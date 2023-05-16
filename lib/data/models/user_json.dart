@@ -1,38 +1,43 @@
 
-import '../../domain/entities/user.dart';
+import '../../domain/entities/user_model.dart';
 
 class UserJson {
-  final int id;
-  final String name;
-  final String username;
-  final String email;
-  final String phone;
-  final String website;
+  final String uid;
+ final String profileImage;
+ final String name;
+ final String phone;
+ final String email;
+ final String city;
+ final String gender;
 
   UserJson({
-    required this.id,
-    required this.name,
-    required this.username,
-    required this.email,
-    required this.phone,
-    required this.website,
+  required this.uid,
+ required   this.profileImage,
+   required this.name,
+  required  this.phone,
+  required  this.email,
+  required  this.city,
+  required this.gender,
   });
 
   factory UserJson.fromJson(Map<String, dynamic> json) => UserJson(
-        id: json['id'],
+        uid: json['uid'],
         name: json['name'],
-        username: json['username'],
+       profileImage: json['profileImage'],
         email: json['email'],
         phone: json['phone'],
-        website: json['website'],
+       city: json['city'],
+       gender: json['gender'],
       );
 
-  User toDomain() => User(
-        id: id,
-        name: name + email,
-        username: username,
+  UserModel? toDomain() => UserModel(
+        uid: uid,
+        name: name,
+        profileImage: profileImage,
         email: email,
         phone: phone,
-        website: website,
+        gender: gender,
+        city:city
+        
       );
 }
