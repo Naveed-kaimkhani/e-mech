@@ -1,34 +1,34 @@
 import 'package:e_mech/presentation/controllers/user_provider.dart';
 import 'package:e_mech/presentation/splash_screen.dart';
+import 'package:e_mech/presentation/user_or_seller.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
-
 import 'data/firebase_user_repository.dart';
 import 'domain/repositories/users_repository.dart';
 
 GetIt getIt = GetIt.instance;
 
 void main() async {
-    WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
-  getIt.registerLazySingleton<UsersRepository>(() => FirebaseUserRepository());
+  // getIt.registerLazySingleton<UsersRepository>(() => FirebaseUserRepository());
   runApp(
-    // // MultiProvider(
-    // //   providers: [
-    // //     ChangeNotifierProvider(
-    // //       create: (_) =>
-    // //           UserProvider(usersRepository: getIt())..getUser(),
-    // //     ),
-    // //   ],
-    //   child: const MyApp(),
-    // ),
-    const MyApp()
-  );
+      // // MultiProvider(
+      // //   providers: [
+      // //     ChangeNotifierProvider(
+      // //       create: (_) =>
+      // //           UserProvider(usersRepository: getIt())..getUser(),
+      // //     ),
+      // //   ],
+      //   child: const MyApp(),
+      // ),
+      const MyApp());
 }
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -39,10 +39,11 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp(
           title: 'Flutter Demo',
+          debugShowCheckedModeBanner: false,
           theme: ThemeData(
             primarySwatch: Colors.blue,
           ),
-          home: const SplashScreen(),
+          home: const UserSellerScreen(),
         );
       },
       // child:

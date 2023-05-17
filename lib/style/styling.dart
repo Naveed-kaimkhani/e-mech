@@ -5,6 +5,7 @@ class Styling {
 
     static const primaryColor = Color(0xffDC3644);
       static var textfieldsColor = Color(0xffF4F7FF);
+  // static var textfieldsColor = Color(0xffF4F7FF);
 
   // static const Color lightBlue = Color(0xff489FB5);
   // static const blueGreyFontColor = Color(0xff8A93A8);

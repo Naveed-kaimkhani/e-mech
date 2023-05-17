@@ -1,3 +1,4 @@
+import 'package:e_mech/presentation/widgets/emergency_service_provider_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -29,37 +30,25 @@ class _SplashScreenState extends State<SplashScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             SizedBox(
-              height: 200.w,
+              height: 250.w,
             ),
             Image.asset(
               Images.logo,
-              height: 200.h,
-              width: 200.w,
+              height: 180.h,
+              width: 180.w,
             ),
-            // const Padding(
-            //   padding: EdgeInsets.only(top: 350.0),
-            // ),
+           
             SizedBox(
-              height: 200.w,
+              height: 230.w,
             ),
-            const Text(
-              "Emergency Service Provider",
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18.0,
-                  color: Colors.black),
-            ),
+          const  EmergencyServiceProviderText(),
             const Padding(
-              padding: EdgeInsets.only(top: 10.0),
-            ),
-            // const Text(
-            //   "Loading...",
-            //   style: TextStyle(fontSize: 16.0, color: Colors.black),
-            // ),
-         const SpinKitRotatingCircle(
-  color: Colors.white,
-  size: 50.0,
-)
+              padding: const EdgeInsets.only(top: 8.0),
+              child: SpinKitSpinningLines(
+                color: Colors.black,
+                size: 30.0,
+              ),
+            )
           ],
         ),
       ),
