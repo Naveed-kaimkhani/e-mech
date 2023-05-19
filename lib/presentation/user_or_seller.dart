@@ -14,7 +14,7 @@ class UserSellerScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         // backgroundColor: const Color(0xffF5AD0D),
-//        appBar: custom_appbar(),
+        //        appBar: custom_appbar(),
         body: Padding(
           padding: EdgeInsets.only(left: 80.w, top: 40.h),
           child: Column(

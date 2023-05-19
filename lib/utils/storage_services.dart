@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../domain/entities/seller_model.dart';
 import '../domain/entities/user_model.dart';
 
 class StorageService {
@@ -12,6 +13,11 @@ class StorageService {
         'user', json.encode(userModel.toMap(userModel)));
   }
 
+  static Future<void> saveSeller(SellerModel sellerModel) async {
+    _sharedPreferences = await SharedPreferences.getInstance();
+    _sharedPreferences.setString(
+        'seller', json.encode(sellerModel.toMap(sellerModel)));
+  }
   static Future<UserModel?> readUser() async {
     _sharedPreferences = await SharedPreferences.getInstance();
     return _sharedPreferences.getString('user') == null

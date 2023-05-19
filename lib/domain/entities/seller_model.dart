@@ -6,7 +6,7 @@ class SellerModel {
  String? phone;
   String? email;
  String? address;
-  String? city;
+  // String? city;
    String? workshopName;
 String? service;
 
@@ -18,7 +18,7 @@ String? service;
   required  this.email,
   required this.CNIC,
   required this.address,
-  required this.city,
+  // required this.city,
   required this.workshopName,
   required this.service
 
@@ -33,7 +33,7 @@ String? service;
     data['phone'] = user.phone;
     data['email'] = user.email;
     data['CNIC'] = user.CNIC;
-    data['city'] = user.city;
+    // data['city'] = user.city;
     data['service'] = user.service;
     data['address'] = user.address;
     return data;
@@ -49,7 +49,7 @@ String? service;
     CNIC = mapData['CNIC'];
      service = mapData['service'];
      address = mapData['address'];
-    city = mapData['city'];
+    // city = mapData['city'];
     
   }
 

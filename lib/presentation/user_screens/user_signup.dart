@@ -1,7 +1,9 @@
 import 'dart:typed_data';
 import 'package:e_mech/presentation/user_screens/home_page.dart';
+import 'package:e_mech/presentation/widgets/circle_progress.dart';
 import 'package:e_mech/presentation/widgets/inputfields.dart';
 import 'package:e_mech/presentation/widgets/my_app_bar.dart';
+import 'package:e_mech/presentation/widgets/radio_button.dart';
 import 'package:e_mech/style/custom_text_style.dart';
 import 'package:e_mech/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -53,7 +55,10 @@ class _UserSignupState extends State<UserSignup> {
   bool isLoadingNow = false;
   bool _obsecureText = true;
   Uint8List? _profileImage;
-
+  String gender = "male";
+  Widget k = SizedBox(
+    height: 16.h,
+  );
   @override
   void dispose() {
     confirmpasswordFocusNode.dispose();
@@ -70,19 +75,17 @@ class _UserSignupState extends State<UserSignup> {
     super.dispose();
   }
 
-  // void isLoading(bool value) {
-  //   setState(() {
-  //     isLoadingNow = value;
-  //   });
-  // }
+  void isLoading(bool value) {
+    setState(() {
+      isLoadingNow = value;
+    });
+  }
 
   void _signup() {
-    utils.showLoading(context);
+    // utils.showLoading(context);
+    isLoading(true);
     _firebaseUserRepository
-        .signUpUser(
-      _emailController.text,
-      _passwordController.text,
-    )
+        .signUpUser(_emailController.text, _passwordController.text, context)
         .then((User? user) async {
       if (user != null) {
         UserModel userModel = UserModel(
@@ -90,20 +93,20 @@ class _UserSignupState extends State<UserSignup> {
           name: _nameController.text,
           phone: _numberController.text,
           email: _emailController.text,
-          gender: 'male',
+          gender: gender,
           city: _cityController.text,
           profileImage: await _firebaseUserRepository.uploadProfileImage(
               imageFile: _profileImage!, uid: user.uid),
         );
         _saveUser(user, userModel);
       } else {
-        // isLoading(false);
-        utils.hideLoading();
+        isLoading(false);
+        // utils.hideLoading();
         utils.flushBarErrorMessage('Failed to Signup', context);
       }
     }).catchError((error) {
-      // isLoading(false);
-      utils.hideLoading();
+      isLoading(false);
+      // utils.hideLoading();
       // print(error.message.toString());
       utils.flushBarErrorMessage(error.message.toString(), context);
     });
@@ -116,8 +119,8 @@ class _UserSignupState extends State<UserSignup> {
       await StorageService.saveUser(userModel).then((value) async {
         //await  StorageService.readUser();
         Provider.of<UserProvider>(context, listen: false).getUserLocally();
-        // isLoading(false);
-        utils.hideLoading();
+        isLoading(false);
+        // utils.hideLoading();
         // SharedPreferences preferences = await SharedPreferences.getInstance();
         // // initScreen = preferences.getInt('initScreen');
         // await preferences.setInt('initScreen', 1);
@@ -126,11 +129,22 @@ class _UserSignupState extends State<UserSignup> {
             context, MaterialPageRoute(builder: (context) => const HomePage()));
       });
     }).catchError((error) {
-      // isLoading(false);
-      utils.hideLoading();
+      isLoading(false);
+      // utils.hideLoading();
       // print(error);
       utils.flushBarErrorMessage(error.message.toString(), context);
     });
+  }
+
+  void _submitForm() {
+    if (_profileImage == null) {
+      utils.flushBarErrorMessage("Please upload profile", context);
+    } else if (_formKey.currentState!.validate()) {
+      // Form is valid, perform signup logic here
+      _signup();
+      // Perform signup logic
+      // ...
+    }
   }
 
   @override
@@ -146,172 +160,201 @@ class _UserSignupState extends State<UserSignup> {
               text: "Login",
               onSignUpOrLoginPressed: () {},
               onBackButtonPressed: () {}),
-          body: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: 16.h,
-                  ),
-                  Text("Sign-Up", style: CustomTextStyle.font_30),
-                  SizedBox(
-                    height: 8.h,
-                  ),
-                  Text("As a User", style: CustomTextStyle.font_20),
-                  uploadProfile(_profileImage),
-                  // SizedBox(
-                  //   height: 15.16.h,
-                  // ),
-                  Form(
-                      key: _formKey,
-                      child: Column(
-                        children: [
-                          InputField(
-                            hint_text: "Enter name",
-                            currentNode: nameFocusNode,
-                            focusNode: nameFocusNode,
-                            nextNode: numberFocusNode,
-                            controller: _nameController,
-                            obsecureText: false,
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return "Enter name";
-                              } else {
-                                return null;
-                              }
-                            },
-                          ),
-                          SizedBox(
-                            height: 16.h,
-                          ),
-                          InputField(
-                            hint_text: "Enter email address",
-                            currentNode: emailFocusNode,
-                            focusNode: emailFocusNode,
-                            nextNode: passwordFocusNode,
-                            controller: _emailController,
-                            obsecureText: false,
-                            keyboardType: TextInputType.emailAddress,
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return "Enter email address";
-                              } else if (!EmailValidator.validate(value)) {
-                                return "Invalid email address";
-                              }
-                            },
-                          ),
-                          SizedBox(
-                            height: 16.h,
-                          ),
-                          InputField(
-                            hint_text: "Enter phone number",
-                            currentNode: numberFocusNode,
-                            focusNode: numberFocusNode,
-                            nextNode: cityFocusNode,
-                            controller: _numberController,
-                            keyboardType: TextInputType.number,
-                            obsecureText: false,
-                            preicon: SizedBox(
-                              width: 60.w,
-                              height: 60.h,
-                              child: Row(
-                                children: [
-                                  Text(
-                                    "  +92",
-                                    style: TextStyle(fontSize: 17.sp),
-                                  ),
-                                  VerticalDivider(
-                                    thickness: 2.r,
-                                    color: Colors.grey.shade700,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return "Enter phone number";
-                              } else if (value.length != 10) {
-                                return "Invalid phone number";
-                              }
-                            },
-                          ),
-                          SizedBox(
-                            height: 16.h,
-                          ),
-                          InputField(
-                            hint_text: "City",
-                            currentNode: emailFocusNode,
-                            focusNode: emailFocusNode,
-                            nextNode: passwordFocusNode,
-                            controller: _emailController,
-                            obsecureText: false,
-                            keyboardType: TextInputType.emailAddress,
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return "Enter city";
-                              }
-                            },
-                          ),
-                          SizedBox(
-                            height: 16.h,
-                          ),
-                          InputField(
-                            hint_text: "Set password",
-                            currentNode: passwordFocusNode,
-                            focusNode: passwordFocusNode,
-                            nextNode: confirmpasswordFocusNode,
-                            keyboardType: TextInputType.text,
-                            controller: _passwordController,
-                            icon: obsecureText!
-                                ? Icons.visibility_off
-                                : Icons.remove_red_eye,
-                            obsecureText: obsecureText,
-                            onIconPress: () {
-                              setState(() {
-                                obsecureText = !obsecureText!;
-                              });
-                            },
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return "Enter password";
-                              } else if (value.length < 6) {
-                                return "password must be of 6 characters";
-                              }
-                            },
-                          ),
-                          SizedBox(
-                            height: 16.h,
-                          ),
-                          InputField(
-                            hint_text: "Confirm password",
-                            currentNode: confirmpasswordFocusNode,
-                            focusNode: confirmpasswordFocusNode,
-                            nextNode: confirmpasswordFocusNode,
-                            controller: _confirmpasswordController,
-                            obsecureText: _obsecureText,
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return "Enter password to confirm";
-                              } else if (value != _passwordController.text) {
-                                return "Password not match";
-                              }
-                            },
-                          ),
-                        ],
-                      )),
-                  SizedBox(
-                    height: 31.h,
-                  ),
-                  AuthButton(
-                      text: "Signup",
-                      func: () {
-                        FocusManager.instance.primaryFocus?.unfocus();
-                        _signup();
+          body: Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 24, top: 16),
+                child: Column(
+                  // mainAxisSize: MainAxisSize.min,
+                  // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // SizedBox(
+                    //   height: 16.h,
+                    // ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text.rich(TextSpan(
+                            text: 'Sign-Up',
+                            style: CustomTextStyle.font_30,
+                            children: <InlineSpan>[
+                              TextSpan(
+                                text: '\nAs a User',
+                                style: CustomTextStyle.font_20,
+                              )
+                            ])),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 40.0),
+                          child: uploadProfile(_profileImage),
+                        ),
+                      ],
+                    ),
+                    // Text("Sign-Up", style: CustomTextStyle.font_30),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   children: [
+                    //     Text("As a User", style: CustomTextStyle.font_20),
+                    //     Padding(
+                    //       padding: const EdgeInsets.only(right: 30.0),
+                    //       child: uploadProfile(_profileImage),
+                    //     ),
+                    //   ],
+                    // ),
+                    // SizedBox(
+                    //   height: 8.h,
+                    // ),
+
+                    SizedBox(
+                      height: 20.16.h,
+                    ),
+
+                    InputField(
+                      hint_text: "Full name",
+                      currentNode: nameFocusNode,
+                      focusNode: nameFocusNode,
+                      nextNode: emailFocusNode,
+                      controller: _nameController,
+                      obsecureText: false,
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return "Enter name";
+                        } else {
+                          return null;
+                        }
                       },
-                      color: Styling.primaryColor),
-                ],
+                    ),
+                    k,
+                    InputField(
+                      hint_text: "Email address",
+                      currentNode: emailFocusNode,
+                      focusNode: emailFocusNode,
+                      nextNode: numberFocusNode,
+                      controller: _emailController,
+                      obsecureText: false,
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return "Enter email address";
+                        } else if (!EmailValidator.validate(value)) {
+                          return "Invalid email address";
+                        }
+                      },
+                    ),
+                    k,
+                    InputField(
+                      hint_text: "Phone",
+                      currentNode: numberFocusNode,
+                      focusNode: numberFocusNode,
+                      nextNode: cityFocusNode,
+                      controller: _numberController,
+                      keyboardType: TextInputType.number,
+                      obsecureText: false,
+                      preicon: SizedBox(
+                        width: 60.w,
+                        height: 60.h,
+                        child: Row(
+                          children: [
+                            Text(
+                              "  +92",
+                              style: TextStyle(fontSize: 17.sp),
+                            ),
+                            VerticalDivider(
+                              thickness: 2.r,
+                              color: Colors.grey.shade700,
+                            ),
+                          ],
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return "Enter phone number";
+                        } else if (value.length != 10) {
+                          return "Invalid phone number";
+                        }
+                      },
+                    ),
+                    k,
+                    InputField(
+                      hint_text: "City",
+                      currentNode: cityFocusNode,
+                      focusNode: cityFocusNode,
+                      nextNode: passwordFocusNode,
+                      controller: _cityController,
+                      obsecureText: false,
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return "City";
+                        }
+                      },
+                    ),
+                    k,
+                    InputField(
+                      hint_text: "Set password",
+                      currentNode: passwordFocusNode,
+                      focusNode: passwordFocusNode,
+                      nextNode: confirmpasswordFocusNode,
+                      keyboardType: TextInputType.text,
+                      controller: _passwordController,
+                      icon: obsecureText!
+                          ? Icons.visibility_off
+                          : Icons.remove_red_eye,
+                      obsecureText: obsecureText,
+                      onIconPress: () {
+                        setState(() {
+                          obsecureText = !obsecureText!;
+                        });
+                      },
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return "Enter password";
+                        } else if (value.length < 6) {
+                          return "password must be of 6 characters";
+                        }
+                      },
+                    ),
+                    k,
+                    InputField(
+                      hint_text: "Confirm password",
+                      currentNode: confirmpasswordFocusNode,
+                      focusNode: confirmpasswordFocusNode,
+                      nextNode: confirmpasswordFocusNode,
+                      controller: _confirmpasswordController,
+                      obsecureText: _obsecureText,
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return "Enter password to confirm";
+                        } else if (value != _passwordController.text) {
+                          return "Password not match";
+                        }
+                      },
+                    ),
+                    k,
+                    // GenderSelection(
+                    //   selectedGender: gender,
+                    // ),
+                    genderSelection(),
+                    SizedBox(
+                      height: 31.h,
+                    ),
+
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20.0),
+                      child: isLoadingNow
+                          ? const CircleProgress()
+                          : AuthButton(
+                              text: "Signup",
+                              func: () {
+                                FocusManager.instance.primaryFocus?.unfocus();
+                                // _signup();
+                                _submitForm();
+                              },
+                              color: Styling.primaryColor),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -334,14 +377,13 @@ class _UserSignupState extends State<UserSignup> {
               //   "https://m.media-amazon.com/images/I/11uufjN3lYL._SX90_SY90_.png",
               //   height: 60,
               // ),
-              // Image.asset(
-              //   "asset/avatar.png",
-              //   height: 100.h,
-              //   width: 100.w,
-              // ),
-              Icon(Icons.browse_gallery),
+              Image.asset(
+                "assets/avatar.png",
+                height: 60.h,
+                width: 60.w,
+              ),
               Positioned(
-                left: 45.w,
+                left: 25.w,
                 bottom: 0.h,
                 child: IconButton(
                   onPressed: () async {
@@ -355,17 +397,16 @@ class _UserSignupState extends State<UserSignup> {
                     }
                   },
                   icon: Container(
-                    width: 36.w,
-                    height: 36.h,
+                    width: 25.w,
+                    height: 25.h,
                     decoration: BoxDecoration(
                       color: Styling.primaryColor,
                       borderRadius: BorderRadius.circular(50.r),
                     ),
-                    child: SizedBox(
+                    child: Container(
                       width: 20.w,
                       height: 20.h,
-                      // child: Image.asset('asset/gallery.png'),
-                      child: Icon(Icons.browse_gallery),
+                      child: Image.asset('assets/gallery.png'),
                     ),
                   ),
                 ),
@@ -375,13 +416,13 @@ class _UserSignupState extends State<UserSignup> {
         : Stack(
             children: [
               CircleAvatar(
-                minRadius: 50.r,
-                maxRadius: 50.r,
+                minRadius: 40.r,
+                maxRadius: 40.r,
                 child: ClipOval(
                     child: Image.memory(
                   image,
-                  height: 200.h,
-                  width: 200.w,
+                  height: 145.h,
+                  width: 145.w,
                   fit: BoxFit.cover,
                 )),
                 // child: ,
@@ -400,8 +441,8 @@ class _UserSignupState extends State<UserSignup> {
                     debugPrint("Image not loaded");
                   },
                   icon: Container(
-                    width: 36.w,
-                    height: 36.h,
+                    width: 30.w,
+                    height: 30.h,
                     decoration: BoxDecoration(
                       color: Styling.primaryColor,
                       borderRadius: BorderRadius.circular(50.r),
@@ -409,8 +450,7 @@ class _UserSignupState extends State<UserSignup> {
                     child: SizedBox(
                       width: 20.w,
                       height: 20.h,
-                      // child: Image.asset('asset/gallery.png'),
-                      child: Icon(Icons.browse_gallery),
+                      child: Image.asset('assets/gallery.png'),
                     ),
                   ),
                 ),
@@ -418,4 +458,46 @@ class _UserSignupState extends State<UserSignup> {
             ],
           );
   } // for 1st image
+
+  Widget genderSelection() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Row(
+          children: [
+            Radio<String>(
+              focusColor: Styling.primaryColor,
+              activeColor: Styling.primaryColor,
+              value: 'female',
+              groupValue: gender,
+              onChanged: (value) {
+                setState(() {
+                  gender = value!;
+                });
+              },
+            ),
+            const Text('Female'),
+          ],
+        ),
+        const SizedBox(width: 20),
+        Row(
+          children: [
+            Radio<String>(
+              focusColor: Styling.primaryColor,
+              // fillColor: Styling.primaryColor,
+              activeColor: Styling.primaryColor,
+              value: 'male',
+              groupValue: gender,
+              onChanged: (value) {
+                setState(() {
+                  gender = value!;
+                });
+              },
+            ),
+            const Text('Male'),
+          ],
+        ),
+      ],
+    );
+  }
 }

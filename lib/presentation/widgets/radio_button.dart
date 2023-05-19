@@ -1,57 +1,54 @@
+import 'package:e_mech/style/styling.dart';
 import 'package:flutter/material.dart';
 
-class RadioButton extends StatefulWidget {
-  const RadioButton({super.key});
+class GenderSelection extends StatefulWidget {
+  String? selectedGender;
+
+ GenderSelection({required this.selectedGender,super.key});
 
   @override
-  _RadioButtonState createState() => _RadioButtonState();
+  _GenderSelectionState createState() => _GenderSelectionState();
 }
 
-class _RadioButtonState extends State<RadioButton> {
-  String? selectedOption;
+class _GenderSelectionState extends State<GenderSelection> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Radio Button Example'),
-      ),
-      body: Column(
-        children: [
-          ListTile(
-            title: Text('Option 1'),
-            leading: Radio(
-              value: 'option1',
-              groupValue: selectedOption,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Row(
+          children: [
+            Radio<String>(
+              focusColor: Styling.primaryColor,
+              value: 'female',
+              groupValue: widget.selectedGender,
               onChanged: (value) {
                 setState(() {
-                  selectedOption = value.toString();
+                  widget.selectedGender = value;
                 });
               },
             ),
-          ),
-          ListTile(
-            title: Text('Option 2'),
-            leading: Radio(
-              value: 'option2',
-              groupValue: selectedOption,
+            const Text('Female'),
+          ],
+        ),
+        const SizedBox(width: 20),
+        Row(
+          children: [
+            Radio<String>(
+              focusColor: Styling.primaryColor,
+              value: 'male',
+              groupValue: widget.selectedGender,
               onChanged: (value) {
                 setState(() {
-                  selectedOption = value.toString();
+                  widget.selectedGender = value;
                 });
               },
             ),
-          ),
-          SizedBox(height: 16),
-          Text('Selected Option: $selectedOption'),
-        ],
-      ),
+            const Text('Male'),
+          ],
+        ),
+      ],
     );
   }
-}
-
-void main() {
-  runApp(MaterialApp(
-    home: RadioButton(),
-  ));
 }

@@ -1,75 +1,52 @@
-// import 'package:e_mech/style/styling.dart';
 // import 'package:flutter/material.dart';
-// import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-// class inputfields extends StatelessWidget {
-//   String? hint_text;
-//   FocusNode? currentNode;
-//   FocusNode? nextNode;
-//   bool? obsecureText;
-//   FocusNode? focusNode;
-//   IconData? icon;
-//   Widget? preicon;
-//   TextInputType? keyboardType;
-//   // bool? visiblity;
-//   Function()? onIconPress;
-//   TextEditingController? controller;
-//   inputfields({
-//     required this.hint_text,
-//     required this.currentNode,
-//     required this.focusNode,
-//     required this.nextNode,
-//     required this.controller,
-//     this.icon,
-//     this.preicon,
-//     this.onIconPress,
-//     this.obsecureText,
-//     this.keyboardType,
-//     // this.visiblity,
-//   });
-
+ 
+// void main() {
+//   runApp(MyApp());
+// }
+ 
+// class MyApp extends StatelessWidget {
+//   // This widget is
+//   //the root of your application.
 //   @override
 //   Widget build(BuildContext context) {
-//     double width = MediaQuery.of(context).size.width;
-//     return Container(
-//       height: 60.h,
-//       width: 371.w,
-//       //  color: Colors.white,
-//       decoration: BoxDecoration(
-//           color: AppColors.textfieldsColor,
-//           borderRadius: BorderRadius.circular(7.r)),
-//       // ignore: prefer_const_constructors
-//       child: TextField(
-//        keyboardType: keyboardType??TextInputType.text,
-//         obscureText: obsecureText ?? false,
-//         onEditingComplete: () =>
-//             utils.fieldFocusChange(context, currentNode!, nextNode!),
-//         controller: controller,
-//         cursorColor: Colors.black,
-//         focusNode: focusNode,
-//         decoration: InputDecoration(
-//           contentPadding: EdgeInsets.all(12),
-//           focusedBorder: OutlineInputBorder(
-//             borderRadius: BorderRadius.circular(7.r),
-//             borderSide: BorderSide(color: Styling.primaryColor, width: 1.0),
-//           ),
-//           border: InputBorder.none,
-//           hintText: hint_text,
-        
-//           hintStyle: TextStyle(
-//             color: Color.fromARGB(255, 112, 102, 102),
-//             fontSize: 17.sp,
-//           ),
-//           prefixIcon: preicon,
-//           suffixIcon: InkWell(
-//             child: Icon(
-//               icon,
-//               color: Color.fromARGB(255, 65, 61, 61),
-//             ),
-//             onTap: onIconPress,
+//     return MaterialApp(
+//       title: 'TextSpan',
+//       theme: ThemeData(
+//         primarySwatch: Colors.blue,
+//       ),
+//       home: MyHomePage(),
+//       debugShowCheckedModeBanner: false,
+//     );
+//   }
+// }
+ 
+// class MyHomePage extends StatefulWidget {
+//   @override
+//   _MyHomePageState createState() => _MyHomePageState();
+// }
+ 
+// class _MyHomePageState extends State<MyHomePage> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('GeeksforGeeks'),
+//         backgroundColor: Colors.green
+//         ),
+//         body: Center(
+//           child: Text.rich(
+//             TextSpan(
+//               text: 'This is textspan ',
+//               children: <InlineSpan>[
+//                 TextSpan(
+//                   text: 'Widget in flutter',
+//                   style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),
+//                 )
+//               ]
+//             )
 //           ),
 //         ),
-//       ),
+//         backgroundColor: Colors.lightBlue[50],
 //     );
 //   }
 // }

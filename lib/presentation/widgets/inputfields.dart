@@ -1,4 +1,5 @@
 import 'package:e_mech/style/styling.dart';
+import 'package:e_mech/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -16,6 +17,7 @@ class InputField extends StatelessWidget {
   Function()? onIconPress;
   TextEditingController? controller;
   InputField({
+    super.key,
     required this.hint_text,
     required this.currentNode,
     required this.focusNode,
@@ -33,38 +35,40 @@ class InputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 60.h,
-      width: 371.w,
+      height: 42.h,
+      width: 325.w,
       decoration: BoxDecoration(
           color: Styling.textfieldsColor,
           borderRadius: BorderRadius.circular(7.r)),
       child: TextFormField(
         style: const TextStyle(
-            color: Color(0xff7FCFCF), fontFamily: "Sansita", fontSize: 12),
+            color: Colors.black, fontFamily: "Sansita", fontSize: 16),
         keyboardType: keyboardType ?? TextInputType.text,
         obscureText: obsecureText ?? false,
         controller: controller,
         cursorColor: Colors.black,
         focusNode: focusNode,
+        onEditingComplete: () =>
+            utils.fieldFocusChange(context, currentNode!, nextNode!),
         decoration: InputDecoration(
-          contentPadding: EdgeInsets.all(12),
+          contentPadding: const EdgeInsets.all(12),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(7.r),
-            borderSide: BorderSide(color: Styling.primaryColor, width: 1.0),
+            borderSide: const BorderSide(color: Colors.black, width: 1.0),
           ),
           border: InputBorder.none,
           hintText: hint_text,
           hintStyle: TextStyle(
-            color: Color.fromARGB(255, 112, 102, 102),
+            color: const Color.fromARGB(255, 112, 102, 102),
             fontSize: 17.sp,
           ),
           prefixIcon: preicon,
           suffixIcon: InkWell(
+            onTap: onIconPress,
             child: Icon(
               icon,
-              color: Color.fromARGB(255, 65, 61, 61),
+              color: const Color.fromARGB(255, 65, 61, 61),
             ),
-            onTap: onIconPress,
           ),
         ),
         validator: validator,

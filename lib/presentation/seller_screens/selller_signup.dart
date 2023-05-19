@@ -1,354 +1,573 @@
-// import 'package:email_validator/email_validator.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:flutter/material.dart';
-// import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'dart:typed_data';
 
-// import '../../data/firebase_user_repository.dart';
-// import '../../domain/entities/seller_model.dart';
+import 'package:e_mech/presentation/widgets/my_app_bar.dart';
+import 'package:e_mech/utils/utils.dart';
+import 'package:email_validator/email_validator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
-// class SellerSignUp extends StatefulWidget {
-//   const SellerSignUp({Key? key}) : super(key: key);
+import '../../data/firebase_user_repository.dart';
+import '../../domain/entities/seller_model.dart';
+import '../../style/custom_text_style.dart';
+import '../../style/styling.dart';
+import '../../utils/storage_services.dart';
+import '../controllers/user_provider.dart';
+import '../user_screens/home_page.dart';
+import '../widgets/auth_button.dart';
+import '../widgets/circle_progress.dart';
+import '../widgets/inputfields.dart';
 
-//   @override
-//   State<SellerSignUp> createState() => _SellerSignUpState();
-// }
+class SellerSignUp extends StatefulWidget {
+  const SellerSignUp({Key? key}) : super(key: key);
 
-// class _SellerSignUpState extends State<SellerSignUp> {
-//   final FirebaseUserRepository _firebaseRepository = FirebaseUserRepository();
+  @override
+  State<SellerSignUp> createState() => _SellerSignUpState();
+}
 
-//   FocusNode nameFocusNode = FocusNode();
-//   FocusNode hosteladdrFocusNode = FocusNode();
-//   FocusNode hostelOwnernameFocusNode = FocusNode();
-//   FocusNode hostelOwnercontactFocusNode = FocusNode();
-//   FocusNode hostelOwnerEmailFocusNode = FocusNode();
-//   FocusNode hostelcontactFocusNode = FocusNode();
-//   FocusNode passwordFocusNode = FocusNode();
-//   FocusNode confirmpasswordFocusNode = FocusNode();
+class _SellerSignUpState extends State<SellerSignUp> {
+  final FirebaseUserRepository _firebaseUserRepository =
+      FirebaseUserRepository();
+  final _formKey = GlobalKey<FormState>();
 
-//   TextEditingController _nameController = TextEditingController();
-//   TextEditingController _hostelcontactController = TextEditingController();
-//   TextEditingController _chargesController = TextEditingController();
-//   TextEditingController _hostelOwnerphoneController = TextEditingController();
-//   TextEditingController _hostelOwnerEmailController = TextEditingController();
-//   TextEditingController _hosteladdressController = TextEditingController();
-//   TextEditingController _passwordController = TextEditingController();
-//   TextEditingController _confirmpasswordController = TextEditingController();
-//   TextEditingController _ChargesController = TextEditingController();
+  String? service = "fuel";
 
-//   // bool isLoadingNow = false;
-//   // void isLoading(bool value) {
-//   //   setState(() {
-//   //     isLoadingNow = value;
-//   //   });
-//   // }
+  bool? obsecureText = true;
+  bool isLoadingNow = false;
+  bool _obsecureText = true;
+  Uint8List? _profileImage;
 
-//   Future<void> _signup(SellerModel hostelModel, context) async {
-//     _firebaseRepository
-//         .signUp(
-//       _hostelOwnerEmailController.text,
-//       _passwordController.text,
-//       context,
-//     )
-//         .then((User? user) async {
-//       if (user != null ) {
-//         hostelModel.uid = user.uid;
-//         Navigator.push(context, MaterialPageRoute(builder: (context) {
-//           return Hostel_Registration(
-//             hostel: hostelModel,
-//           );
-//         }));
-//       } else {
-//         isLoading(false);
-//       }
-//     }).catchError((error) {
-//       isLoading(false);
-//       utils.flushBarErrorMessage(error.message.toString(), context);
-//     });
-//   }
+  FocusNode nameFocusNode = FocusNode();
+  FocusNode addrFocusNode = FocusNode();
+  // FocusNode cityFocusNode = FocusNode();
+  FocusNode phoneFocusNode = FocusNode();
+  FocusNode emailFocusNode = FocusNode();
+  FocusNode confirmFocusNode = FocusNode();
+  FocusNode passwordFocusNode = FocusNode();
+  FocusNode workshopFocusNode = FocusNode();
+  FocusNode CNICFocusNode = FocusNode();
 
-//   Future<void> _validateFields() async {
-//     if (_nameController.text.trim().isEmpty &&
-//         _hosteladdressController.text.trim().isEmpty &&
-//         _hostelcontactController.text.trim().isEmpty &&
-//         _chargesController.text.trim().isEmpty &&
-//         _hostelOwnerEmailController.text.trim().isEmpty &&
-//         _hostelOwnerphoneController.text.trim().isEmpty &&
-//         _passwordController.text.trim().isEmpty &&
-//         _confirmpasswordController.text.trim().isEmpty) {
-//       utils.flushBarErrorMessage('Enter your complete details', context);
-//     } else if (_nameController.text.trim().isEmpty) {
-//       utils.flushBarErrorMessage('Enter your full name', context);
-//     } else if (_hosteladdressController.text.trim().isEmpty) {
-//       utils.flushBarErrorMessage('Enter your full address', context);
-//     } else if (_hostelcontactController.text.length != 10) {
-//       utils.flushBarErrorMessage('Invalid hostel Phone Number', context);
-//     } else if (_chargesController.text.trim().isEmpty) {
-//       utils.flushBarErrorMessage('Enter the full name', context);
-//     } else if (_hostelOwnerEmailController.text.trim().isEmpty) {
-//       utils.flushBarErrorMessage('Enter your email address', context);
-//     } else if (!EmailValidator.validate(_hostelOwnerEmailController.text)) {
-//       utils.flushBarErrorMessage('Invalid Email', context);
-//     } else if (_hostelOwnerphoneController.text.length != 10) {
-//       utils.flushBarErrorMessage('Invalid owner phone number', context);
-//     } else if (_passwordController.text.trim().isEmpty) {
-//       utils.flushBarErrorMessage('Enter your password', context);
-//     } else if (_passwordController.text.length < 6) {
-//       utils.flushBarErrorMessage(
-//           'Password must be atleast 6 characters', context);
-//     } else if (_confirmpasswordController.text.trim().isEmpty) {
-//       utils.flushBarErrorMessage(
-//           'Enter your password again to confirm', context);
-//     } else if (_passwordController.text != _confirmpasswordController.text) {
-//       utils.flushBarErrorMessage('Enter same password to confirm', context);
-//     } else {
-//       isLoading(true);
-//       hostelModel HostelModel = hostelModel(
-//         name: _nameController.text.trim(),
-//         hostel_address: _hosteladdressController.text.trim(),
-//         hostel_phone: _hostelcontactController.text.trim(),
-//         charges: int.parse(_chargesController.text),
-//         email: _hostelOwnerEmailController.text.trim(),
-//       );
-//       _signup(HostelModel, context);
-//     }
-//   }
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _CNICController = TextEditingController();
+  final TextEditingController _workshopController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  // final TextEditingController _cityController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmpasswordController =
+      TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+  // final TextEditingController _workshopController = TextEditingController();
 
-//   @override
-//   void dispose() {
-//     _nameController.dispose();
-//     _hostelcontactController.dispose();
-//     _chargesController.dispose();
-//     _hostelOwnerphoneController.dispose();
-//     _hostelOwnerEmailController.dispose();
-//     _hosteladdressController.dispose();
-//     _passwordController.dispose();
-//     _confirmpasswordController.dispose();
-//     _ChargesController.dispose();
+  // bool isLoadingNow = false;
+  // void isLoading(bool value) {
+  //   setState(() {
+  //     isLoadingNow = value;
+  //   });
+  // }
+  Widget k = SizedBox(
+    height: 16.h,
+  );
+  void isLoading(bool value) {
+    setState(() {
+      isLoadingNow = value;
+    });
+  }
 
-//     nameFocusNode.dispose();
-//     hosteladdrFocusNode.dispose();
-//     hostelOwnernameFocusNode.dispose();
-//     hostelOwnercontactFocusNode.dispose();
-//     hostelOwnerEmailFocusNode.dispose();
-//     hostelcontactFocusNode.dispose();
-//     passwordFocusNode.dispose();
-//     confirmpasswordFocusNode.dispose();
-//     super.dispose();
-//   }
+  void _submitForm() {
+    if (_profileImage == null) {
+      utils.flushBarErrorMessage("Please upload profile", context);
+    } else if (_formKey.currentState!.validate()) {
+      // Form is valid, perform signup logic here
+      _signup();
+      // Perform signup logic
+      // ...
+    }
+  }
 
-//   bool? obsecureText = true;
-//   @override
-//   void initState() {
-//     utils.checkConnectivity(context);
-//     super.initState();
-//   }
+  Future<void> _signup() async {
+    isLoading(true);
+    _firebaseUserRepository
+        .signUpUser(
+      _emailController.text,
+      _passwordController.text,
+      context,
+    )
+        .then((User? user) async {
+      if (user != null) {
+        SellerModel sellerModel = SellerModel(
+          uid: utils.currentUserUid,
+          name: _nameController.text,
+          phone: _phoneController.text,
+          email: _emailController.text,
+          CNIC: _CNICController.text,
+          address: _addressController.text,
+          // city: _cityController.text,
+          workshopName: _workshopController.text,
+          
+          service: service,
+          profileImage: await _firebaseUserRepository.uploadProfileImage(
+              imageFile: _profileImage!, uid: user.uid),
+        );
+        _saveSeller(user, sellerModel);
+      } else {
+        isLoading(false);
+      }
+    }).catchError((error) {
+      isLoading(false);
+      utils.flushBarErrorMessage(error.message.toString(), context);
+    });
+  }
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return GestureDetector(
-//       onTap: () {
-//         FocusManager.instance.primaryFocus?.unfocus();
-//       },
-//       child: SafeArea(
-//         child: Scaffold(
-//           appBar: upper_design(
-//             needcolor: true,
-//             needicon: true,
-//             isUserDelete: false,
-//           ),
-//           body: Stack(
-//             children: [
-//               Container(
-//                 color: AppColors.primaryColor,
-//                 child: Container(
-//                   decoration: auth_screens_decor(),
-//                   child: Padding(
-//                     padding:
-//                         EdgeInsets.only(left: 28.w, right: 28.w, top: 10.h),
-//                     child: SingleChildScrollView(
-//                       child: Column(
-//                         children: [
-//                           SizedBox(
-//                             height: 48.h,
-//                           ),
-//                           Text(
-//                             "Hostel Signup",
-//                             style: TextStyle(
-//                                 fontSize: 26.sp, fontWeight: FontWeight.w500),
-//                           ),
-//                           SizedBox(
-//                             height: 28.h,
-//                           ),
-//                           inputfields(
-//                             hint_text: "Enter Hostel name",
-//                             currentNode: nameFocusNode,
-//                             focusNode: nameFocusNode,
-//                             nextNode: hosteladdrFocusNode,
-//                             controller: _nameController,
-//                             obsecureText: false,
-//                             onIconPress: () {
-//                               setState(() {});
-//                             },
-//                           ),
-//                           SizedBox(
-//                             height: 16.h,
-//                           ),
-//                           inputfields(
-//                             hint_text: "Enter Hostel address",
-//                             currentNode: hosteladdrFocusNode,
-//                             focusNode: hosteladdrFocusNode,
-//                             nextNode: hostelcontactFocusNode,
-//                             controller: _hosteladdressController,
-//                             keyboardType: TextInputType.text,
-//                             obsecureText: false,
-//                             onIconPress: () {
-//                               setState(() {});
-//                             },
-//                           ),
-//                           SizedBox(
-//                             height: 16.h,
-//                           ),
-//                           inputfields(
-//                             hint_text: "3XXXXXXXXX",
-//                             currentNode: hostelcontactFocusNode,
-//                             focusNode: hostelcontactFocusNode,
-//                             nextNode: hostelOwnernameFocusNode,
-//                             controller: _hostelcontactController,
-//                             keyboardType: TextInputType.number,
-//                             preicon: Container(
-//                               width: 60.w,
-//                               height: 60.h,
-//                               child: Row(
-//                                 children: [
-//                                   Text(
-//                                     "  +92",
-//                                     style: TextStyle(
-//                                         fontSize: 17.sp,
-//                                         color:
-//                                             Color.fromARGB(255, 120, 111, 111)),
-//                                   ),
-//                                   VerticalDivider(
-//                                     thickness: 2,
-//                                     color: Colors.grey.shade700,
-//                                   ),
-//                                 ],
-//                               ),
-//                             ),
-//                             obsecureText: false,
-//                           ),
-//                           SizedBox(
-//                             height: 16.h,
-//                           ),
-//                           inputfields(
-//                             hint_text: "Charges/month",
-//                             currentNode: hostelOwnernameFocusNode,
-//                             focusNode: hostelOwnernameFocusNode,
-//                             nextNode: hostelOwnerEmailFocusNode,
-//                             controller: _chargesController,
-//                             obsecureText: false,
-//                             keyboardType: TextInputType.number,
-//                           ),
-//                           SizedBox(
-//                             height: 16.h,
-//                           ),
-//                           inputfields(
-//                             hint_text: "Enter Email address",
-//                             currentNode: hostelOwnerEmailFocusNode,
-//                             focusNode: hostelOwnerEmailFocusNode,
-//                             nextNode: hostelOwnercontactFocusNode,
-//                             controller: _hostelOwnerEmailController,
-//                             obsecureText: false,
-//                             keyboardType: TextInputType.emailAddress,
-//                           ),
-//                           SizedBox(
-//                             height: 16.h,
-//                           ),
-//                           inputfields(
-//                             hint_text: "3XXXXXXXXX",
-//                             currentNode: hostelOwnercontactFocusNode,
-//                             focusNode: hostelOwnercontactFocusNode,
-//                             nextNode: passwordFocusNode,
-//                             controller: _hostelOwnerphoneController,
-//                             keyboardType: TextInputType.number,
-//                             preicon: Container(
-//                               width: 60.w,
-//                               height: 60.h,
-//                               child: Row(
-//                                 children: [
-//                                   Text(
-//                                     "  +92",
-//                                     style: TextStyle(fontSize: 17.sp),
-//                                   ),
-//                                   VerticalDivider(
-//                                     thickness: 2,
-//                                     color: Color.fromARGB(255, 120, 111, 111),
-//                                   ),
-//                                 ],
-//                               ),
-//                             ),
-//                             obsecureText: false,
-//                           ),
-//                           SizedBox(
-//                             height: 16.h,
-//                           ),
-//                           inputfields(
-//                             hint_text: "Set Password",
-//                             currentNode: passwordFocusNode,
-//                             focusNode: passwordFocusNode,
-//                             nextNode: confirmpasswordFocusNode,
-//                             controller: _passwordController,
-//                             keyboardType: TextInputType.text,
-//                             obsecureText: true,
-//                           ),
-//                           SizedBox(
-//                             height: 16.h,
-//                           ),
-//                           inputfields(
-//                               hint_text: "Confirm Password",
-//                               currentNode: confirmpasswordFocusNode,
-//                               focusNode: confirmpasswordFocusNode,
-//                               nextNode: confirmpasswordFocusNode,
-//                               controller: _confirmpasswordController,
-//                               keyboardType: TextInputType.text,
-//                               icon: obsecureText!
-//                                   ? Icons.visibility_off
-//                                   : Icons.remove_red_eye,
-//                               obsecureText: obsecureText!,
-//                               onIconPress: () {
-//                                 setState(() {
-//                                   obsecureText = !obsecureText!;
-//                                 });
-//                               }),
-//                           SizedBox(
-//                             height: 30.h,
-//                           ),
-//                           Container(
-//                             alignment: Alignment.centerRight,
-//                             child: isLoadingNow
-//                                 ? circle_progress()
-//                                 : MiniButton(
-//                                     text: 'Next',
-//                                     func: () {
-//                                       FocusManager.instance.primaryFocus
-//                                           ?.unfocus();
-//                                       _validateFields();
-//                                       // setState(() {
+  void _saveSeller(User firebaseUser, SellerModel sellerModel) {
+    _firebaseUserRepository
+        .saveSellerDataToFirestore(sellerModel)
+        .then((value) async {
+      await StorageService.saveSeller(sellerModel).then((value) async {
+        //await  StorageService.readUser();
+        Provider.of<UserProvider>(context, listen: false).getUserLocally();
+        isLoading(false);
+        // utils.hideLoading();
+        // SharedPreferences preferences = await SharedPreferences.getInstance();
+        // // initScreen = preferences.getInt('initScreen');
+        // await preferences.setInt('initScreen', 1);
+        // await preferences.setInt('isUser', 1);
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => const HomePage()));
+      });
+    }).catchError((error) {
+      isLoading(false);
+      // utils.hideLoading();
+      // print(error);
+      utils.flushBarErrorMessage(error.message.toString(), context);
+    });
+  }
 
-//                                       // });
-//                                     },
-//                                     color: AppColors.primaryColor,
-//                                     icon: Icons.arrow_forward),
-//                           ),
-//                         ],
-//                       ),
-//                     ),
-//                   ),
-//                 ),
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _phoneController.dispose();
+    // _cityController.dispose();
+    _workshopController.dispose();
+    _emailController.dispose();
+    _addressController.dispose();
+    _passwordController.dispose();
+    _confirmpasswordController.dispose();
+    _CNICController.dispose();
+
+    nameFocusNode.dispose();
+    // addressFocusNode.dispose();
+    nameFocusNode.dispose();
+    phoneFocusNode.dispose();
+    emailFocusNode.dispose();
+    workshopFocusNode.dispose();
+    passwordFocusNode.dispose();
+    confirmFocusNode.dispose();
+    addrFocusNode.dispose();
+    CNICFocusNode.dispose();
+    // cityFocusNode.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    utils.checkConnectivity(context);
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
+      child: SafeArea(
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          appBar: MyAppBar(
+              text: "Login",
+              onSignUpOrLoginPressed: () {},
+              onBackButtonPressed: () {
+                
+              }),
+          body: Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 24, top: 16),
+                child: Column(
+                  // mainAxisSize: MainAxisSize.min,
+                  // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // SizedBox(
+                    //   height: 16.h,
+                    // ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text.rich(TextSpan(
+                            text: 'Sign-Up',
+                            style: CustomTextStyle.font_30,
+                            children: <InlineSpan>[
+                              TextSpan(
+                                text: '\nAs a Seller',
+                                style: CustomTextStyle.font_20,
+                              )
+                            ])),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 40.0),
+                          child: uploadProfile(_profileImage),
+                        ),
+                      ],
+                    ),
+                    // Text("Sign-Up", style: CustomTextStyle.font_30),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   children: [
+                    //     Text("As a User", style: CustomTextStyle.font_20),
+                    //     Padding(
+                    //       padding: const EdgeInsets.only(right: 30.0),
+                    //       child: uploadProfile(_profileImage),
+                    //     ),
+                    //   ],
+                    // ),
+                    // SizedBox(
+                    //   height: 8.h,
+                    // ),
+
+                    SizedBox(
+                      height: 20.16.h,
+                    ),
+                    InputField(
+                      hint_text: "CNIC",
+                      currentNode: CNICFocusNode,
+                      focusNode: CNICFocusNode,
+                      nextNode: workshopFocusNode,
+                      controller: _CNICController,
+                      obsecureText: false,
+                      keyboardType: TextInputType.number,
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return "Enter CNIC";
+                        } else if (value.length != 13) {
+                          return "Invalid CNIC";
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+                    k,
+                    InputField(
+                      hint_text: "WorkShop Name",
+                      currentNode: workshopFocusNode,
+                      focusNode: workshopFocusNode,
+                      nextNode: nameFocusNode,
+                      controller: _workshopController,
+                      obsecureText: false,
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return "Enter WorkShop Name";
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+
+                    k,
+
+                    InputField(
+                      hint_text: "Full name",
+                      currentNode: nameFocusNode,
+                      focusNode: nameFocusNode,
+                      nextNode: emailFocusNode,
+                      controller: _nameController,
+                      obsecureText: false,
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return "Enter name";
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+                    k,
+                    InputField(
+                      hint_text: "Email address",
+                      currentNode: emailFocusNode,
+                      focusNode: emailFocusNode,
+                      nextNode: phoneFocusNode,
+                      controller: _emailController,
+                      obsecureText: false,
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return "Enter email address";
+                        } else if (!EmailValidator.validate(value)) {
+                          return "Invalid email address";
+                        }
+                      },
+                    ),
+                    k,
+                    InputField(
+                      hint_text: "Phone",
+                      currentNode: phoneFocusNode,
+                      focusNode: phoneFocusNode,
+                      nextNode: passwordFocusNode,
+                      controller: _phoneController,
+                      keyboardType: TextInputType.number,
+                      obsecureText: false,
+                      preicon: SizedBox(
+                        width: 60.w,
+                        height: 60.h,
+                        child: Row(
+                          children: [
+                            Text(
+                              "  +92",
+                              style: TextStyle(fontSize: 17.sp),
+                            ),
+                            VerticalDivider(
+                              thickness: 2.r,
+                              color: Colors.grey.shade700,
+                            ),
+                          ],
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return "Enter phone number";
+                        } else if (value.length != 10) {
+                          return "Invalid phone number";
+                        }
+                      },
+                    ),
+                    k,
+
+                    InputField(
+                      hint_text: "Set password",
+                      currentNode: passwordFocusNode,
+                      focusNode: passwordFocusNode,
+                      nextNode: confirmFocusNode,
+                      keyboardType: TextInputType.text,
+                      controller: _passwordController,
+                      icon: obsecureText!
+                          ? Icons.visibility_off
+                          : Icons.remove_red_eye,
+                      obsecureText: obsecureText,
+                      onIconPress: () {
+                        setState(() {
+                          obsecureText = !obsecureText!;
+                        });
+                      },
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return "Enter password";
+                        } else if (value.length < 6) {
+                          return "password must be of 6 characters";
+                        }
+                      },
+                    ),
+                    k,
+                    InputField(
+                      hint_text: "Confirm password",
+                      currentNode: confirmFocusNode,
+                      focusNode: confirmFocusNode,
+                      nextNode: confirmFocusNode,
+                      controller: _confirmpasswordController,
+                      obsecureText: _obsecureText,
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return "Enter password to confirm";
+                        } else if (value != _passwordController.text) {
+                          return "Password not match";
+                        }
+                      },
+                    ),
+                    // k,
+                    SizedBox(
+                      height: 8.h,
+                    ),
+
+                    genderSelection(),
+                    SizedBox(
+                      height: 8.h,
+                    ),
+
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20.0),
+                      child: isLoadingNow
+                          ? const CircleProgress()
+                          : AuthButton(
+                              text: "Signup",
+                              func: () {
+                                FocusManager.instance.primaryFocus?.unfocus();
+                                // _signup();
+                                _submitForm();
+                              },
+                              color: Styling.primaryColor),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void onIconPress() {
+    setState(() {
+      _obsecureText = !_obsecureText;
+    });
+  }
+
+  Widget uploadProfile(Uint8List? image) {
+    return image == null
+        ? Stack(
+            children: [
+              // Image.network(
+              //   "https://m.media-amazon.com/images/I/11uufjN3lYL._SX90_SY90_.png",
+              //   height: 60,
+              // ),
+              Image.asset(
+                "assets/avatar.png",
+                height: 60.h,
+                width: 60.w,
+              ),
+              Positioned(
+                left: 25.w,
+                bottom: 0.h,
+                child: IconButton(
+                  onPressed: () async {
+                    Uint8List? _image = await utils.pickImage();
+                    if (_image != null) {
+                      setState(() {
+                        _profileImage = _image;
+                      });
+                    } else {
+                      debugPrint("Image not loaded");
+                    }
+                  },
+                  icon: Container(
+                    width: 25.w,
+                    height: 25.h,
+                    decoration: BoxDecoration(
+                      color: Styling.primaryColor,
+                      borderRadius: BorderRadius.circular(50.r),
+                    ),
+                    child: Container(
+                      width: 20.w,
+                      height: 20.h,
+                      child: Image.asset('assets/gallery.png'),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          )
+        : Stack(
+            children: [
+              CircleAvatar(
+                minRadius: 40.r,
+                maxRadius: 40.r,
+                child: ClipOval(
+                    child: Image.memory(
+                  image,
+                  height: 145.h,
+                  width: 145.w,
+                  fit: BoxFit.cover,
+                )),
+                // child: ,
+              ),
+              Positioned(
+                left: 45.w,
+                bottom: 0.h,
+                child: IconButton(
+                  onPressed: () async {
+                    Uint8List? _image = await utils.pickImage();
+                    if (_image != null) {
+                      setState(() {
+                        image = _image;
+                      });
+                    }
+                    debugPrint("Image not loaded");
+                  },
+                  icon: Container(
+                    width: 30.w,
+                    height: 30.h,
+                    decoration: BoxDecoration(
+                      color: Styling.primaryColor,
+                      borderRadius: BorderRadius.circular(50.r),
+                    ),
+                    child: SizedBox(
+                      width: 20.w,
+                      height: 20.h,
+                      child: Image.asset('assets/gallery.png'),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+  } // for 1st image
+
+  Widget genderSelection() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Row(
+          children: [
+            Radio<String>(
+              focusColor: Styling.primaryColor,
+              activeColor: Styling.primaryColor,
+              value: 'Mechanic',
+              groupValue: service,
+              onChanged: (value) {
+                setState(() {
+                  service = value!;
+                });
+              },
+            ),
+            const Text('Mechanic'),
+          ],
+        ),
+        Row(
+          children: [
+            Radio<String>(
+              focusColor: Styling.primaryColor,
+              activeColor: Styling.primaryColor,
+              value: 'Fuel',
+              groupValue: service,
+              onChanged: (value) {
+                setState(() {
+                  service = value!;
+                });
+              },
+            ),
+            const Text('Fuel'),
+          ],
+        ),
+        const SizedBox(width: 20),
+        Row(
+          children: [
+            Radio<String>(
+              focusColor: Styling.primaryColor,
+              // fillColor: Styling.primaryColor,
+              activeColor: Styling.primaryColor,
+              value: 'Puncture',
+              groupValue: service,
+              onChanged: (value) {
+                setState(() {
+                  service = value!;
+                });
+              },
+            ),
+            const Text('Puncture'),
+          ],
+        ),
+      ],
+    );
+  }
+}

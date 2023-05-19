@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AuthButton extends StatelessWidget {
- final String? text;
- final Function()? func;
- final Color? color;
+  final String? text;
+  final Function()? func;
+  final Color? color;
   const AuthButton({
     required this.text,
     required this.func,
@@ -17,8 +17,8 @@ class AuthButton extends StatelessWidget {
     return InkWell(
       onTap: func,
       child: Container(
-        width: 321.w,
-        height: 67.h,
+        width: 277.w,
+        height: 50.h,
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(14.r),

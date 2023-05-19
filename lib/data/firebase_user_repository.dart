@@ -5,6 +5,7 @@ import 'package:e_mech/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
+import '../domain/entities/seller_model.dart';
 import '../domain/entities/user_model.dart';
 import '../domain/repositories/users_repository.dart';
 import 'models/user_json.dart';
@@ -14,6 +15,8 @@ class FirebaseUserRepository implements UsersRepository {
   static final FirebaseFirestore firestore = FirebaseFirestore.instance;
   static final CollectionReference _userCollection =
       firestore.collection('users');
+      static final CollectionReference _sellerCollection =
+      firestore.collection('sellers');
 final Reference _storageReference = FirebaseStorage.instance.ref();
   
   
@@ -39,7 +42,7 @@ final Reference _storageReference = FirebaseStorage.instance.ref();
   }
 
   @override
-  Future<User?> signUpUser(String email, String password,) async {
+  Future<User?> signUpUser(String email, String password,context) async {
     try {
       UserCredential userCredential =
           await _auth.createUserWithEmailAndPassword(
@@ -48,8 +51,8 @@ final Reference _storageReference = FirebaseStorage.instance.ref();
       );
       return userCredential.user;
     } on FirebaseAuthException catch (error) {
-     print(error);
-      // utils.flushBarErrorMessage(error.message.toString(), context);
+    //  print(error);
+      utils.flushBarErrorMessage(error.message.toString(), context);
     }
     return null;
   }
@@ -57,6 +60,12 @@ final Reference _storageReference = FirebaseStorage.instance.ref();
   @override
   Future<void> saveUserDataToFirestore(UserModel userModel) async {
     await _userCollection.doc(userModel.uid).set(userModel.toMap(userModel));
+  }
+
+  
+  @override
+  Future<void> saveSellerDataToFirestore(SellerModel sellerModel) async {
+    await _sellerCollection.doc(sellerModel.uid).set(sellerModel.toMap(sellerModel));
   }
 @override
   Future<String> uploadProfileImage(

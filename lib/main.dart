@@ -1,6 +1,9 @@
+import 'package:e_mech/domain/entities/seller_model.dart';
 import 'package:e_mech/presentation/controllers/user_provider.dart';
+import 'package:e_mech/presentation/seller_screens/selller_signup.dart';
 import 'package:e_mech/presentation/splash_screen.dart';
 import 'package:e_mech/presentation/user_or_seller.dart';
+import 'package:e_mech/presentation/user_screens/user_signup.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -37,13 +40,19 @@ class MyApp extends StatelessWidget {
     return ScreenUtilInit(
       designSize: const Size(360, 690),
       builder: (context, child) {
-        return MaterialApp(
-          title: 'Flutter Demo',
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            primarySwatch: Colors.blue,
+        return MultiProvider(
+          providers: [
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+
+          ],
+          child: MaterialApp(
+            title: 'Flutter Demo',
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData(
+              primarySwatch: Colors.blue,
+            ),
+            home: const SellerSignUp(),
           ),
-          home: const UserSellerScreen(),
         );
       },
       // child:
