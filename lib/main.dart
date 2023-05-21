@@ -1,9 +1,13 @@
 import 'package:e_mech/domain/entities/seller_model.dart';
+import 'package:e_mech/presentation/auth_screens/seller_auth/seller_login.dart';
+import 'package:e_mech/presentation/auth_screens/user_auth/user_login.dart';
+import 'package:e_mech/presentation/controllers/seller_provider.dart';
 import 'package:e_mech/presentation/controllers/user_provider.dart';
 import 'package:e_mech/presentation/seller_screens/selller_signup.dart';
 import 'package:e_mech/presentation/splash_screen.dart';
 import 'package:e_mech/presentation/user_or_seller.dart';
-import 'package:e_mech/presentation/user_screens/user_signup.dart';
+import 'package:e_mech/presentation/auth_screens/user_auth/user_signup.dart';
+import 'package:e_mech/presentation/user_screens/home_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -42,8 +46,8 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MultiProvider(
           providers: [
-        ChangeNotifierProvider(create: (_) => UserProvider()),
-
+            ChangeNotifierProvider(create: (_) => UserProvider()),
+            ChangeNotifierProvider(create: (_) => SellerProvider()),
           ],
           child: MaterialApp(
             title: 'Flutter Demo',
@@ -51,7 +55,7 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(
               primarySwatch: Colors.blue,
             ),
-            home: const SellerSignUp(),
+            home:  HomePage(),
           ),
         );
       },

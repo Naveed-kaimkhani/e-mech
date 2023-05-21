@@ -1,4 +1,4 @@
-import 'package:e_mech/presentation/user_screens/user_signup.dart';
+import 'package:e_mech/presentation/auth_screens/user_auth/user_signup.dart';
 import 'package:e_mech/presentation/seller_screens/selller_signup.dart';
 import 'package:e_mech/presentation/widgets/emergency_service_provider_text.dart';
 import 'package:e_mech/presentation/widgets/user_seller_component.dart';

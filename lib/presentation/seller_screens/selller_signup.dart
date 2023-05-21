@@ -134,7 +134,7 @@ class _SellerSignUpState extends State<SellerSignUp> {
         // await preferences.setInt('initScreen', 1);
         // await preferences.setInt('isUser', 1);
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => const HomePage()));
+            context, MaterialPageRoute(builder: (context) =>  HomePage()));
       });
     }).catchError((error) {
       isLoading(false);
