@@ -39,7 +39,7 @@ class _HomePageState extends State<HomePage> {
     return SafeArea(
       child: Scaffold(
           floatingActionButton: FloatingActionButton(
-              child: Icon(Icons.location_searching_outlined),
+              child:const Icon(Icons.location_searching_outlined),
               onPressed: () async {
                 GoogleMapController controller = await _controller.future;
                 controller.animateCamera(
