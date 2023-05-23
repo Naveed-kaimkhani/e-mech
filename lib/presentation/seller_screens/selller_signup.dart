@@ -14,6 +14,8 @@ import '../../domain/entities/seller_model.dart';
 import '../../style/custom_text_style.dart';
 import '../../style/styling.dart';
 import '../../utils/storage_services.dart';
+import '../auth_screens/seller_auth/seller_login.dart';
+import '../controllers/seller_provider.dart';
 import '../controllers/user_provider.dart';
 import '../user_screens/user_home_page.dart';
 import '../widgets/auth_button.dart';
@@ -40,33 +42,22 @@ class _SellerSignUpState extends State<SellerSignUp> {
   Uint8List? _profileImage;
 
   FocusNode nameFocusNode = FocusNode();
-  FocusNode addrFocusNode = FocusNode();
-  // FocusNode cityFocusNode = FocusNode();
   FocusNode phoneFocusNode = FocusNode();
   FocusNode emailFocusNode = FocusNode();
   FocusNode confirmFocusNode = FocusNode();
   FocusNode passwordFocusNode = FocusNode();
   FocusNode workshopFocusNode = FocusNode();
-  FocusNode CNICFocusNode = FocusNode();
+  FocusNode cNICFocusNode = FocusNode();
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _CNICController = TextEditingController();
   final TextEditingController _workshopController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  // final TextEditingController _cityController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmpasswordController =
       TextEditingController();
   final TextEditingController _addressController = TextEditingController();
-  // final TextEditingController _workshopController = TextEditingController();
-
-  // bool isLoadingNow = false;
-  // void isLoading(bool value) {
-  //   setState(() {
-  //     isLoadingNow = value;
-  //   });
-  // }
   Widget k = SizedBox(
     height: 16.h,
   );
@@ -106,7 +97,7 @@ class _SellerSignUpState extends State<SellerSignUp> {
           address: _addressController.text,
           // city: _cityController.text,
           workshopName: _workshopController.text,
-          
+
           service: service,
           profileImage: await _firebaseUserRepository.uploadProfileImage(
               imageFile: _profileImage!, uid: user.uid),
@@ -127,7 +118,7 @@ class _SellerSignUpState extends State<SellerSignUp> {
         .then((value) async {
       await StorageService.saveSeller(sellerModel).then((value) async {
         //await  StorageService.readUser();
-        Provider.of<UserProvider>(context, listen: false).getUserLocally();
+        Provider.of<SellerProvider>(context, listen: false).getSellerLocally();
         isLoading(false);
         // utils.hideLoading();
         // SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -135,7 +126,7 @@ class _SellerSignUpState extends State<SellerSignUp> {
         // await preferences.setInt('initScreen', 1);
         // await preferences.setInt('isUser', 1);
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) =>  SellerHomepage()));
+            context, MaterialPageRoute(builder: (context) => SellerHomepage()));
       });
     }).catchError((error) {
       isLoading(false);
@@ -158,17 +149,15 @@ class _SellerSignUpState extends State<SellerSignUp> {
     _CNICController.dispose();
 
     nameFocusNode.dispose();
-    // addressFocusNode.dispose();
-    nameFocusNode.dispose();
     phoneFocusNode.dispose();
     emailFocusNode.dispose();
     workshopFocusNode.dispose();
     passwordFocusNode.dispose();
     confirmFocusNode.dispose();
-    addrFocusNode.dispose();
-    CNICFocusNode.dispose();
-    // cityFocusNode.dispose();
+    cNICFocusNode.dispose();
     super.dispose();
+
+  
   }
 
   @override
@@ -189,9 +178,7 @@ class _SellerSignUpState extends State<SellerSignUp> {
           appBar: MyAppBar(
               text: "Login",
               onSignUpOrLoginPressed: () {},
-              onBackButtonPressed: () {
-                
-              }),
+              onBackButtonPressed: () {}),
           body: Form(
             key: _formKey,
             child: SingleChildScrollView(
@@ -223,28 +210,13 @@ class _SellerSignUpState extends State<SellerSignUp> {
                         ),
                       ],
                     ),
-                    // Text("Sign-Up", style: CustomTextStyle.font_30),
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //   children: [
-                    //     Text("As a User", style: CustomTextStyle.font_20),
-                    //     Padding(
-                    //       padding: const EdgeInsets.only(right: 30.0),
-                    //       child: uploadProfile(_profileImage),
-                    //     ),
-                    //   ],
-                    // ),
-                    // SizedBox(
-                    //   height: 8.h,
-                    // ),
-
                     SizedBox(
                       height: 20.16.h,
                     ),
                     InputField(
                       hint_text: "CNIC",
-                      currentNode: CNICFocusNode,
-                      focusNode: CNICFocusNode,
+                      currentNode: cNICFocusNode,
+                      focusNode: cNICFocusNode,
                       nextNode: workshopFocusNode,
                       controller: _CNICController,
                       obsecureText: false,
@@ -403,7 +375,7 @@ class _SellerSignUpState extends State<SellerSignUp> {
                               text: "Signup",
                               func: () {
                                 FocusManager.instance.primaryFocus?.unfocus();
-                                // _signup();
+
                                 _submitForm();
                               },
                               color: Styling.primaryColor),

@@ -178,4 +178,20 @@ Future<void> addlatLongToUserDocument(double lat, double long, String address,co
     utils.flushBarErrorMessage(e.toString(),context);
   }
 }
+
+
+Future<void> addlatLongToSellerDocument(double lat, double long, String address,context) async {
+  try {
+    final userRef = FirebaseFirestore.instance.collection('sellers').doc(utils.currentUserUid);
+
+    await userRef.update({
+      'lat':lat,
+      'long':long,
+      'address':address,
+    });
+    utils.toastMessage("Location Updated");
+  } catch (e) {
+    utils.flushBarErrorMessage(e.toString(),context);
+  }
+}
 }
