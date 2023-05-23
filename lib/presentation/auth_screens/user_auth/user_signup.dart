@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:e_mech/presentation/user_screens/get_user_current_location.dart';
 import 'package:e_mech/presentation/user_screens/home_page.dart';
 import 'package:e_mech/presentation/widgets/circle_progress.dart';
 import 'package:e_mech/presentation/widgets/inputfields.dart';
@@ -126,7 +127,7 @@ class _UserSignupState extends State<UserSignup> {
         // await preferences.setInt('initScreen', 1);
         // await preferences.setInt('isUser', 1);
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => HomePage()));
+            context, MaterialPageRoute(builder: (context) =>GetUserCurrentLocation()));
       });
     }).catchError((error) {
       isLoading(false);

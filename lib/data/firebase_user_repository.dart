@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -5,6 +6,7 @@ import 'package:e_mech/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
+import '../domain/entities/request_model.dart';
 import '../domain/entities/seller_model.dart';
 import '../domain/entities/user_model.dart';
 import '../domain/repositories/users_repository.dart';
@@ -129,5 +131,51 @@ class FirebaseUserRepository implements UsersRepository {
     // }
   }
 
+  Future<void> accpetRequest(
+      RequestModel requestModel) async {
+    await _userCollection
+        .doc(requestModel.senderUid)
+        .collection('AcceptedRequest')
+        .add(requestModel.toMap(requestModel));
+    await declineRequest(requestModel);
+  }
 
+  Future<void> declineRequest(
+      RequestModel requestModel) async {
+  //   FirebaseFirestore.instance
+  //       .collection("users")
+  //       .doc(requestModel.receiverUid)
+  //       .collection('connectionRequest')
+  //       .where("goalId", isEqualTo: requestModel.goalId)
+  //       .get()
+  //       .then((value) {
+  //     value.docs.forEach((element) {
+  //       FirebaseFirestore.instance
+  //           .collection("users")
+  //           .doc(requestModel.receiverUid)
+  //           .collection('connectionRequest')
+  //           .doc(element.id)
+  //           .delete()
+  //           .then((value) {
+  //         // print("Success!");
+  //         // utils.toastMessage("Request Declined");
+  //       });
+  //     });
+  //   });
+  }
+
+Future<void> addlatLongToUserDocument(double lat, double long, String address,context) async {
+  try {
+    final userRef = FirebaseFirestore.instance.collection('users').doc(utils.currentUserUid);
+
+    await userRef.update({
+      'lat':lat,
+      'long':long,
+      'address':address,
+    });
+    utils.toastMessage("Location Updated");
+  } catch (e) {
+    utils.flushBarErrorMessage(e.toString(),context);
+  }
+}
 }
