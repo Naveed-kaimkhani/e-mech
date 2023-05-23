@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:e_mech/presentation/seller_screens/seller_homepage.dart';
 import 'package:e_mech/presentation/widgets/my_app_bar.dart';
 import 'package:e_mech/utils/utils.dart';
 import 'package:email_validator/email_validator.dart';
@@ -14,7 +15,7 @@ import '../../style/custom_text_style.dart';
 import '../../style/styling.dart';
 import '../../utils/storage_services.dart';
 import '../controllers/user_provider.dart';
-import '../user_screens/home_page.dart';
+import '../user_screens/user_home_page.dart';
 import '../widgets/auth_button.dart';
 import '../widgets/circle_progress.dart';
 import '../widgets/inputfields.dart';
@@ -134,7 +135,7 @@ class _SellerSignUpState extends State<SellerSignUp> {
         // await preferences.setInt('initScreen', 1);
         // await preferences.setInt('isUser', 1);
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) =>  HomePage()));
+            context, MaterialPageRoute(builder: (context) =>  SellerHomepage()));
       });
     }).catchError((error) {
       isLoading(false);

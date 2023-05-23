@@ -6,6 +6,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -152,4 +154,70 @@ class utils {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     return preferences;
   }
+
+ static String getAddressFromPlacemark(Placemark placemark) {
+  String address = '';
+
+  // Extract relevant address components
+  String name = placemark.name ?? '';
+  String subLocality = placemark.subLocality ?? '';
+  String locality = placemark.locality ?? '';
+  String administrativeArea = placemark.administrativeArea ?? '';
+  String postalCode = placemark.postalCode ?? '';
+  String country = placemark.country ?? '';
+
+  // Build the address string
+  if (name.isNotEmpty) {
+    address += '$name, ';
+  }
+
+  if (subLocality.isNotEmpty) {
+    address += '$subLocality, ';
+  }
+
+  if (locality.isNotEmpty) {
+    address += '$locality, ';
+  }
+
+  if (administrativeArea.isNotEmpty) {
+    address += '$administrativeArea, ';
+  }
+
+  if (postalCode.isNotEmpty) {
+    address += '$postalCode, ';
+  }
+
+  if (country.isNotEmpty) {
+    address += country;
+  }
+
+  return address;
+}
+
+
+static  Future<String> getAddressFromLatLng(double latitude, double longitude,context) async {
+    try {
+      List<Placemark> placemarks =
+          await placemarkFromCoordinates(latitude, longitude);
+if (placemarks.isNotEmpty) {
+  Placemark placemark = placemarks.first;
+  String address =utils.getAddressFromPlacemark(placemark);
+  return address;
+} else {
+  utils.flushBarErrorMessage("No address found for the given coordinates.",context);
+}
+    } catch (e) {
+      utils.flushBarErrorMessage(e.toString(), context);
+    }
+    return '';
+  }
+  
+
+//  static void animateCamera( GoogleMapController _controller , CameraPosition _cameraPosition  )async{
+    
+//      GoogleMapController controller = await _controller.future;
+//             controller
+//                 .animateCamera(CameraUpdate.newCameraPosition(_cameraPosition));
+  
+//   }     
 }

@@ -1,4 +1,5 @@
-import 'package:e_mech/presentation/user_screens/home_page.dart';
+import 'package:e_mech/presentation/seller_screens/seller_homepage.dart';
+import 'package:e_mech/presentation/user_screens/user_home_page.dart';
 import 'package:e_mech/presentation/widgets/circle_progress.dart';
 import 'package:e_mech/presentation/widgets/inputfields.dart';
 import 'package:e_mech/presentation/widgets/my_app_bar.dart';
@@ -93,7 +94,7 @@ class _SellerLoginState extends State<SellerLogin> {
           await preferences.setInt('isSeller', 1);
           isLoading(false);
           Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) =>  HomePage()));
+              MaterialPageRoute(builder: (context) =>  SellerHomepage()));
         }).catchError((error) {
           isLoading(false);
           utils.flushBarErrorMessage(error.message.toString(), context);
