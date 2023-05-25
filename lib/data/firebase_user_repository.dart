@@ -233,4 +233,24 @@ Future<List<SellerModel>> getSellersData() async {
     }
   }
 
+static Future<List<RequestModel>> getRequests(context) async {
+  try {
+    final List<RequestModel> models = [];
+    final QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
+        .collection("sellers")
+        .doc(utils.currentUserUid)
+        .collection('Request')
+        .get();
+
+    models.addAll(snapshot.docs.map((docsSnap) => RequestModel.fromMap(docsSnap.data() as dynamic)));
+
+    return models;
+  } catch (e) {
+    // Handle any potential errors here
+    utils.flushBarErrorMessage('Error fetching requests: $e',context);
+    // print('Error fetching connection requests: $e');
+    return [];
+  }
+}
+
 }

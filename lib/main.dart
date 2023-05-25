@@ -5,6 +5,7 @@ import 'package:e_mech/presentation/controllers/all_sellerdata_provider.dart';
 import 'package:e_mech/presentation/controllers/seller_provider.dart';
 import 'package:e_mech/presentation/controllers/user_provider.dart';
 import 'package:e_mech/presentation/seller_screens/request_screen.dart';
+import 'package:e_mech/presentation/seller_screens/seller_homepage.dart';
 import 'package:e_mech/presentation/seller_screens/selller_signup.dart';
 import 'package:e_mech/presentation/splash_screen.dart';
 import 'package:e_mech/presentation/user_or_seller.dart';
@@ -61,7 +62,7 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(
               primarySwatch: Colors.blue,
             ),
-            home:UserLogin(),
+            home:SellerHomepage(),
           ),
         );
       },

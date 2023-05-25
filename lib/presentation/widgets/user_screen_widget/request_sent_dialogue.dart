@@ -23,7 +23,6 @@ class _RequestSentDialogueState extends State<RequestSentDialogue> {
           mainAxisSize: MainAxisSize.min,
           children: [
             DoneIcon(),
-           
             Text(
               "Request Sent",
               style: CustomTextStyle.font_25,
@@ -45,7 +44,7 @@ class _RequestSentDialogueState extends State<RequestSentDialogue> {
         ),
       ),
     );
-    ;
+    
   }
 }
 

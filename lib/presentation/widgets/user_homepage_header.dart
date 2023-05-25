@@ -4,14 +4,18 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../style/custom_text_style.dart';
 
 class UserHomePageHeader extends StatelessWidget {
-  const UserHomePageHeader({
+  String name;
+  String text;
+  UserHomePageHeader({
+    required this.name,
+    required this.text,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 90.h,
+        height: 80.h,
         width: 355.w,
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.only(
@@ -35,11 +39,11 @@ class UserHomePageHeader extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Hi Faisal',
+                  'Hi $name',
                   style: CustomTextStyle.font_25,
                 ),
                 Text(
-                  'Find Mechanic Now',
+                  text,
                   style: CustomTextStyle.font_20,
                 ),
               ],

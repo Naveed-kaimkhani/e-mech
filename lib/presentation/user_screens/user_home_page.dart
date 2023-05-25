@@ -9,8 +9,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 
 import '../../domain/entities/seller_model.dart';
+import '../../domain/entities/user_model.dart';
+import '../controllers/user_provider.dart';
 import '../widgets/general_bttn_for_userhmpg.dart';
 import '../widgets/user_homepage_header.dart';
 
@@ -26,7 +29,7 @@ class _UserHomePageState extends State<UserHomePage> {
       FirebaseUserRepository();
   final Completer<GoogleMapController> _controller = Completer();
   List<SellerModel>? _sellerModel;
-  bool isLoadingNow=false;
+  bool isLoadingNow = false;
 
   static CameraPosition _cameraPosition = CameraPosition(
     target: LatLng(24.965508, 69.293713),
@@ -43,6 +46,7 @@ class _UserHomePageState extends State<UserHomePage> {
       isLoadingNow = value;
     });
   }
+
   Future<Position?> getUserCurrentLocation() async {
     try {
       await Geolocator.requestPermission();
@@ -116,6 +120,8 @@ class _UserHomePageState extends State<UserHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    UserModel? user = Provider.of<UserProvider>(context, listen: false).user;
+
     return SafeArea(
       child: Scaffold(
         floatingActionButton: Column(
@@ -126,7 +132,9 @@ class _UserHomePageState extends State<UserHomePage> {
             locationButton(),
             k,
             InkWell(
-              child: GeneralBttnForUserHmPg(text: "Hire Now",),
+              child: GeneralBttnForUserHmPg(
+                text: "Hire Now",
+              ),
               onTap: () {
                 showDialog(
                   context: context,
@@ -153,7 +161,10 @@ class _UserHomePageState extends State<UserHomePage> {
                 _controller.complete(controller);
               },
             ),
-            UserHomePageHeader(),
+            UserHomePageHeader(
+              name: user!.name!,
+              text: "Find Mechanic Now",
+            ),
           ],
         ),
       ),

@@ -20,19 +20,20 @@ class utils {
   static toastMessage(String message) {
     Fluttertoast.showToast(msg: message);
   }
-static String getCurrentDate(){
-var now = DateTime.now();
-var formatterDate = DateFormat('dd/MM/yy');
-String actualDate = formatterDate.format(now);
-  return actualDate;
-}
 
-static String getCurrentTime(){
-var now = DateTime.now();
-var formatterTime = DateFormat('kk:mm');
-String actualTime = formatterTime.format(now);
-  return actualTime;
-}
+  static String getCurrentDate() {
+    var now = DateTime.now();
+    var formatterDate = DateFormat('dd/MM/yy');
+    String actualDate = formatterDate.format(now);
+    return actualDate;
+  }
+
+  static String getCurrentTime() {
+    var now = DateTime.now();
+    var formatterTime = DateFormat('kk:mm');
+    String actualTime = formatterTime.format(now);
+    return actualTime;
+  }
 
   static void flushBarErrorMessage(String message, BuildContext context) {
     showFlushbar(
@@ -42,7 +43,7 @@ String actualTime = formatterTime.format(now);
         margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         padding: const EdgeInsets.all(15),
         message: message,
-        duration: const Duration(seconds: 4),
+        duration: const Duration(seconds: 5),
         borderRadius: BorderRadius.circular(8),
         flushbarPosition: FlushbarPosition.TOP,
         // backgroundColor: const Color.fromARGB(255, 90, 89, 89),
@@ -70,7 +71,9 @@ String actualTime = formatterTime.format(now);
       if (connected == false) {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => const Center(child: Text("NO internet"),),
+            builder: (context) => const Center(
+              child: Text("NO internet"),
+            ),
           ),
         );
         // return connected;
@@ -126,7 +129,6 @@ String actualTime = formatterTime.format(now);
             ),
           ),
         );
-       
       },
     );
   }
@@ -144,73 +146,74 @@ String actualTime = formatterTime.format(now);
     SharedPreferences preferences = await SharedPreferences.getInstance();
     return preferences;
   }
-   static String getRandomid() {
+
+  static String getRandomid() {
     return (100000 + Random().nextInt(10000)).toString();
   }
 
- static String getAddressFromPlacemark(Placemark placemark) {
-  String address = '';
+  static String getAddressFromPlacemark(Placemark placemark) {
+    String address = '';
 
-  // Extract relevant address components
-  String name = placemark.name ?? '';
-  String subLocality = placemark.subLocality ?? '';
-  String locality = placemark.locality ?? '';
-  String administrativeArea = placemark.administrativeArea ?? '';
-  String postalCode = placemark.postalCode ?? '';
-  String country = placemark.country ?? '';
+    // Extract relevant address components
+    String name = placemark.name ?? '';
+    String subLocality = placemark.subLocality ?? '';
+    String locality = placemark.locality ?? '';
+    String administrativeArea = placemark.administrativeArea ?? '';
+    String postalCode = placemark.postalCode ?? '';
+    String country = placemark.country ?? '';
 
-  // Build the address string
-  if (name.isNotEmpty) {
-    address += '$name, ';
+    // Build the address string
+    if (name.isNotEmpty) {
+      address += '$name, ';
+    }
+
+    if (subLocality.isNotEmpty) {
+      address += '$subLocality, ';
+    }
+
+    if (locality.isNotEmpty) {
+      address += '$locality, ';
+    }
+
+    if (administrativeArea.isNotEmpty) {
+      address += '$administrativeArea, ';
+    }
+
+    if (postalCode.isNotEmpty) {
+      address += '$postalCode, ';
+    }
+
+    if (country.isNotEmpty) {
+      address += country;
+    }
+
+    return address;
   }
 
-  if (subLocality.isNotEmpty) {
-    address += '$subLocality, ';
-  }
-
-  if (locality.isNotEmpty) {
-    address += '$locality, ';
-  }
-
-  if (administrativeArea.isNotEmpty) {
-    address += '$administrativeArea, ';
-  }
-
-  if (postalCode.isNotEmpty) {
-    address += '$postalCode, ';
-  }
-
-  if (country.isNotEmpty) {
-    address += country;
-  }
-
-  return address;
-}
-
-
-static  Future<String> getAddressFromLatLng(double latitude, double longitude,context) async {
+  static Future<String> getAddressFromLatLng(
+      double latitude, double longitude, context) async {
     try {
       List<Placemark> placemarks =
           await placemarkFromCoordinates(latitude, longitude);
-if (placemarks.isNotEmpty) {
-  Placemark placemark = placemarks.first;
-  String address =utils.getAddressFromPlacemark(placemark);
-  return address;
-} else {
-  utils.flushBarErrorMessage("No address found for the given coordinates.",context);
-}
+      if (placemarks.isNotEmpty) {
+        Placemark placemark = placemarks.first;
+        String address = utils.getAddressFromPlacemark(placemark);
+        return address;
+      } else {
+        utils.flushBarErrorMessage(
+            "No address found for the given coordinates.", context);
+      }
     } catch (e) {
       utils.flushBarErrorMessage(e.toString(), context);
     }
     return '';
   }
-  
 
 //  static void animateCamera( GoogleMapController _controller , CameraPosition _cameraPosition  )async{
-    
+
 //      GoogleMapController controller = await _controller.future;
 //             controller
 //                 .animateCamera(CameraUpdate.newCameraPosition(_cameraPosition));
-  
-//   }     
+
+//   }
 }

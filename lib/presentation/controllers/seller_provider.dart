@@ -12,7 +12,7 @@ class SellerProvider with ChangeNotifier {
 
   // SellerProvider({required this.usersRepository});
   SellerModel? _sellerDetails;
-  SellerModel? get users => _sellerDetails;
+  SellerModel? get seller => _sellerDetails;
 
 
   Future getSellerLocally() async {

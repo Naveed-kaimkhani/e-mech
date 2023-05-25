@@ -23,7 +23,7 @@ class _SendRequestDialogueState extends State<SendRequestDialogue> {
   String _selectedService = "Mechanic";
   String _selectedVehicleType = "Car";
   TextEditingController controller = TextEditingController();
-  bool isLoadingNow=false;
+  bool isLoadingNow = false;
   // Updated _services list with unique items
   final List<String> _services = ['Mechanic', 'Puncture', 'Petrol'];
   final List<String> _vehicleTypes = ['Car', 'Motorcycle', 'Truck'];
@@ -33,6 +33,7 @@ class _SendRequestDialogueState extends State<SendRequestDialogue> {
       isLoadingNow = value;
     });
   }
+
   @override
   Widget build(BuildContext context) {
     List<SellerModel>? allSellers =
@@ -145,17 +146,18 @@ class _SendRequestDialogueState extends State<SendRequestDialogue> {
               height: 12.h,
             ),
             InkWell(
-              child:isLoadingNow?const CircleProgress(): GeneralBttnForUserHmPg(
-                text: "Send Request",
-              ),
+              child: isLoadingNow
+                  ? const CircleProgress()
+                  : GeneralBttnForUserHmPg(
+                      text: "Send Request",
+                    ),
               onTap: () async {
-
                 //send request to nearest mechanic
                 List<SellerModel> neededSellers =
                     filterSellersByService(allSellers!, _selectedService);
                 await sendRequest(neededSellers, user!);
-                  Navigator.pop(context);
-                   openRequestSentDialogue(context);
+                Navigator.pop(context);
+                openRequestSentDialogue(context);
               },
             ),
             TextButton(
@@ -175,15 +177,15 @@ class _SendRequestDialogueState extends State<SendRequestDialogue> {
 
   Future<dynamic> openRequestSentDialogue(BuildContext context) {
     return showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return RequestSentDialogue();
-                },
-              );
+      context: context,
+      builder: (BuildContext context) {
+        return RequestSentDialogue();
+      },
+    );
   }
 
   filterSellersByService(List<SellerModel> sellers, String selectedService) {
-  isLoading(true);
+    isLoading(true);
     return sellers
         .where((seller) => seller.service!.contains(selectedService))
         .toList();
@@ -205,6 +207,6 @@ class _SendRequestDialogueState extends State<SendRequestDialogue> {
         senderProfileImage: user.profileImage);
 
     await FirebaseUserRepository.sentRequest(sellers, request, context);
-isLoading(false);
+    isLoading(false);
   }
 }
