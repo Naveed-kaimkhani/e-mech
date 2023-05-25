@@ -6,11 +6,14 @@ class SellerModel {
  String? phone;
   String? email;
  String? address;
-  // String? city;
+  double? lat;
+  double? long;
    String? workshopName;
 String? service;
 
   SellerModel({
+  this.lat,
+  this.long,
   required this.uid,
  required   this.profileImage,
    required this.name,
@@ -18,7 +21,6 @@ String? service;
   required  this.email,
   required this.CNIC,
   required this.address,
-  // required this.city,
   required this.workshopName,
   required this.service
 
@@ -30,6 +32,8 @@ String? service;
     data['uid'] = user.uid;
     data['profileImage'] = user.profileImage;
     data['name'] = user.name;
+    data['lat'] = user.lat;
+    data['long'] = user.long;
     data['phone'] = user.phone;
     data['email'] = user.email;
     data['CNIC'] = user.CNIC;
@@ -45,6 +49,8 @@ String? service;
     profileImage = mapData['profileImage'];
     name = mapData['name'];
     phone = mapData['phone'];
+     lat = mapData['lat'];
+    long = mapData['long'];
     email = mapData['email'];
     CNIC = mapData['CNIC'];
      service = mapData['service'];

@@ -164,9 +164,25 @@ class FirebaseUserRepository implements UsersRepository {
   //   });
   }
 
-Future<void> addlatLongToUserDocument(double lat, double long, String address,context) async {
+// Future<void> addlatLongToUserDocument(double lat, double long, String address,context) async {
+//   try {
+//     final userRef = FirebaseFirestore.instance.collection('users').doc(utils.currentUserUid);
+
+//     await userRef.update({
+//       'lat':lat,
+//       'long':long,
+//       'address':address,
+//     });
+//     utils.toastMessage("Location Updated");
+//   } catch (e) {
+//     utils.flushBarErrorMessage(e.toString(),context);
+//   }
+// }
+
+
+Future<void> addlatLongToFirebaseDocument(double lat, double long, String address,String documentName,context) async {
   try {
-    final userRef = FirebaseFirestore.instance.collection('users').doc(utils.currentUserUid);
+    final userRef = FirebaseFirestore.instance.collection(documentName).doc(utils.currentUserUid);
 
     await userRef.update({
       'lat':lat,
@@ -179,19 +195,23 @@ Future<void> addlatLongToUserDocument(double lat, double long, String address,co
   }
 }
 
+Future<List<SellerModel>> getSellersData() async {
+  final snapshot =
+      await FirebaseFirestore.instance.collection("sellers").get();
 
-Future<void> addlatLongToSellerDocument(double lat, double long, String address,context) async {
-  try {
-    final userRef = FirebaseFirestore.instance.collection('sellers').doc(utils.currentUserUid);
+  return snapshot.docs.map((doc) {
+    final data = doc.data();
+    return SellerModel.fromMap(data);
+  }).toList();
+}
 
-    await userRef.update({
-      'lat':lat,
-      'long':long,
-      'address':address,
-    });
-    utils.toastMessage("Location Updated");
-  } catch (e) {
-    utils.flushBarErrorMessage(e.toString(),context);
+static Future<void> sentRequest(List<SellerModel> sellers, RequestModel requestModel) async {
+  for (SellerModel seller in sellers) {
+    await _sellerCollection
+        .doc(seller.uid)
+        .collection('Request')
+        .add(requestModel.toMap(requestModel));
   }
 }
+
 }

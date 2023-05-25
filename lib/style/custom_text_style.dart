@@ -8,12 +8,22 @@ class CustomTextStyle {
     fontSize: 20.sp,
     fontWeight: FontWeight.w500,
   );
+  static final font_20_red = TextStyle(
+    color: Styling.primaryColor,
+    fontSize: 20.sp,
+    fontWeight: FontWeight.w700,
+  );
   static final font_15 = TextStyle(
     color: Styling.primaryColor,
     fontSize: 15.sp,
     fontWeight: FontWeight.w700,
   );
 
+  static final font_25 = TextStyle(
+    color: Styling.primaryColor,
+    fontSize: 25.sp,
+    fontWeight: FontWeight.w700,
+  );
   static final font_14_red = TextStyle(
     color: Styling.primaryColor,
     fontSize: 14.sp,

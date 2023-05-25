@@ -1,4 +1,6 @@
 import 'dart:typed_data';
+import 'package:e_mech/navigation_page.dart';
+import 'package:e_mech/presentation/controllers/all_sellerdata_provider.dart';
 import 'package:e_mech/presentation/user_screens/get_user_current_location.dart';
 import 'package:e_mech/presentation/user_screens/user_home_page.dart';
 import 'package:e_mech/presentation/widgets/circle_progress.dart';
@@ -49,19 +51,20 @@ class _UserLoginState extends State<UserLogin> {
   Widget k = SizedBox(
     height: 16.h,
   );
-  @override
-  void dispose() {
-    passwordFocusNode.dispose();
-    emailFocusNode.dispose();
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
-
+  
   void isLoading(bool value) {
     setState(() {
       isLoadingNow = value;
     });
+  }
+  
+  void _submitForm() {
+    if (_formKey.currentState!.validate()) {
+      // Form is valid, perform signup logic here
+      _login();
+      // Perform signup logic
+      // ...
+    }
   }
 
   void _login() {
@@ -86,13 +89,14 @@ class _UserLoginState extends State<UserLogin> {
       if (userModel != null) {
         StorageService.saveUser(userModel).then((value) async {
           Provider.of<UserProvider>(context, listen: false).getUserLocally();
+          Provider.of<AllSellerDataProvider>(context, listen: false).getSellersDataFromServer(context);
 
           SharedPreferences preferences = await SharedPreferences.getInstance();
           await preferences.setInt('initScreen', 1);
           await preferences.setInt('isUser', 1);
           isLoading(false);
           Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => UserHomePage()));
+              MaterialPageRoute(builder: (context) => NavigationPage()));
         }).catchError((error) {
           isLoading(false);
           utils.flushBarErrorMessage(error.message.toString(), context);
@@ -107,14 +111,15 @@ class _UserLoginState extends State<UserLogin> {
     });
   }
 
-  void _submitForm() {
-    if (_formKey.currentState!.validate()) {
-      // Form is valid, perform signup logic here
-      _login();
-      // Perform signup logic
-      // ...
-    }
+@override
+  void dispose() {
+    passwordFocusNode.dispose();
+    emailFocusNode.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
+
 
   @override
   Widget build(BuildContext context) {

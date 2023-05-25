@@ -34,6 +34,14 @@ class StorageService {
             json.decode(_sharedPreferences.getString('seller')!));
   }
 
+  // static Future<List<SellerModel?>> readSellersData() async {
+  //   _sharedPreferences = await SharedPreferences.getInstance();
+  //   return _sharedPreferences.getString('AllSellersData') == null
+  //       ? null
+  //       : SellerModel.fromMap(
+  //           json.decode(_sharedPreferences.getString('seller')!));
+  // }
+
   static Future<void> clear() async {
     _sharedPreferences = await SharedPreferences.getInstance();
     _sharedPreferences.clear();

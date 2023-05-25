@@ -32,8 +32,8 @@ loadLocation() {
       String adress = await utils.getAddressFromLatLng(
           value!.latitude, value.longitude, context);
 
-      await _firebaseUserRepository.addlatLongToSellerDocument(
-          value.latitude, value.longitude, adress, context);
+      await _firebaseUserRepository.addlatLongToFirebaseDocument(
+          value.latitude, value.longitude, adress,'sellers', context);
   });
 }
   // void addMarker(Position value, String markerId, String title) {

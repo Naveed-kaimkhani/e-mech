@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:typed_data';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:another_flushbar/flushbar_route.dart';
@@ -10,6 +11,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../presentation/widgets/circle_progress.dart';
@@ -18,8 +20,20 @@ class utils {
   static toastMessage(String message) {
     Fluttertoast.showToast(msg: message);
   }
+String getCurrentDate(){
+var now = DateTime.now();
+var formatterDate = DateFormat('dd/MM/yy');
+String actualDate = formatterDate.format(now);
+  return actualDate;
+}
 
-  
+String getCurrentTime(){
+var now = DateTime.now();
+var formatterTime = DateFormat('kk:mm');
+String actualTime = formatterTime.format(now);
+  return actualTime;
+}
+
   static void flushBarErrorMessage(String message, BuildContext context) {
     showFlushbar(
       context: context,
@@ -153,6 +167,9 @@ class utils {
   static Future<SharedPreferences> getPreferencesObject() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     return preferences;
+  }
+   static String getRandomid() {
+    return (100000 + Random().nextInt(10000)).toString();
   }
 
  static String getAddressFromPlacemark(Placemark placemark) {
