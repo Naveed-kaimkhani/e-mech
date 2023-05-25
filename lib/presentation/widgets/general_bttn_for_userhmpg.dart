@@ -4,9 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../style/styling.dart';
 
-class HireNowButton extends StatelessWidget {
+class GeneralBttnForUserHmPg extends StatelessWidget {
   String text;
-   HireNowButton({
+   GeneralBttnForUserHmPg({
     required this.text,
     super.key,
   });

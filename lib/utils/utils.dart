@@ -20,14 +20,14 @@ class utils {
   static toastMessage(String message) {
     Fluttertoast.showToast(msg: message);
   }
-String getCurrentDate(){
+static String getCurrentDate(){
 var now = DateTime.now();
 var formatterDate = DateFormat('dd/MM/yy');
 String actualDate = formatterDate.format(now);
   return actualDate;
 }
 
-String getCurrentTime(){
+static String getCurrentTime(){
 var now = DateTime.now();
 var formatterTime = DateFormat('kk:mm');
 String actualTime = formatterTime.format(now);
@@ -57,30 +57,6 @@ String actualTime = formatterTime.format(now);
       )..show(context),
     );
   }
-
-  // static void flushBarErrorMessage(String message, BuildContext context) {
-  //   showFlushbar(
-  //     context: context,
-  //     flushbar: Flushbar(
-  //       forwardAnimationCurve: Curves.decelerate,
-  //       margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-  //       padding: EdgeInsets.all(15),
-  //       message: message,
-  //       duration: const Duration(seconds: 4),
-  //       borderRadius: BorderRadius.circular(8),
-  //       flushbarPosition: FlushbarPosition.TOP,
-  //       // backgroundColor: const Color.fromARGB(255, 90, 89, 89),
-  //       backgroundColor: Colors.red,
-  //       reverseAnimationCurve: Curves.easeInOut,
-  //       positionOffset: 20,
-  //       icon: const Icon(
-  //         Icons.error,
-  //         size: 28,
-  //         color: Colors.white,
-  //       ),
-  //     )..show(context),
-  //   );
-  // }
 
   static void fieldFocusChange(
       BuildContext context, FocusNode current, FocusNode nextFocus) {

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:e_mech/data/firebase_user_repository.dart';
+import 'package:e_mech/presentation/widgets/user_screen_widget/request_sent_dialogue.dart';
 import 'package:e_mech/presentation/widgets/user_screen_widget/send_request_dialogue.dart';
 import 'package:e_mech/style/custom_text_style.dart';
 import 'package:e_mech/style/styling.dart';
@@ -10,7 +11,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../domain/entities/seller_model.dart';
-import '../widgets/hire_now_button.dart';
+import '../widgets/general_bttn_for_userhmpg.dart';
 import '../widgets/user_homepage_header.dart';
 
 class UserHomePage extends StatefulWidget {
@@ -25,6 +26,8 @@ class _UserHomePageState extends State<UserHomePage> {
       FirebaseUserRepository();
   final Completer<GoogleMapController> _controller = Completer();
   List<SellerModel>? _sellerModel;
+  bool isLoadingNow=false;
+
   static CameraPosition _cameraPosition = CameraPosition(
     target: LatLng(24.965508, 69.293713),
     zoom: 18,
@@ -35,6 +38,11 @@ class _UserHomePageState extends State<UserHomePage> {
   );
   List<Marker> _marker = [];
 
+  void isLoading(bool value) {
+    setState(() {
+      isLoadingNow = value;
+    });
+  }
   Future<Position?> getUserCurrentLocation() async {
     try {
       await Geolocator.requestPermission();
@@ -118,7 +126,7 @@ class _UserHomePageState extends State<UserHomePage> {
             locationButton(),
             k,
             InkWell(
-              child: HireNowButton(text: "Hire Now",),
+              child: GeneralBttnForUserHmPg(text: "Hire Now",),
               onTap: () {
                 showDialog(
                   context: context,

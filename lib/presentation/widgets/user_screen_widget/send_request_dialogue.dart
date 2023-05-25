@@ -1,15 +1,18 @@
 import 'package:e_mech/data/firebase_user_repository.dart';
 import 'package:e_mech/domain/entities/request_model.dart';
 import 'package:e_mech/domain/entities/seller_model.dart';
+import 'package:e_mech/domain/entities/user_model.dart';
 import 'package:e_mech/presentation/controllers/all_sellerdata_provider.dart';
+import 'package:e_mech/presentation/widgets/circle_progress.dart';
+import 'package:e_mech/presentation/widgets/user_screen_widget/request_sent_dialogue.dart';
 import 'package:e_mech/style/custom_text_style.dart';
 import 'package:e_mech/style/styling.dart';
 import 'package:e_mech/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-
-import '../hire_now_button.dart';
+import '../../controllers/user_provider.dart';
+import '../general_bttn_for_userhmpg.dart';
 
 class SendRequestDialogue extends StatefulWidget {
   @override
@@ -20,16 +23,21 @@ class _SendRequestDialogueState extends State<SendRequestDialogue> {
   String _selectedService = "Mechanic";
   String _selectedVehicleType = "Car";
   TextEditingController controller = TextEditingController();
- 
-
+  bool isLoadingNow=false;
   // Updated _services list with unique items
   final List<String> _services = ['Mechanic', 'Puncture', 'Petrol'];
   final List<String> _vehicleTypes = ['Car', 'Motorcycle', 'Truck'];
 
+  void isLoading(bool value) {
+    setState(() {
+      isLoadingNow = value;
+    });
+  }
   @override
   Widget build(BuildContext context) {
-        List<SellerModel>? allSellers =
+    List<SellerModel>? allSellers =
         Provider.of<AllSellerDataProvider>(context, listen: false).sellers;
+    UserModel? user = Provider.of<UserProvider>(context, listen: false).user;
 
     return Dialog(
       // shadowColor: Color.fromARGB(255, 135, 130, 130),
@@ -137,13 +145,17 @@ class _SendRequestDialogueState extends State<SendRequestDialogue> {
               height: 12.h,
             ),
             InkWell(
-              child: HireNowButton(
+              child:isLoadingNow?const CircleProgress(): GeneralBttnForUserHmPg(
                 text: "Send Request",
               ),
-              onTap: (){
-                //send request to nearest mechanic  
-             List<SellerModel> neededSellers= filterSellersByService(allSellers!, _selectedService);
-              sendRequest(neededSellers);
+              onTap: () async {
+
+                //send request to nearest mechanic
+                List<SellerModel> neededSellers =
+                    filterSellersByService(allSellers!, _selectedService);
+                await sendRequest(neededSellers, user!);
+                  Navigator.pop(context);
+                   openRequestSentDialogue(context);
               },
             ),
             TextButton(
@@ -159,18 +171,40 @@ class _SendRequestDialogueState extends State<SendRequestDialogue> {
         ),
       ),
     );
+  }
 
+  Future<dynamic> openRequestSentDialogue(BuildContext context) {
+    return showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return RequestSentDialogue();
+                },
+              );
   }
-filterSellersByService(List<SellerModel> sellers, String selectedService) {
-  return sellers.where((seller) => seller.service!.contains(selectedService)).toList();
+
+  filterSellersByService(List<SellerModel> sellers, String selectedService) {
+  isLoading(true);
+    return sellers
+        .where((seller) => seller.service!.contains(selectedService))
+        .toList();
   }
- sendRequest(List<SellerModel> sellers){
-  RequestModel(
-    serviceId: utils.getRandomid(),
-    senderUid: utils.currentUserUid,
-    serviceRequired: _selectedService,
-    sentDate: 
-  )
-   FirebaseUserRepository.sentRequest(sellers,);
-}
+
+  sendRequest(List<SellerModel> sellers, UserModel user) async {
+    if (sellers.isEmpty) {
+      isLoading(false);
+      utils.flushBarErrorMessage("No Required Mechanic Available", context);
+      return;
+    }
+    RequestModel request = RequestModel(
+        serviceId: utils.getRandomid(),
+        senderUid: utils.currentUserUid,
+        serviceRequired: _selectedService,
+        senderName: user.name,
+        sentDate: utils.getCurrentDate(),
+        sentTime: utils.getCurrentTime(),
+        senderProfileImage: user.profileImage);
+
+    await FirebaseUserRepository.sentRequest(sellers, request, context);
+isLoading(false);
+  }
 }

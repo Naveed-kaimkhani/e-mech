@@ -12,7 +12,7 @@ class UserProvider with ChangeNotifier {
 
   // UserProvider({required this.usersRepository});
   UserModel? _userDetails;
-  UserModel? get users => _userDetails;
+  UserModel? get user => _userDetails;
 
 
   Future getUserLocally() async {

@@ -205,13 +205,32 @@ Future<List<SellerModel>> getSellersData() async {
   }).toList();
 }
 
-static Future<void> sentRequest(List<SellerModel> sellers, RequestModel requestModel) async {
-  for (SellerModel seller in sellers) {
-    await _sellerCollection
-        .doc(seller.uid)
-        .collection('Request')
-        .add(requestModel.toMap(requestModel));
+// static Future<void> sentRequest(List<SellerModel> sellers, RequestModel requestModel) async {
+//   for (SellerModel seller in sellers) {
+//     await _sellerCollection
+//         .doc(seller.uid)
+//         .collection('Request')
+//         .add(requestModel.toMap(requestModel));
+//   }
+// }
+
+ static Future<void> sentRequest(List<SellerModel> sellers, RequestModel requestModel,context) async {
+    try {
+      for (SellerModel seller in sellers) {
+        await _sellerCollection
+            .doc(seller.uid)
+            .collection('Request')
+            .add(requestModel.toMap(requestModel));
+      }
+      utils.toastMessage("Request Sent");
+    } catch (error) {
+      // Handle the error appropriately
+      utils.flushBarErrorMessage('Error sending request: $error',context);
+      throw FirebaseException(
+        plugin: 'FirebaseUserRepository',
+        message: 'Failed to send request to sellers.',
+      );
+    }
   }
-}
 
 }
