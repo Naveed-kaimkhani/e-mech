@@ -12,6 +12,7 @@ import 'package:e_mech/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -73,6 +74,10 @@ class _UserLoginState extends State<UserLogin> {
         .login(_emailController.text, _passwordController.text, context)
         .then((User? user) async {
       if (user != null) {
+       final   currentLocation = await Geolocator.getCurrentPosition();
+print(currentLocation.latitude);
+print(currentLocation.longitude);
+
         _getUserDetails(user.uid);
 
         SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -86,6 +91,9 @@ class _UserLoginState extends State<UserLogin> {
 
   void _getUserDetails(String uid) {
     _firebaseRepository.getUser().then((UserModel? userModel) {
+            print("in _getUserDetails");
+            print(userModel!.lat);
+
       if (userModel != null) {
         StorageService.saveUser(userModel).then((value) async {
           Provider.of<UserProvider>(context, listen: false).getUserLocally();

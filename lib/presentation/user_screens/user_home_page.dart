@@ -62,7 +62,7 @@ class _UserHomePageState extends State<UserHomePage> {
     setState(() {
       _sellerModel = sellers;
     });
-    _createSellersMarkers();
+    // _createSellersMarkers();
   }
 
   loadLocation() {
@@ -73,6 +73,8 @@ class _UserHomePageState extends State<UserHomePage> {
       await _firebaseUserRepository.addlatLongToFirebaseDocument(
           value.latitude, value.longitude, adress, 'users', context);
 
+          Provider.of<UserProvider>(context, listen: false).getUserFromServer(context);
+    
       addMarker(value, '1', 'My Position 1');
 
       setState(() {
@@ -83,7 +85,8 @@ class _UserHomePageState extends State<UserHomePage> {
         );
         animateCamera();
       });
-    });
+    }
+    );
     // setState(() {});
   }
 
@@ -114,8 +117,8 @@ class _UserHomePageState extends State<UserHomePage> {
   @override
   void initState() {
     super.initState();
-    //  loadLocation();
-    //loadSellersData();
+     loadLocation();
+    loadSellersData();
   }
 
   @override
@@ -148,11 +151,6 @@ class _UserHomePageState extends State<UserHomePage> {
         ),
         body: Stack(
           children: [
-            // Container(
-            //   height: 320.h,
-            //   width: 575.w,
-            //   color: Colors.black,
-            // ),
             GoogleMap(
               initialCameraPosition: _cameraPosition,
               compassEnabled: true,

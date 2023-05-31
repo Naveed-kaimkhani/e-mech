@@ -1,4 +1,5 @@
 import 'package:e_mech/presentation/seller_screens/seller_homepage.dart';
+import 'package:e_mech/presentation/seller_screens/seller_navigation.dart';
 import 'package:e_mech/presentation/user_screens/user_home_page.dart';
 import 'package:e_mech/presentation/widgets/circle_progress.dart';
 import 'package:e_mech/presentation/widgets/inputfields.dart';
@@ -32,11 +33,6 @@ class _SellerLoginState extends State<SellerLogin> {
   final FirebaseUserRepository _firebaseRepository = FirebaseUserRepository();
   final _formKey = GlobalKey<FormState>();
 
-  @override
-  void initState() {
-    super.initState();
-    utils.checkConnectivity(context);
-  }
 
   FocusNode emailFocusNode = FocusNode();
   FocusNode passwordFocusNode = FocusNode();
@@ -94,7 +90,7 @@ class _SellerLoginState extends State<SellerLogin> {
           await preferences.setInt('isSeller', 1);
           isLoading(false);
           Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) =>  SellerHomepage()));
+              MaterialPageRoute(builder: (context) =>  SellerNavigation()));
         }).catchError((error) {
           isLoading(false);
           utils.flushBarErrorMessage(error.message.toString(), context);
@@ -116,6 +112,11 @@ class _SellerLoginState extends State<SellerLogin> {
       // Perform signup logic
       // ...
     }
+  }
+  @override
+  void initState() {
+    super.initState();
+    utils.checkConnectivity(context);
   }
 
   @override
@@ -203,7 +204,6 @@ class _SellerLoginState extends State<SellerLogin> {
                         }
                       },
                     ),
-
                     Padding(
                       padding: const EdgeInsets.only(left: 20.0, top: 40),
                       child: isLoadingNow

@@ -152,13 +152,25 @@ class _SendRequestDialogueState extends State<SendRequestDialogue> {
                       text: "Send Request",
                     ),
               onTap: () async {
+                print("in send request");
                 //send request to nearest mechanic
                 List<SellerModel> neededSellers =
                     filterSellersByService(allSellers!, _selectedService);
-                await sendRequest(neededSellers, user!);
+                print("need seller $neededSellers");
+                if (neededSellers.isNotEmpty) {
+                  print("in if");
+                  await sendRequest(neededSellers, user!);
                 Navigator.pop(context);
                 openRequestSentDialogue(context);
-              },
+              
+                }
+               else{
+               isLoading(false); 
+                 Navigator.pop(context);
+              utils.flushBarErrorMessage("No required Mechanic Available", context);
+               
+               }
+                },
             ),
             TextButton(
                 onPressed: () {
@@ -179,7 +191,7 @@ class _SendRequestDialogueState extends State<SendRequestDialogue> {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
-        return RequestSentDialogue();
+        return const RequestSentDialogue();
       },
     );
   }
@@ -192,19 +204,21 @@ class _SendRequestDialogueState extends State<SendRequestDialogue> {
   }
 
   sendRequest(List<SellerModel> sellers, UserModel user) async {
-    if (sellers.isEmpty) {
-      isLoading(false);
-      utils.flushBarErrorMessage("No Required Mechanic Available", context);
-      return;
-    }
+    
     RequestModel request = RequestModel(
+        documentId:'',
         serviceId: utils.getRandomid(),
         senderUid: utils.currentUserUid,
         serviceRequired: _selectedService,
         senderName: user.name,
+        senderPhone: user.phone,
+        senderLat: user.lat,
+        senderLong: user.long,
         sentDate: utils.getCurrentDate(),
         sentTime: utils.getCurrentTime(),
-        senderProfileImage: user.profileImage);
+        senderProfileImage: user.profileImage)
+        
+        ;
 
     await FirebaseUserRepository.sentRequest(sellers, request, context);
     isLoading(false);

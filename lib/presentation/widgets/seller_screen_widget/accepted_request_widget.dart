@@ -2,7 +2,6 @@ import 'package:e_mech/presentation/auth_screens/user_auth/user_login.dart';
 import 'package:e_mech/presentation/seller_screens/seller_user_tracing.dart';
 import 'package:e_mech/presentation/user_screens/profile.dart';
 import 'package:e_mech/presentation/widgets/profile_pic.dart';
-import 'package:e_mech/presentation/widgets/request_widget_button.dart';
 import 'package:e_mech/presentation/widgets/seller_screen_widget/test.dart';
 import 'package:e_mech/style/custom_text_style.dart';
 import 'package:e_mech/style/images.dart';
@@ -15,19 +14,17 @@ import '../../../data/firebase_user_repository.dart';
 import '../../../domain/entities/request_model.dart';
 import '../../auth_screens/seller_auth/seller_login.dart';
 
-class RequestWidget extends StatefulWidget {
+class AcceptedRequestWidget extends StatefulWidget {
   final RequestModel requestModel;
-  RequestWidget({
+  AcceptedRequestWidget({
     Key? key,
-  required  this.requestModel,
+    required this.requestModel,
   }) : super(key: key);
-  bool? isAccepted = false;
-  String text = "Accepted";
   @override
-  State<RequestWidget> createState() => _RequestWidgetState();
+  State<AcceptedRequestWidget> createState() => _AcceptedRequestWidgetState();
 }
 
-class _RequestWidgetState extends State<RequestWidget> {
+class _AcceptedRequestWidgetState extends State<AcceptedRequestWidget> {
   final FirebaseUserRepository _firebaseRepository = FirebaseUserRepository();
 
   @override
@@ -75,7 +72,7 @@ class _RequestWidgetState extends State<RequestWidget> {
                   ),
                   Text(
                     // widget.requestModel!.senderName!,
-                    widget.requestModel?.senderName ?? "No Sender Name",
+                    widget.requestModel.senderName ?? "No Sender Name",
                     style: CustomTextStyle.font_20,
                   ),
                 ],
@@ -112,79 +109,56 @@ class _RequestWidgetState extends State<RequestWidget> {
                       // ),
                     ],
                   ),
-                  widget.isAccepted!
-                      ? InkWell(
-                        child: Container(
-                            height: 30.h,
-                            width: 89.w,
-                            padding: const EdgeInsets.all(28.0),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30.r),
-                                color: Colors.black),
-                            child: Center(
-                              child: Text(
-                                "Goto Locat",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20.sp,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                          ),
-                          onTap: (){
-
-                  // });
-Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context)=> SellerUserTracing(requestModel: widget.requestModel,)),
-            );
-                          },
-                      )
-                      : Row(
-                          children: [
-                            InkWell(
-                              child: RequestWidgetButton(
-                                  text: "Cancel", color: Colors.black),
-                              onTap: () async {
-                                // setState(() {
-                                //   widget.isAccepted = false;
-                                //   widget.text = "Declined";
-              
-
-                                // await _firebaseRepository.declineConnectionRequest(
-                                //     requestModel: widget.requestModel!);
-
-                                utils.toastMessage("Request Declined");
-
-                                // await _firebaseRepository.acceptConnectionRequest(
-                                //     requestModel: widget.requestModel!);
-                                // utils.toastMessage("Request Accepted");
-                              },
-                            ),
-                            SizedBox(
-                              width: 8.w,
-                            ),
-                            InkWell(
-                              child: RequestWidgetButton(
-                                  text: "Accept", color: Styling.primaryColor),
-                              onTap: () async {
-                                setState(() {
-                                  widget.isAccepted = true;
-                                  widget.text = "Accepted";
-                                });
-                                await FirebaseUserRepository.acceptRequest(
-                                    widget.requestModel, context);
-           
-                                utils.toastMessage("Request Accepted");
-           
-                              },
-                            )
-                          ],
-                        ),
+                  InkWell(
+                    child: request_widget_button(
+                      text: "Location",
+                      color: Colors.black,
+                    ),
+                    onTap: () {
+                      print("location button prassed");
+                      
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SellerUserTracing(
+                                  requestModel: widget.requestModel,
+                                )),
+                      );
+                    },
+                  )
                 ]),
           )
         ],
+      ),
+    );
+  }
+}
+
+class request_widget_button extends StatelessWidget {
+  String text;
+  Color color;
+  request_widget_button({
+    required this.text,
+    required this.color,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 30.h,
+      width: 90.w,
+      decoration:
+          BoxDecoration(borderRadius: BorderRadius.circular(6.r), color: color),
+      child: Center(
+        child: Text(
+          text,
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18.sp,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
       ),
     );
   }

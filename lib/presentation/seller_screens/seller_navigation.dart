@@ -1,3 +1,5 @@
+import 'package:e_mech/presentation/seller_screens/accepted_request.dart';
+import 'package:e_mech/presentation/seller_screens/seller_homepage.dart';
 import 'package:e_mech/presentation/user_screens/profile.dart';
 import 'package:e_mech/presentation/user_screens/services.dart';
 import 'package:e_mech/presentation/user_screens/setting.dart';
@@ -7,16 +9,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
-class NavigationPage extends StatefulWidget {
-  const NavigationPage({Key? key}) : super(key: key);
+class SellerNavigation extends StatefulWidget {
+  const SellerNavigation({Key? key}) : super(key: key);
   @override
-  State<NavigationPage> createState() => _NavigationPageState();
+  State<SellerNavigation> createState() => _SellerNavigationState();
 }
 
-class _NavigationPageState extends State<NavigationPage> {
+class _SellerNavigationState extends State<SellerNavigation> {
   List pages = [
-    UserHomePage(),
-    Services(),
+    SellerHomepage(),
+    AcceptedRequest(),
     Setting(),
     Profile(),
   ];

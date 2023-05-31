@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ProfilePic extends StatelessWidget {
   const ProfilePic({
@@ -19,7 +20,7 @@ class ProfilePic extends StatelessWidget {
         height: height,
         width: width,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(45)),
+          borderRadius:BorderRadius.all(Radius.circular(45.r)),
           image: DecorationImage(
             image: imageProvider,
             fit: BoxFit.cover,

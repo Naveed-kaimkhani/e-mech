@@ -44,8 +44,8 @@ class FirebaseUserRepository implements UsersRepository {
         await _userCollection.doc(utils.currentUserUid).get();
     if (documentSnapshot.data() != null) {
       UserModel? userModel =
-          UserJson.fromJson(documentSnapshot.data() as Map<String, dynamic>)
-              .toDomain();
+          UserModel.fromMap(documentSnapshot.data() as Map<String, dynamic>);
+      print(userModel.lat);
       if (userModel != null) {
         return userModel;
       } else {
@@ -131,53 +131,24 @@ class FirebaseUserRepository implements UsersRepository {
     // }
   }
 
-  Future<void> accpetRequest(
-      RequestModel requestModel) async {
-    await _userCollection
-        .doc(requestModel.senderUid)
+static Future<void> acceptRequest(RequestModel requestModel, context) async {
+  try {
+    // Add the request to the "AcceptedRequest" subcollection of the current seller
+    await _sellerCollection
+        .doc(utils.currentUserUid)
         .collection('AcceptedRequest')
         .add(requestModel.toMap(requestModel));
-    await declineRequest(requestModel);
+        print("request accepted");
+    // Delete the request from every seller
+    await deleteRequestFromEverySeller(requestModel.documentId!, context);
+
+    // Show success message or perform other operations
+    utils.toastMessage("Request Accepted");
+  } catch (e) {
+    // Handle error
+    print('Error accepting request: $e');
   }
-
-  Future<void> declineRequest(
-      RequestModel requestModel) async {
-  //   FirebaseFirestore.instance
-  //       .collection("users")
-  //       .doc(requestModel.receiverUid)
-  //       .collection('connectionRequest')
-  //       .where("goalId", isEqualTo: requestModel.goalId)
-  //       .get()
-  //       .then((value) {
-  //     value.docs.forEach((element) {
-  //       FirebaseFirestore.instance
-  //           .collection("users")
-  //           .doc(requestModel.receiverUid)
-  //           .collection('connectionRequest')
-  //           .doc(element.id)
-  //           .delete()
-  //           .then((value) {
-  //         // print("Success!");
-  //         // utils.toastMessage("Request Declined");
-  //       });
-  //     });
-  //   });
-  }
-
-// Future<void> addlatLongToUserDocument(double lat, double long, String address,context) async {
-//   try {
-//     final userRef = FirebaseFirestore.instance.collection('users').doc(utils.currentUserUid);
-
-//     await userRef.update({
-//       'lat':lat,
-//       'long':long,
-//       'address':address,
-//     });
-//     utils.toastMessage("Location Updated");
-//   } catch (e) {
-//     utils.flushBarErrorMessage(e.toString(),context);
-//   }
-// }
+}
 
 
 Future<void> addlatLongToFirebaseDocument(double lat, double long, String address,String documentName,context) async {
@@ -198,34 +169,32 @@ Future<void> addlatLongToFirebaseDocument(double lat, double long, String addres
 Future<List<SellerModel>> getSellersData() async {
   final snapshot =
       await FirebaseFirestore.instance.collection("sellers").get();
-
   return snapshot.docs.map((doc) {
     final data = doc.data();
     return SellerModel.fromMap(data);
   }).toList();
 }
-
-// static Future<void> sentRequest(List<SellerModel> sellers, RequestModel requestModel) async {
-//   for (SellerModel seller in sellers) {
-//     await _sellerCollection
-//         .doc(seller.uid)
-//         .collection('Request')
-//         .add(requestModel.toMap(requestModel));
-//   }
-// }
-
- static Future<void> sentRequest(List<SellerModel> sellers, RequestModel requestModel,context) async {
+static Future<void> sentRequest(
+    List<SellerModel> sellers,
+    RequestModel requestModel,
+    context,
+  ) async {
     try {
       for (SellerModel seller in sellers) {
-        await _sellerCollection
+        final DocumentReference requestRef = await _sellerCollection
             .doc(seller.uid)
             .collection('Request')
             .add(requestModel.toMap(requestModel));
+
+        final String documentId = requestRef.id;
+
+        await requestRef.update({'documentId': documentId});
       }
-      utils.toastMessage("Request Sent");
+      
+      // utils.toastMessage("Request Sent");
     } catch (error) {
       // Handle the error appropriately
-      utils.flushBarErrorMessage('Error sending request: $error',context);
+      utils.flushBarErrorMessage('Error sending request: $error', context);
       throw FirebaseException(
         plugin: 'FirebaseUserRepository',
         message: 'Failed to send request to sellers.',
@@ -233,23 +202,74 @@ Future<List<SellerModel>> getSellersData() async {
     }
   }
 
-static Future<List<RequestModel>> getRequests(context) async {
+static Stream<List<RequestModel>> getRequests(context) async* {
   try {
-    final List<RequestModel> models = [];
-    final QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
+    final CollectionReference requestCollection = FirebaseFirestore.instance
         .collection("sellers")
         .doc(utils.currentUserUid)
-        .collection('Request')
-        .get();
+        .collection('Request');
 
-    models.addAll(snapshot.docs.map((docsSnap) => RequestModel.fromMap(docsSnap.data() as dynamic)));
-
-    return models;
+    yield* requestCollection.snapshots().map((snapshot) {
+      final List<RequestModel> models = snapshot.docs
+          .map((docsSnap) => RequestModel.fromMap(docsSnap.data() as dynamic))
+          .toList();
+      return models;
+    });
   } catch (e) {
     // Handle any potential errors here
-    utils.flushBarErrorMessage('Error fetching requests: $e',context);
-    // print('Error fetching connection requests: $e');
-    return [];
+    utils.flushBarErrorMessage('Error fetching requests: $e', context);
+    // print('Error fetching requests: $e');
+    yield []; // Yield an empty list in case of an error
+  }
+}
+
+static Stream<List<RequestModel>> getAcceptedRequests(context) async* {
+  try {
+    final CollectionReference requestCollection = FirebaseFirestore.instance
+        .collection("sellers")
+        .doc(utils.currentUserUid)
+        .collection('AcceptedRequest');
+
+    yield* requestCollection.snapshots().map((snapshot) {
+      final List<RequestModel> models = snapshot.docs
+          .map((docsSnap) => RequestModel.fromMap(docsSnap.data() as dynamic))
+          .toList();
+      return models;
+    });
+  } catch (e) {
+    // Handle any potential errors here
+    utils.flushBarErrorMessage('Error fetching requests: $e', context);
+    // print('Error fetching requests: $e');
+    yield []; // Yield an empty list in case of an error
+  }
+}
+
+
+static Future<void> deleteRequestFromEverySeller(String documentId,context) async {
+  try {
+
+    // Retrieve all documents in the sellers collection
+    QuerySnapshot querySnapshot = await _sellerCollection.get();
+
+    // Iterate over the documents
+    for (DocumentSnapshot sellerDocument in querySnapshot.docs) {
+      // Get a reference to the "Request" subcollection of the current seller document
+      CollectionReference requestCollection =
+          sellerDocument.reference.collection('Request');
+
+      // Query for documents that contain the specified document ID
+      QuerySnapshot requestQuerySnapshot =
+          await requestCollection.where('documentId', isEqualTo: documentId).get();
+
+      // Delete each document in the "Request" subcollection
+      for (DocumentSnapshot requestDocument in requestQuerySnapshot.docs) {
+        await requestDocument.reference.delete();
+      }
+    }
+    print("request deleted ");
+  } catch (e) {
+    // print('Error deleting documents: $e');
+    utils.flushBarErrorMessage('Error deleting documents: $e',context);
   }
 }
 

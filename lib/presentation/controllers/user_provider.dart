@@ -27,9 +27,11 @@ class UserProvider with ChangeNotifier {
   // }
 
   
-  Future getHostelFromServer(String uid, context) async {
+  Future getUserFromServer(context) async {
     final FirebaseUserRepository firebaseRepository = FirebaseUserRepository();
-    _userDetails = await firebaseRepository.getUser();
+   _userDetails = await firebaseRepository.getUser();
+   print(_userDetails!.lat!);
+   print(_userDetails!.long);
     if (_userDetails == null) {
       utils.flushBarErrorMessage("No user found",context);
     }
