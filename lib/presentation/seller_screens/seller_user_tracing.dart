@@ -33,25 +33,35 @@ class _SellerUserTracingState extends State<SellerUserTracing> {
   Position? currentLocation;
 
   void getUserCurrentLocation() async {
+    print("in getUserCurrentLocation");
     try {
+      print("in try");
       // await Geolocator.requestPermission();
-      currentLocation = await Geolocator.getCurrentPosition();
+      // currentLocation = await Geolocator.getCurrentPosition();
 
+      currentLocation = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+      print(currentLocation);
       Geolocator.getPositionStream().listen(
         (Position position) async {
+          print("in getPositionStream");
+          print(position);
+          currentLocation = position;
+          print(currentLocation);
           // Do something with the updated position
           GoogleMapController controller = await _controller.future;
-          
-          setState(() {
-            currentLocation = position;
-          controller
-              .animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
-            target: LatLng(position.latitude, position.longitude),
-            zoom: 18,
-          )));
-          });
 
-          
+          setState(() {
+            print("location initialized");
+            currentLocation = position;
+            print(currentLocation);
+            controller
+                .animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+              target:
+                  LatLng(sourceLocation!.latitude, sourceLocation!.longitude),
+              zoom: 18,
+            )));
+          });
 
           // print('Latitude: ${position.latitude}, Longitude: ${position.longitude}');
         },
@@ -122,11 +132,11 @@ class _SellerUserTracingState extends State<SellerUserTracing> {
         LatLng(widget.requestModel.senderLat!, widget.requestModel.senderLong!);
     getPolyPoints();
     getUserCurrentLocation();
-    
   }
 
   @override
   Widget build(BuildContext context) {
+    print(currentLocation);
     print("in build");
     return SafeArea(
       child: Scaffold(
@@ -140,13 +150,14 @@ class _SellerUserTracingState extends State<SellerUserTracing> {
                 compassEnabled: true,
                 markers: {
                   Marker(
-                    markerId: MarkerId("CurrentLocation"),
+                    markerId: MarkerId("CurrentLocation",),
                     position: LatLng(
                         currentLocation!.latitude, currentLocation!.longitude),
                   ),
                   Marker(
                     markerId: MarkerId("Source"),
-                    position: sourceLocation!,
+                    position: LatLng(
+                       sourceLocation!.latitude, sourceLocation!.longitude),
                   ),
                   Marker(
                     markerId: MarkerId("Destination"),

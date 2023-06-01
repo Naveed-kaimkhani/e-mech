@@ -64,7 +64,7 @@ class _SellerLoginState extends State<SellerLogin> {
   void _login() {
     isLoading(true);
     _firebaseRepository
-        .login(_emailController.text, _passwordController.text, context)
+        .login("navv@gmail.com", "111111", context)
         .then((User? user) async {
       if (user != null) {
         _getSellerDetails();
@@ -108,10 +108,11 @@ class _SellerLoginState extends State<SellerLogin> {
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
       // Form is valid, perform signup logic here
-      _login();
+      
       // Perform signup logic
       // ...
     }
+    _login();
   }
   @override
   void initState() {
