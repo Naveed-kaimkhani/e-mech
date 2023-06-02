@@ -16,6 +16,7 @@ import 'package:e_mech/presentation/user_screens/get_user_current_location.dart'
 import 'package:e_mech/presentation/user_screens/user_home_page.dart';
 import 'package:e_mech/presentation/widgets/seller_screen_widget/accepted_request_widget.dart';
 import 'package:e_mech/presentation/widgets/seller_screen_widget/request_widget.dart';
+import 'package:e_mech/utils/routes/routes.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -66,8 +67,11 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(
               primarySwatch: Colors.blue,
             ),
-            home:SellerLogin(),
+            home:UserSellerScreen(),
+                          onGenerateRoute: Routes.onGenerateRoute,
+
           ),
+          
         );
       },
       // child:

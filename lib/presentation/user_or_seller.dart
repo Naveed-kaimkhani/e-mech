@@ -2,6 +2,7 @@ import 'package:e_mech/presentation/auth_screens/user_auth/user_signup.dart';
 import 'package:e_mech/presentation/seller_screens/selller_signup.dart';
 import 'package:e_mech/presentation/widgets/emergency_service_provider_text.dart';
 import 'package:e_mech/presentation/widgets/user_seller_component.dart';
+import 'package:e_mech/utils/routes/routes_name.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../style/images.dart';
@@ -25,12 +26,7 @@ class UserSellerScreen extends StatelessWidget {
                 image: 'assets/user.png',
                 text: "User",
                 ontap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const UserSignup(),
-                    ),
-                  );
+                  Navigator.pushNamed(context, RoutesName.userLogin);
                 },
               ),
               SizedBox(
@@ -40,13 +36,7 @@ class UserSellerScreen extends StatelessWidget {
                   image: Images.seller,
                   text: "Seller",
                   ontap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        // builder: (context) =>const SellerSignUp(),
-                        builder: (context) => Container(),
-                      ),
-                    );
+                    Navigator.pushNamed(context, RoutesName.sellerLogin);
                   }),
               SizedBox(
                 height: 80.h,

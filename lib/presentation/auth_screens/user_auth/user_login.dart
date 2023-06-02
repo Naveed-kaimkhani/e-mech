@@ -8,6 +8,7 @@ import 'package:e_mech/presentation/widgets/inputfields.dart';
 import 'package:e_mech/presentation/widgets/my_app_bar.dart';
 import 'package:e_mech/style/custom_text_style.dart';
 import 'package:e_mech/style/images.dart';
+import 'package:e_mech/utils/routes/routes_name.dart';
 import 'package:e_mech/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +38,7 @@ class _UserLoginState extends State<UserLogin> {
   @override
   void initState() {
     super.initState();
-    utils.checkConnectivity(context);
+    // utils.checkConnectivity(context);
   }
 
   FocusNode emailFocusNode = FocusNode();
@@ -52,13 +53,13 @@ class _UserLoginState extends State<UserLogin> {
   Widget k = SizedBox(
     height: 16.h,
   );
-  
+
   void isLoading(bool value) {
     setState(() {
       isLoadingNow = value;
     });
   }
-  
+
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
       // Form is valid, perform signup logic here
@@ -74,30 +75,24 @@ class _UserLoginState extends State<UserLogin> {
         .login(_emailController.text, _passwordController.text, context)
         .then((User? user) async {
       if (user != null) {
-       final   currentLocation = await Geolocator.getCurrentPosition();
-print(currentLocation.latitude);
-print(currentLocation.longitude);
-
+        //  final   currentLocation = await Geolocator.getCurrentPosition();
         _getUserDetails(user.uid);
-
-        SharedPreferences preferences = await SharedPreferences.getInstance();
-        await preferences.setInt('isUser', 1);
+        // SharedPreferences preferences = await SharedPreferences.getInstance();
+        // await preferences.setInt('isUser', 1);
       } else {
         isLoading(false);
-        //utils.flushBarErrorMessage("Failed to login", context);
+        utils.flushBarErrorMessage("Failed to login", context);
       }
     });
   }
 
   void _getUserDetails(String uid) {
     _firebaseRepository.getUser().then((UserModel? userModel) {
-            print("in _getUserDetails");
-            print(userModel!.lat);
-
       if (userModel != null) {
         StorageService.saveUser(userModel).then((value) async {
           Provider.of<UserProvider>(context, listen: false).getUserLocally();
-          Provider.of<AllSellerDataProvider>(context, listen: false).getSellersDataFromServer(context);
+          Provider.of<AllSellerDataProvider>(context, listen: false)
+              .getSellersDataFromServer(context);
 
           SharedPreferences preferences = await SharedPreferences.getInstance();
           await preferences.setInt('initScreen', 1);
@@ -119,7 +114,7 @@ print(currentLocation.longitude);
     });
   }
 
-@override
+  @override
   void dispose() {
     passwordFocusNode.dispose();
     emailFocusNode.dispose();
@@ -127,7 +122,6 @@ print(currentLocation.longitude);
     _passwordController.dispose();
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -139,30 +133,26 @@ print(currentLocation.longitude);
         child: Scaffold(
           backgroundColor: Colors.white,
           appBar: MyAppBar(
-              text: "SignUP",
-              onSignUpOrLoginPressed: () {},
-              onBackButtonPressed: () {}),
+              text: "SignUp",
+              onSignUpOrLoginPressed: () {
+                Navigator.pushNamed(context, RoutesName.userSingup);
+              },
+              onBackButtonPressed: () {
+                Navigator.pop(context);
+              }),
           body: Form(
             key: _formKey,
             child: SingleChildScrollView(
               child: Padding(
                 padding: EdgeInsets.only(left: 24.w, top: 8.h),
                 child: Column(
-                  // mainAxisSize: MainAxisSize.min,
-                  // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // SizedBox(
-                    //   height: 16.h,
-                    // ),
                     Image.asset(
                       Images.logo,
                       height: 120.h,
                       width: 120.w,
                     ),
-                    // SizedBox(
-                    //   height: 6.h,
-                    // ),
                     Text.rich(TextSpan(
                         text: 'Proceed With Your ',
                         style: CustomTextStyle.font_20,
@@ -172,7 +162,6 @@ print(currentLocation.longitude);
                             style: CustomTextStyle.font_30,
                           )
                         ])),
-
                     k,
                     InputField(
                       hint_text: "Email",
@@ -215,7 +204,6 @@ print(currentLocation.longitude);
                         }
                       },
                     ),
-
                     Padding(
                       padding: const EdgeInsets.only(left: 20.0, top: 40),
                       child: isLoadingNow
@@ -224,7 +212,6 @@ print(currentLocation.longitude);
                               text: "Login",
                               func: () {
                                 FocusManager.instance.primaryFocus?.unfocus();
-                                // _signup();
                                 _submitForm();
                               },
                               color: Styling.primaryColor),
