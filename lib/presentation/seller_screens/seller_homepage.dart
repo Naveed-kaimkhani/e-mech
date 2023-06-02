@@ -27,15 +27,19 @@ class _SellerHomepageState extends State<SellerHomepage> {
   Future<Position?> getUserCurrentLocation() async {
     try {
       await Geolocator.requestPermission();
-      return await Geolocator.getCurrentPosition();
+      return await Geolocator.getCurrentPosition(
+                desiredAccuracy: LocationAccuracy.bestForNavigation,
+
+      );
     } catch (error) {
       utils.flushBarErrorMessage(error.toString(), context);
       return null; // or throw the error
     }
   }
-
+// this function fill be used when the seller location is need to update everytime he open the app
   loadLocation() {
     getUserCurrentLocation().then((value) async {
+
       String adress = await utils.getAddressFromLatLng(
           value!.latitude, value.longitude, context);
 
@@ -45,17 +49,11 @@ class _SellerHomepageState extends State<SellerHomepage> {
     Provider.of<SellerProvider>(context, listen: false)
         .getSellerFromServer(context);
   }
-  // void addMarker(Position value, String markerId, String title) {
-  //   _marker.add(Marker(
-  //       position: LatLng(value.latitude, value.longitude),
-  //       markerId: MarkerId(markerId),
-  //       infoWindow: InfoWindow(title: title)));
-  // }
 
   @override
   void initState() {
     super.initState();
-    loadLocation();
+   // loadLocation();
   }
 
   @override

@@ -73,8 +73,8 @@ class _UserHomePageState extends State<UserHomePage> {
       await _firebaseUserRepository.addlatLongToFirebaseDocument(
           value.latitude, value.longitude, adress, 'users', context);
 
-          Provider.of<UserProvider>(context, listen: false).getUserFromServer(context);
-    
+       await Provider.of<UserProvider>(context, listen: false).getUserFromServer(context);
+    utils.hideLoading();
       addMarker(value, '1', 'My Position 1');
 
       setState(() {
@@ -117,6 +117,7 @@ class _UserHomePageState extends State<UserHomePage> {
   @override
   void initState() {
     super.initState();
+    utils.showLoading(context);
      loadLocation();
     loadSellersData();
   }

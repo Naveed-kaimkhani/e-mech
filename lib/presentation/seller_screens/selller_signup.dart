@@ -7,6 +7,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/firebase_user_repository.dart';
@@ -57,7 +58,7 @@ class _SellerSignUpState extends State<SellerSignUp> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmpasswordController =
       TextEditingController();
-  final TextEditingController _addressController = TextEditingController();
+  // final TextEditingController _addressController = TextEditingController();
   Widget k = SizedBox(
     height: 16.h,
   );
@@ -88,16 +89,19 @@ class _SellerSignUpState extends State<SellerSignUp> {
     )
         .then((User? user) async {
       if (user != null) {
+        final Position sellerLocation = await Geolocator.getCurrentPosition();
+        final String address = await utils.getAddressFromLatLng(
+            sellerLocation.latitude, sellerLocation.longitude, context);
         SellerModel sellerModel = SellerModel(
           uid: utils.currentUserUid,
           name: _nameController.text,
           phone: _phoneController.text,
           email: _emailController.text,
           CNIC: _CNICController.text,
-          address: _addressController.text,
-          // city: _cityController.text,
+          address: address,
+          lat: sellerLocation.latitude,
+          long: sellerLocation.longitude,
           workshopName: _workshopController.text,
-
           service: service,
           profileImage: await _firebaseUserRepository.uploadProfileImage(
               imageFile: _profileImage!, uid: user.uid),
@@ -143,7 +147,7 @@ class _SellerSignUpState extends State<SellerSignUp> {
     // _cityController.dispose();
     _workshopController.dispose();
     _emailController.dispose();
-    _addressController.dispose();
+    // _addressController.dispose();
     _passwordController.dispose();
     _confirmpasswordController.dispose();
     _CNICController.dispose();
@@ -156,8 +160,6 @@ class _SellerSignUpState extends State<SellerSignUp> {
     confirmFocusNode.dispose();
     cNICFocusNode.dispose();
     super.dispose();
-
-  
   }
 
   @override
