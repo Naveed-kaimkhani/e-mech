@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 import 'package:e_mech/data/firebase_user_repository.dart';
 import 'package:e_mech/presentation/controllers/all_sellerdata_provider.dart';
 import 'package:e_mech/presentation/widgets/user_screen_widget/request_sent_dialogue.dart';
@@ -7,6 +8,8 @@ import 'package:e_mech/style/custom_text_style.dart';
 import 'package:e_mech/style/styling.dart';
 import 'package:e_mech/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'dart:ui' as ui;
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -14,6 +17,7 @@ import 'package:provider/provider.dart';
 
 import '../../domain/entities/seller_model.dart';
 import '../../domain/entities/user_model.dart';
+import '../../style/images.dart';
 import '../controllers/user_provider.dart';
 import '../widgets/general_bttn_for_userhmpg.dart';
 import '../widgets/user_homepage_header.dart';
@@ -121,22 +125,39 @@ class _UserHomePageState extends State<UserHomePage> {
     controller.animateCamera(CameraUpdate.newCameraPosition(_cameraPosition));
   }
 
-  void _createSellersMarkers() {
+  Future<Uint8List> getByteFromAssets(String path, int widht) async {
+    ByteData data = await rootBundle.load(path);
+    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
+        targetHeight: widht);
+    ui.FrameInfo fi = await codec.getNextFrame();
+    return (await fi.image.toByteData(format: ui.ImageByteFormat.png))!
+        .buffer
+        .asUint8List();
+  }
+
+  void _createSellersMarkers() async {
+    final Uint8List icon = await getByteFromAssets(Images.mech, 80);
     _marker = _sellerModel!.map((seller) {
       final markerId = MarkerId(seller.name!);
       final marker = Marker(
         markerId: markerId,
         position: LatLng(seller.lat!, seller.long!),
+        icon: BitmapDescriptor.fromBytes(icon),
         infoWindow: InfoWindow(title: seller.name),
       );
       return marker;
     }).toList();
 
+    _marker.add(Marker(
+        position: LatLng(user!.lat!, user!.long!),
+        markerId: MarkerId(user!.name!),
+        infoWindow: InfoWindow(title: user!.name!)));
     setState(() {});
   }
 
   @override
   void initState() {
+    print("in user hmepage");
     super.initState();
     utils.checkConnectivity(context);
     loadLocation();

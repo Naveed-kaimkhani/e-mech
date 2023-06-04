@@ -8,6 +8,6 @@ class Images {
   static const String seller = 'assets/mechanic.png';
   static const String sellerTracingIcon = 'assets/bycicle.png';
   static const String sellerInitialPosition = 'assets/SellerLocation.png';
-  // static const String seller = 'assets/mechanic.png';
+  static const String mech = 'assets/mech.png';
 
 }
