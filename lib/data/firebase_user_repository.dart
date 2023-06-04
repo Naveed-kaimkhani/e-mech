@@ -151,7 +151,7 @@ static Future<void> acceptRequest(RequestModel requestModel, context) async {
 }
 
 
-Future<void> addlatLongToFirebaseDocument(double lat, double long, String address,String documentName,context) async {
+Future<void> addlatLongToFirebaseDocument(double lat, double long, String address,String documentName) async {
   try {
     final userRef = FirebaseFirestore.instance.collection(documentName).doc(utils.currentUserUid);
 
@@ -160,9 +160,9 @@ Future<void> addlatLongToFirebaseDocument(double lat, double long, String addres
       'long':long,
       'address':address,
     });
-    utils.toastMessage("Location Updated");
+    // utils.toastMessage("Location Updated");
   } catch (e) {
-    utils.flushBarErrorMessage(e.toString(),context);
+    // utils.flushBarErrorMessage(e.toString(),context);
   }
 }
 

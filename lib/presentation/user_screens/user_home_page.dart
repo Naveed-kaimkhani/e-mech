@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:e_mech/data/firebase_user_repository.dart';
+import 'package:e_mech/presentation/controllers/all_sellerdata_provider.dart';
 import 'package:e_mech/presentation/widgets/user_screen_widget/request_sent_dialogue.dart';
 import 'package:e_mech/presentation/widgets/user_screen_widget/send_request_dialogue.dart';
 import 'package:e_mech/style/custom_text_style.dart';
@@ -29,7 +30,10 @@ class _UserHomePageState extends State<UserHomePage> {
       FirebaseUserRepository();
   final Completer<GoogleMapController> _controller = Completer();
   List<SellerModel>? _sellerModel;
+  UserModel? user;
   bool isLoadingNow = false;
+  // bool isMapLoaded = false;
+// bool _isLocationUpdated = false;
 
   static CameraPosition _cameraPosition = CameraPosition(
     target: LatLng(24.965508, 69.293713),
@@ -47,52 +51,67 @@ class _UserHomePageState extends State<UserHomePage> {
     });
   }
 
-  Future<Position?> getUserCurrentLocation() async {
+  // void changeMaploading(bool value) {
+  //   setState(() {
+  //     isMapLoaded = value;
+  //   });
+  // }
+  // Future<Position?> getUserCurrentLocation() async {
+  //   try {
+  //     await Geolocator.requestPermission();
+  //     return await Geolocator.getCurrentPosition();
+  //   } catch (error) {
+  //     utils.flushBarErrorMessage(error.toString(), context);
+  //     return null; // or throw the error
+  //   }
+  // }
+
+  // loadSellersData() async {
+  // // changeMaploading(false);
+  //   // List<SellerModel> sellers = await _firebaseUserRepository.getSellersData();
+  //   // setState(() {
+  //   //   _sellerModel = sellers;
+  //   // });
+  //   // _createSellersMarkers();
+  // }
+  loadLocation() async {
     try {
-      await Geolocator.requestPermission();
-      return await Geolocator.getCurrentPosition();
-    } catch (error) {
-      utils.flushBarErrorMessage(error.toString(), context);
-      return null; // or throw the error
-    }
-  }
+      user = Provider.of<UserProvider>(context, listen: false).user;
+      _sellerModel =
+          Provider.of<AllSellerDataProvider>(context, listen: false).sellers;
 
-  loadSellersData() async {
-    List<SellerModel> sellers = await _firebaseUserRepository.getSellersData();
-    setState(() {
-      _sellerModel = sellers;
-    });
-    // _createSellersMarkers();
-  }
+      // final value = await getUserCurrentLocation();
+      // String address = await utils.getAddressFromLatLng(value!.latitude, value.longitude);
 
-  loadLocation() {
-    getUserCurrentLocation().then((value) async {
-      String adress = await utils.getAddressFromLatLng(
-          value!.latitude, value.longitude, context);
+      // await _firebaseUserRepository.addlatLongToFirebaseDocument(
+      //   value.latitude, value.longitude, address, 'users');
 
-      await _firebaseUserRepository.addlatLongToFirebaseDocument(
-          value.latitude, value.longitude, adress, 'users', context);
+      // await Provider.of<UserProvider>(context, listen: false).getUserFromServer(context);
 
-       await Provider.of<UserProvider>(context, listen: false).getUserFromServer(context);
-    utils.hideLoading();
-      addMarker(value, '1', 'My Position 1');
+      addMarker(user!.lat!, user!.long!, '1', 'My Position 1');
 
       setState(() {
         _cameraPosition = CameraPosition(
-          target: LatLng(value.latitude, value.longitude),
-          // zoom: 14.4746,
+          target: LatLng(user!.lat!, user!.long!),
           zoom: 18,
         );
         animateCamera();
       });
+    } catch (error) {
+      // utils.hideLoading();
+      // changeMaploading(false);
+      utils.flushBarErrorMessage(error.toString(), context);
+      // Handle any potential errors here
+    } finally {
+      // utils.hideLoading();
     }
-    );
-    // setState(() {});
+
+    // utils.showLoading(context);
   }
 
-  void addMarker(Position value, String markerId, String title) {
+  void addMarker(double lat, double long, String markerId, String title) {
     _marker.add(Marker(
-        position: LatLng(value.latitude, value.longitude),
+        position: LatLng(lat, long),
         markerId: MarkerId(markerId),
         infoWindow: InfoWindow(title: title)));
   }
@@ -112,62 +131,61 @@ class _UserHomePageState extends State<UserHomePage> {
       );
       return marker;
     }).toList();
+
+    setState(() {});
   }
 
   @override
   void initState() {
     super.initState();
-    utils.showLoading(context);
-     loadLocation();
-    loadSellersData();
+    utils.checkConnectivity(context);
+    loadLocation();
+    _createSellersMarkers();
   }
 
   @override
   Widget build(BuildContext context) {
-    UserModel? user = Provider.of<UserProvider>(context, listen: false).user;
-
     return SafeArea(
-      child: Scaffold(
-        floatingActionButton: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            callButton(),
-            k,
-            locationButton(),
-            k,
-            InkWell(
-              child: GeneralBttnForUserHmPg(
-                text: "Hire Now",
-              ),
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return SendRequestDialogue();
-                  },
-                );
-              },
+        child: Scaffold(
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          callButton(),
+          k,
+          locationButton(),
+          k,
+          InkWell(
+            child: GeneralBttnForUserHmPg(
+              text: "Hire Now",
             ),
-          ],
-        ),
-        body: Stack(
-          children: [
-            GoogleMap(
-              initialCameraPosition: _cameraPosition,
-              compassEnabled: true,
-              markers: Set<Marker>.of(_marker),
-              onMapCreated: (GoogleMapController controller) {
-                _controller.complete(controller);
-              },
-            ),
-            UserHomePageHeader(
-              name: user!.name!,
-              text: "Find Mechanic Now",
-            ),
-          ],
-        ),
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return SendRequestDialogue();
+                },
+              );
+            },
+          ),
+        ],
       ),
-    );
+      body: Stack(
+        children: [
+          GoogleMap(
+            initialCameraPosition: _cameraPosition,
+            compassEnabled: true,
+            markers: Set<Marker>.of(_marker),
+            onMapCreated: (GoogleMapController controller) {
+              _controller.complete(controller);
+            },
+          ),
+          UserHomePageHeader(
+            name: user!.name!,
+            text: "Find Mechanic Now",
+          ),
+        ],
+      ),
+    ));
   }
 
   Padding locationButton() {

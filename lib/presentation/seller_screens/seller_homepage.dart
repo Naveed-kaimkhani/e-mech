@@ -41,10 +41,10 @@ class _SellerHomepageState extends State<SellerHomepage> {
     getUserCurrentLocation().then((value) async {
 
       String adress = await utils.getAddressFromLatLng(
-          value!.latitude, value.longitude, context);
+          value!.latitude, value.longitude);
 
       await _firebaseUserRepository.addlatLongToFirebaseDocument(
-          value.latitude, value.longitude, adress, 'sellers', context);
+          value.latitude, value.longitude, adress, 'sellers');
     });
     Provider.of<SellerProvider>(context, listen: false)
         .getSellerFromServer(context);

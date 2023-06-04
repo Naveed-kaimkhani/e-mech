@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:e_mech/presentation/seller_screens/seller_homepage.dart';
 import 'package:e_mech/presentation/widgets/my_app_bar.dart';
+import 'package:e_mech/utils/routes/routes_name.dart';
 import 'package:e_mech/utils/utils.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -91,7 +92,7 @@ class _SellerSignUpState extends State<SellerSignUp> {
       if (user != null) {
         final Position sellerLocation = await Geolocator.getCurrentPosition();
         final String address = await utils.getAddressFromLatLng(
-            sellerLocation.latitude, sellerLocation.longitude, context);
+            sellerLocation.latitude, sellerLocation.longitude);
         SellerModel sellerModel = SellerModel(
           uid: utils.currentUserUid,
           name: _nameController.text,
@@ -179,210 +180,217 @@ class _SellerSignUpState extends State<SellerSignUp> {
           backgroundColor: Colors.white,
           appBar: MyAppBar(
               text: "Login",
-              onSignUpOrLoginPressed: () {},
-              onBackButtonPressed: () {}),
+              onSignUpOrLoginPressed: () {
+                Navigator.pushNamed(context, RoutesName.sellerLogin);
+              },
+              onBackButtonPressed: () {
+                Navigator.pop(context);
+              }),
           body: Form(
             key: _formKey,
             child: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.only(left: 24, top: 16),
-                child: Column(
-                  // mainAxisSize: MainAxisSize.min,
-                  // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // SizedBox(
-                    //   height: 16.h,
-                    // ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text.rich(TextSpan(
-                            text: 'Sign-Up',
-                            style: CustomTextStyle.font_30,
-                            children: <InlineSpan>[
-                              TextSpan(
-                                text: '\nAs a Seller',
-                                style: CustomTextStyle.font_20,
-                              )
-                            ])),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 40.0),
-                          child: uploadProfile(_profileImage),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 20.16.h,
-                    ),
-                    InputField(
-                      hint_text: "CNIC",
-                      currentNode: cNICFocusNode,
-                      focusNode: cNICFocusNode,
-                      nextNode: workshopFocusNode,
-                      controller: _CNICController,
-                      obsecureText: false,
-                      keyboardType: TextInputType.number,
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return "Enter CNIC";
-                        } else if (value.length != 13) {
-                          return "Invalid CNIC";
-                        } else {
-                          return null;
-                        }
-                      },
-                    ),
-                    k,
-                    InputField(
-                      hint_text: "WorkShop Name",
-                      currentNode: workshopFocusNode,
-                      focusNode: workshopFocusNode,
-                      nextNode: nameFocusNode,
-                      controller: _workshopController,
-                      obsecureText: false,
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return "Enter WorkShop Name";
-                        } else {
-                          return null;
-                        }
-                      },
-                    ),
-
-                    k,
-
-                    InputField(
-                      hint_text: "Full name",
-                      currentNode: nameFocusNode,
-                      focusNode: nameFocusNode,
-                      nextNode: emailFocusNode,
-                      controller: _nameController,
-                      obsecureText: false,
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return "Enter name";
-                        } else {
-                          return null;
-                        }
-                      },
-                    ),
-                    k,
-                    InputField(
-                      hint_text: "Email address",
-                      currentNode: emailFocusNode,
-                      focusNode: emailFocusNode,
-                      nextNode: phoneFocusNode,
-                      controller: _emailController,
-                      obsecureText: false,
-                      keyboardType: TextInputType.emailAddress,
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return "Enter email address";
-                        } else if (!EmailValidator.validate(value)) {
-                          return "Invalid email address";
-                        }
-                      },
-                    ),
-                    k,
-                    InputField(
-                      hint_text: "Phone",
-                      currentNode: phoneFocusNode,
-                      focusNode: phoneFocusNode,
-                      nextNode: passwordFocusNode,
-                      controller: _phoneController,
-                      keyboardType: TextInputType.number,
-                      obsecureText: false,
-                      preicon: SizedBox(
-                        width: 60.w,
-                        height: 60.h,
-                        child: Row(
-                          children: [
-                            Text(
-                              "  +92",
-                              style: TextStyle(fontSize: 17.sp),
-                            ),
-                            VerticalDivider(
-                              thickness: 2.r,
-                              color: Colors.grey.shade700,
-                            ),
-                          ],
-                        ),
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height,
+                  child: Column(
+                    // mainAxisSize: MainAxisSize.min,
+                    // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // SizedBox(
+                      //   height: 16.h,
+                      // ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text.rich(TextSpan(
+                              text: 'Sign-Up',
+                              style: CustomTextStyle.font_30,
+                              children: <InlineSpan>[
+                                TextSpan(
+                                  text: '\nAs a Seller',
+                                  style: CustomTextStyle.font_20,
+                                )
+                              ])),
+                          Padding(
+                            padding: const EdgeInsets.only(right: 40.0),
+                            child: uploadProfile(_profileImage),
+                          ),
+                        ],
                       ),
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return "Enter phone number";
-                        } else if (value.length != 10) {
-                          return "Invalid phone number";
-                        }
-                      },
-                    ),
-                    k,
+                      SizedBox(
+                        height: 20.16.h,
+                      ),
+                      InputField(
+                        hint_text: "CNIC",
+                        currentNode: cNICFocusNode,
+                        focusNode: cNICFocusNode,
+                        nextNode: workshopFocusNode,
+                        controller: _CNICController,
+                        obsecureText: false,
+                        keyboardType: TextInputType.number,
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return "Enter CNIC";
+                          } else if (value.length != 13) {
+                            return "Invalid CNIC";
+                          } else {
+                            return null;
+                          }
+                        },
+                      ),
+                      k,
+                      InputField(
+                        hint_text: "WorkShop Name",
+                        currentNode: workshopFocusNode,
+                        focusNode: workshopFocusNode,
+                        nextNode: nameFocusNode,
+                        controller: _workshopController,
+                        obsecureText: false,
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return "Enter WorkShop Name";
+                          } else {
+                            return null;
+                          }
+                        },
+                      ),
 
-                    InputField(
-                      hint_text: "Set password",
-                      currentNode: passwordFocusNode,
-                      focusNode: passwordFocusNode,
-                      nextNode: confirmFocusNode,
-                      keyboardType: TextInputType.text,
-                      controller: _passwordController,
-                      icon: obsecureText!
-                          ? Icons.visibility_off
-                          : Icons.remove_red_eye,
-                      obsecureText: obsecureText,
-                      onIconPress: () {
-                        setState(() {
-                          obsecureText = !obsecureText!;
-                        });
-                      },
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return "Enter password";
-                        } else if (value.length < 6) {
-                          return "password must be of 6 characters";
-                        }
-                      },
-                    ),
-                    k,
-                    InputField(
-                      hint_text: "Confirm password",
-                      currentNode: confirmFocusNode,
-                      focusNode: confirmFocusNode,
-                      nextNode: confirmFocusNode,
-                      controller: _confirmpasswordController,
-                      obsecureText: _obsecureText,
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return "Enter password to confirm";
-                        } else if (value != _passwordController.text) {
-                          return "Password not match";
-                        }
-                      },
-                    ),
-                    // k,
-                    SizedBox(
-                      height: 8.h,
-                    ),
+                      k,
 
-                    genderSelection(),
-                    SizedBox(
-                      height: 8.h,
-                    ),
+                      InputField(
+                        hint_text: "Full name",
+                        currentNode: nameFocusNode,
+                        focusNode: nameFocusNode,
+                        nextNode: emailFocusNode,
+                        controller: _nameController,
+                        obsecureText: false,
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return "Enter name";
+                          } else {
+                            return null;
+                          }
+                        },
+                      ),
+                      k,
+                      InputField(
+                        hint_text: "Email address",
+                        currentNode: emailFocusNode,
+                        focusNode: emailFocusNode,
+                        nextNode: phoneFocusNode,
+                        controller: _emailController,
+                        obsecureText: false,
+                        keyboardType: TextInputType.emailAddress,
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return "Enter email address";
+                          } else if (!EmailValidator.validate(value)) {
+                            return "Invalid email address";
+                          }
+                        },
+                      ),
+                      k,
+                      InputField(
+                        hint_text: "Phone",
+                        currentNode: phoneFocusNode,
+                        focusNode: phoneFocusNode,
+                        nextNode: passwordFocusNode,
+                        controller: _phoneController,
+                        keyboardType: TextInputType.number,
+                        obsecureText: false,
+                        preicon: SizedBox(
+                          width: 60.w,
+                          height: 60.h,
+                          child: Row(
+                            children: [
+                              Text(
+                                "  +92",
+                                style: TextStyle(fontSize: 17.sp),
+                              ),
+                              VerticalDivider(
+                                thickness: 2.r,
+                                color: Colors.grey.shade700,
+                              ),
+                            ],
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return "Enter phone number";
+                          } else if (value.length != 10) {
+                            return "Invalid phone number";
+                          }
+                        },
+                      ),
+                      k,
 
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20.0),
-                      child: isLoadingNow
-                          ? const CircleProgress()
-                          : AuthButton(
-                              text: "Signup",
-                              func: () {
-                                FocusManager.instance.primaryFocus?.unfocus();
+                      InputField(
+                        hint_text: "Set password",
+                        currentNode: passwordFocusNode,
+                        focusNode: passwordFocusNode,
+                        nextNode: confirmFocusNode,
+                        keyboardType: TextInputType.text,
+                        controller: _passwordController,
+                        icon: obsecureText!
+                            ? Icons.visibility_off
+                            : Icons.remove_red_eye,
+                        obsecureText: obsecureText,
+                        onIconPress: () {
+                          setState(() {
+                            obsecureText = !obsecureText!;
+                          });
+                        },
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return "Enter password";
+                          } else if (value.length < 6) {
+                            return "password must be of 6 characters";
+                          }
+                        },
+                      ),
+                      k,
+                      InputField(
+                        hint_text: "Confirm password",
+                        currentNode: confirmFocusNode,
+                        focusNode: confirmFocusNode,
+                        nextNode: confirmFocusNode,
+                        controller: _confirmpasswordController,
+                        obsecureText: _obsecureText,
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return "Enter password to confirm";
+                          } else if (value != _passwordController.text) {
+                            return "Password not match";
+                          }
+                        },
+                      ),
+                      // k,
+                      SizedBox(
+                        height: 8.h,
+                      ),
 
-                                _submitForm();
-                              },
-                              color: Styling.primaryColor),
-                    ),
-                  ],
+                      genderSelection(),
+                      SizedBox(
+                        height: 8.h,
+                      ),
+
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20.0),
+                        child: isLoadingNow
+                            ? const CircleProgress()
+                            : AuthButton(
+                                text: "Signup",
+                                func: () {
+                                  FocusManager.instance.primaryFocus?.unfocus();
+
+                                  _submitForm();
+                                },
+                                color: Styling.primaryColor),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

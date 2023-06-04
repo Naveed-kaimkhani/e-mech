@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:e_mech/navigation_page.dart';
 import 'package:e_mech/presentation/controllers/all_sellerdata_provider.dart';
+import 'package:e_mech/presentation/splash_screen.dart';
 import 'package:e_mech/presentation/user_screens/get_user_current_location.dart';
 import 'package:e_mech/presentation/user_screens/user_home_page.dart';
 import 'package:e_mech/presentation/widgets/circle_progress.dart';
@@ -35,12 +36,6 @@ class _UserLoginState extends State<UserLogin> {
   final FirebaseUserRepository _firebaseRepository = FirebaseUserRepository();
   final _formKey = GlobalKey<FormState>();
 
-  @override
-  void initState() {
-    super.initState();
-    // utils.checkConnectivity(context);
-  }
-
   FocusNode emailFocusNode = FocusNode();
   FocusNode passwordFocusNode = FocusNode();
 
@@ -63,16 +58,17 @@ class _UserLoginState extends State<UserLogin> {
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
       // Form is valid, perform signup logic here
-      _login();
+
       // Perform signup logic
       // ...
     }
+    _login();
   }
 
   void _login() {
     isLoading(true);
     _firebaseRepository
-        .login(_emailController.text, _passwordController.text, context)
+        .login("hii@gmail.com", "123456", context)
         .then((User? user) async {
       if (user != null) {
         //  final   currentLocation = await Geolocator.getCurrentPosition();
@@ -99,7 +95,7 @@ class _UserLoginState extends State<UserLogin> {
           await preferences.setInt('isUser', 1);
           isLoading(false);
           Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => NavigationPage()));
+              MaterialPageRoute(builder: (context) => SplashScreen()));
         }).catchError((error) {
           isLoading(false);
           utils.flushBarErrorMessage(error.message.toString(), context);
@@ -121,6 +117,12 @@ class _UserLoginState extends State<UserLogin> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    utils.checkConnectivity(context);
   }
 
   @override

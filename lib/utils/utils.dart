@@ -191,7 +191,7 @@ class utils {
   }
 
   static Future<String> getAddressFromLatLng(
-      double latitude, double longitude, context) async {
+      double latitude, double longitude) async {
     try {
       List<Placemark> placemarks =
           await placemarkFromCoordinates(latitude, longitude);
@@ -200,11 +200,11 @@ class utils {
         String address = utils.getAddressFromPlacemark(placemark);
         return address;
       } else {
-        utils.flushBarErrorMessage(
-            "No address found for the given coordinates.", context);
+        // utils.flushBarErrorMessage(
+        //     "No address found for the given coordinates.", context);
       }
     } catch (e) {
-      utils.flushBarErrorMessage(e.toString(), context);
+      // utils.flushBarErrorMessage(e.toString(), context);
     }
     return '';
   }

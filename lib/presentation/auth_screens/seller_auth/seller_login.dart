@@ -6,6 +6,7 @@ import 'package:e_mech/presentation/widgets/inputfields.dart';
 import 'package:e_mech/presentation/widgets/my_app_bar.dart';
 import 'package:e_mech/style/custom_text_style.dart';
 import 'package:e_mech/style/images.dart';
+import 'package:e_mech/utils/routes/routes_name.dart';
 import 'package:e_mech/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +33,6 @@ class SellerLogin extends StatefulWidget {
 class _SellerLoginState extends State<SellerLogin> {
   final FirebaseUserRepository _firebaseRepository = FirebaseUserRepository();
   final _formKey = GlobalKey<FormState>();
-
 
   FocusNode emailFocusNode = FocusNode();
   FocusNode passwordFocusNode = FocusNode();
@@ -90,7 +90,7 @@ class _SellerLoginState extends State<SellerLogin> {
           await preferences.setInt('isSeller', 1);
           isLoading(false);
           Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) =>  SellerNavigation()));
+              MaterialPageRoute(builder: (context) => SellerNavigation()));
         }).catchError((error) {
           isLoading(false);
           utils.flushBarErrorMessage(error.message.toString(), context);
@@ -108,12 +108,13 @@ class _SellerLoginState extends State<SellerLogin> {
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
       // Form is valid, perform signup logic here
-      
+
       // Perform signup logic
       // ...
     }
     _login();
   }
+
   @override
   void initState() {
     super.initState();
@@ -131,8 +132,12 @@ class _SellerLoginState extends State<SellerLogin> {
           backgroundColor: Colors.white,
           appBar: MyAppBar(
               text: "SignUp",
-              onSignUpOrLoginPressed: () {},
-              onBackButtonPressed: () {}),
+              onSignUpOrLoginPressed: () {
+                Navigator.pushNamed(context, RoutesName.sellerSignup);
+              },
+              onBackButtonPressed: () {
+                Navigator.pop(context);
+              }),
           body: Form(
             key: _formKey,
             child: SingleChildScrollView(
