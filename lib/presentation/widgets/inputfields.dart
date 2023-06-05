@@ -35,11 +35,9 @@ class InputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 42.h,
-      width: 325.w,
       decoration: BoxDecoration(
-          color: Styling.textfieldsColor,
-          borderRadius: BorderRadius.circular(7.r)),
+        borderRadius: BorderRadius.circular(20.r),
+      ),
       child: TextFormField(
         style: const TextStyle(
             color: Colors.black, fontFamily: "Sansita", fontSize: 16),
@@ -51,6 +49,8 @@ class InputField extends StatelessWidget {
         onEditingComplete: () =>
             utils.fieldFocusChange(context, currentNode!, nextNode!),
         decoration: InputDecoration(
+          fillColor: Styling.textfieldsColor,
+          filled: true,
           contentPadding: const EdgeInsets.all(12),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(7.r),
