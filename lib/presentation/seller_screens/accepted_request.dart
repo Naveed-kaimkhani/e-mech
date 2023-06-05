@@ -44,6 +44,7 @@ class _AcceptedRequestState extends State<AcceptedRequest> {
               UserHomePageHeader(
                 name: "Hii ${seller!.name}",
                 text: "All Requst",
+                imageUrl: seller.profileImage!,
               ),
               SizedBox(
                 height: 35.h,

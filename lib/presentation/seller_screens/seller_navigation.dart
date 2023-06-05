@@ -1,6 +1,5 @@
 import 'package:e_mech/presentation/seller_screens/accepted_request.dart';
 import 'package:e_mech/presentation/seller_screens/seller_homepage.dart';
-import 'package:e_mech/presentation/user_screens/profile.dart';
 import 'package:e_mech/presentation/user_screens/services.dart';
 import 'package:e_mech/presentation/user_screens/setting.dart';
 import 'package:e_mech/presentation/user_screens/user_home_page.dart';
@@ -20,7 +19,7 @@ class _SellerNavigationState extends State<SellerNavigation> {
     SellerHomepage(),
     AcceptedRequest(),
     Setting(),
-    Profile(),
+    Setting()
   ];
   int currentindex = 0;
   void onTap(int index) {

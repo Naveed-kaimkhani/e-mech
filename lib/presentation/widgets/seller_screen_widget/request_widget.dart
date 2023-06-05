@@ -1,6 +1,5 @@
 import 'package:e_mech/presentation/auth_screens/user_auth/user_login.dart';
 import 'package:e_mech/presentation/seller_screens/seller_user_tracing.dart';
-import 'package:e_mech/presentation/user_screens/profile.dart';
 import 'package:e_mech/presentation/widgets/profile_pic.dart';
 import 'package:e_mech/presentation/widgets/request_widget_button.dart';
 import 'package:e_mech/presentation/widgets/seller_screen_widget/test.dart';

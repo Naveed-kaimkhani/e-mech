@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:typed_data';
+import 'package:custom_info_window/custom_info_window.dart';
 import 'package:e_mech/data/firebase_user_repository.dart';
 import 'package:e_mech/presentation/controllers/all_sellerdata_provider.dart';
 import 'package:e_mech/presentation/widgets/user_screen_widget/request_sent_dialogue.dart';
@@ -10,6 +11,7 @@ import 'package:e_mech/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -33,6 +35,7 @@ class _UserHomePageState extends State<UserHomePage> {
   final FirebaseUserRepository _firebaseUserRepository =
       FirebaseUserRepository();
   final Completer<GoogleMapController> _controller = Completer();
+  CustomInfoWindowController _windowinfoController=CustomInfoWindowController();
   List<SellerModel>? _sellerModel;
   UserModel? user;
   bool isLoadingNow = false;
@@ -52,9 +55,7 @@ class _UserHomePageState extends State<UserHomePage> {
   void isLoading(bool value) {
     setState(() {
       isLoadingNow = value;
-    });
-  }
-
+    });  }
   // void changeMaploading(bool value) {
   //   setState(() {
   //     isMapLoaded = value;
@@ -143,7 +144,13 @@ class _UserHomePageState extends State<UserHomePage> {
         markerId: markerId,
         position: LatLng(seller.lat!, seller.long!),
         icon: BitmapDescriptor.fromBytes(icon),
-        infoWindow: InfoWindow(title: seller.name),
+        // infoWindow: InfoWindow(title: seller.name),
+        onTap: (){
+          _windowinfoController.addInfoWindow!(
+           Text(seller.name!),
+            LatLng(seller.lat!, seller.long!)
+          );
+        }
       );
       return marker;
     }).toList();
@@ -163,6 +170,7 @@ class _UserHomePageState extends State<UserHomePage> {
     loadLocation();
     _createSellersMarkers();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -197,18 +205,35 @@ class _UserHomePageState extends State<UserHomePage> {
             compassEnabled: true,
             markers: Set<Marker>.of(_marker),
             onMapCreated: (GoogleMapController controller) {
-              _controller.complete(controller);
+              // _controller.complete(controller);
+            _windowinfoController.googleMapController=controller;
+            },
+            onTap: (Position){
+              _windowinfoController.hideInfoWindow!();
             },
           ),
+          CustomInfoWindow(controller: _windowinfoController,height: 100,width: 300,offset: 35,),
           UserHomePageHeader(
             name: user!.name!,
+            imageUrl: user!.profileImage!,
             text: "Find Mechanic Now",
           ),
         ],
       ),
     ));
   }
-
+launchphone() async {
+    Uri phone = Uri.parse("111111111111");
+    if (await canLaunchUrl(phone)) {
+      await launchUrl(phone);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("unable to open"),
+        ),
+      );
+    }
+  }
   Padding locationButton() {
     return Padding(
       padding: const EdgeInsets.only(left: 110.0),
@@ -235,8 +260,8 @@ class _UserHomePageState extends State<UserHomePage> {
             Icons.call,
             color: Colors.white,
           ),
-          onPressed: () async {
-            animateCamera();
+          onPressed: ()  {
+            launchphone();
           }),
     );
   }

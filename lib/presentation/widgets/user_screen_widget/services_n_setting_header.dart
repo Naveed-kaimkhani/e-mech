@@ -1,26 +1,24 @@
 import 'package:e_mech/presentation/widgets/profile_pic.dart';
+import 'package:e_mech/style/styling.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../style/custom_text_style.dart';
+import '../../../style/custom_text_style.dart';
 
-class UserHomePageHeader extends StatelessWidget {
-  String name;
+class ServicesNSettingHeader extends StatelessWidget {
   String text;
-  String imageUrl;
-  UserHomePageHeader({
-    required this.name,
+
+  ServicesNSettingHeader({
     required this.text,
-    required this.imageUrl,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 80.h,
+        height: 100.h,
         width: 355.w,
-        padding: EdgeInsets.only(top: 18, left: 18),
+        padding: EdgeInsets.only(top: 45, left: 50),
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.only(
               bottomLeft: Radius.circular(40),
@@ -38,24 +36,18 @@ class UserHomePageHeader extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              // mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Hi $name',
-                  style: CustomTextStyle.font_25,
-                ),
-                Text(
-                  text,
-                  style: CustomTextStyle.font_20,
-                ),
-              ],
+            Icon(
+              Icons.grid_view_rounded,
+              size: 30.h,
+              color: Styling.primaryColor,
             ),
             SizedBox(
-              width: 80.w,
+              width: 25.w,
             ),
-            ProfilePic(url: imageUrl, height: 50.h, width: 50.h),
+            Text(
+              text,
+              style: CustomTextStyle.font_25,
+            ),
           ],
         ));
   }

@@ -1,4 +1,3 @@
-import 'package:e_mech/presentation/user_screens/profile.dart';
 import 'package:e_mech/presentation/user_screens/services.dart';
 import 'package:e_mech/presentation/user_screens/setting.dart';
 import 'package:e_mech/presentation/user_screens/user_home_page.dart';
@@ -18,7 +17,7 @@ class _NavigationPageState extends State<NavigationPage> {
     UserHomePage(),
     Services(),
     Setting(),
-    Profile(),
+    Setting()
   ];
   int currentindex = 0;
   void onTap(int index) {

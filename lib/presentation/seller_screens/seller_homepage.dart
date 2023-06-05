@@ -69,6 +69,7 @@ class _SellerHomepageState extends State<SellerHomepage> {
               UserHomePageHeader(
                 name: "Hii ${seller!.name}",
                 text: "All Requst",
+                imageUrl: seller.profileImage!,
               ),
               SizedBox(
                 height: 35.h,
