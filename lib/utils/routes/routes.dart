@@ -2,6 +2,7 @@ import 'package:e_mech/presentation/auth_screens/seller_auth/seller_login.dart';
 import 'package:e_mech/presentation/auth_screens/user_auth/user_login.dart';
 import 'package:e_mech/presentation/auth_screens/user_auth/user_signup.dart';
 import 'package:e_mech/presentation/seller_screens/selller_signup.dart';
+import 'package:e_mech/presentation/user_screens/petrol_providers.dart';
 import 'package:e_mech/utils/routes/routes_name.dart';
 import 'package:flutter/material.dart';
 
@@ -19,6 +20,9 @@ class Routes {
 
       case RoutesName.userLogin:
         return _buildRoute(UserLogin(), settings);
+       
+      case RoutesName.PetrolProviders:
+        return _buildRoute(PetrolProviders(), settings); 
       default:
         return _buildRoute(const Scaffold(body: Center(
           child: Text("NO Route Found"),

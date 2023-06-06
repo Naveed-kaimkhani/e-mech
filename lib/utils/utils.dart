@@ -14,8 +14,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'dart:ui' as ui;
 import '../presentation/widgets/circle_progress.dart';
+import '../presentation/widgets/user_screen_widget/request_sent_dialogue.dart';
 
 class utils {
   static toastMessage(String message) {
@@ -200,6 +202,29 @@ class utils {
         .buffer
         .asUint8List();
   }
+
+  static Future<dynamic> openRequestSentDialogue(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return const RequestSentDialogue();
+      },
+    );
+  }
+
+  static launchphone(String number, context) async {
+    Uri phone = Uri.parse(number);
+    if (await canLaunchUrl(phone)) {
+      await launchUrl(phone);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("unable to open"),
+        ),
+      );
+    }
+  }
+
   static Future<String> getAddressFromLatLng(
       double latitude, double longitude) async {
     try {

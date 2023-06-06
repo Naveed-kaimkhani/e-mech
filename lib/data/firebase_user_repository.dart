@@ -10,7 +10,6 @@ import '../domain/entities/request_model.dart';
 import '../domain/entities/seller_model.dart';
 import '../domain/entities/user_model.dart';
 import '../domain/repositories/users_repository.dart';
-import 'models/user_json.dart';
 
 class FirebaseUserRepository implements UsersRepository {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -202,6 +201,32 @@ static Future<void> sentRequest(
     }
   }
 
+static Future<void> sendRequestForSpecificService(
+    String sellerId,
+    RequestModel requestModel,
+    context,
+  ) async {
+    try {
+        final DocumentReference requestRef = await _sellerCollection
+            .doc(sellerId)
+            .collection('Request')
+            .add(requestModel.toMap(requestModel));
+
+        final String documentId = requestRef.id;
+
+        await requestRef.update({'documentId': documentId});
+      
+      utils.toastMessage("Request Sent");
+    } catch (error) {
+      // Handle the error appropriately
+      utils.flushBarErrorMessage('Error sending request: $error', context);
+      throw FirebaseException(
+        plugin: 'FirebaseUserRepository',
+        message: 'Failed to send request to sellers.',
+      );
+    }
+  }
+
 static Stream<List<RequestModel>> getRequests(context) async* {
   try {
     final CollectionReference requestCollection = FirebaseFirestore.instance
@@ -271,6 +296,26 @@ static Future<void> deleteRequestFromEverySeller(String documentId,context) asyn
     // print('Error deleting documents: $e');
     utils.flushBarErrorMessage('Error deleting documents: $e',context);
   }
+}
+static Future<List<Map<String, dynamic>>> getSellersBasedOnService(String service) async {
+  List<Map<String, dynamic>> sellersList = [];
+
+  try {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection("sellers")
+        .where("service", isEqualTo: service)
+        .get();
+
+    querySnapshot.docs.forEach((doc) {
+    sellersList.add(doc.data() as Map<String, dynamic>);
+
+    });
+  } catch (e) {
+    // Handle any errors that may occur
+    print("Error: $e");
+  }
+
+  return sellersList;
 }
 
 }

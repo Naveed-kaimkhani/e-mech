@@ -1,3 +1,4 @@
+import 'package:e_mech/utils/routes/routes_name.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -26,7 +27,7 @@ class Services extends StatelessWidget {
           services_screen_widgets(
             text: "Petrol",
             imageURL: Images.petrol,
-            routeName: "",
+            routeName: RoutesName.PetrolProviders,
           ),
           k,
           services_screen_widgets(

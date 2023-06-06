@@ -161,7 +161,8 @@ class _SendRequestDialogueState extends State<SendRequestDialogue> {
                   print("in if");
                   await sendRequest(neededSellers, user!);
                 Navigator.pop(context);
-                openRequestSentDialogue(context);
+                utils.openRequestSentDialogue(context);
+              
               
                 }
                else{
@@ -187,14 +188,6 @@ class _SendRequestDialogueState extends State<SendRequestDialogue> {
     );
   }
 
-  Future<dynamic> openRequestSentDialogue(BuildContext context) {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return const RequestSentDialogue();
-      },
-    );
-  }
 
   filterSellersByService(List<SellerModel> sellers, String selectedService) {
     isLoading(true);

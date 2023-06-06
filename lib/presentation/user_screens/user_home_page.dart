@@ -222,18 +222,6 @@ class _UserHomePageState extends State<UserHomePage> {
       ),
     ));
   }
-launchphone() async {
-    Uri phone = Uri.parse("111111111111");
-    if (await canLaunchUrl(phone)) {
-      await launchUrl(phone);
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("unable to open"),
-        ),
-      );
-    }
-  }
   Padding locationButton() {
     return Padding(
       padding: const EdgeInsets.only(left: 110.0),
@@ -261,7 +249,7 @@ launchphone() async {
             color: Colors.white,
           ),
           onPressed: ()  {
-            launchphone();
+           utils.launchphone('',context);
           }),
     );
   }

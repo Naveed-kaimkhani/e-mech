@@ -3,6 +3,7 @@ import 'package:e_mech/presentation/seller_screens/seller_user_tracing.dart';
 import 'package:e_mech/presentation/widgets/profile_pic.dart';
 import 'package:e_mech/presentation/widgets/request_widget_button.dart';
 import 'package:e_mech/presentation/widgets/seller_screen_widget/test.dart';
+import 'package:e_mech/presentation/widgets/user_screen_widget/call_widget.dart';
 import 'package:e_mech/style/custom_text_style.dart';
 import 'package:e_mech/style/images.dart';
 import 'package:e_mech/style/styling.dart';
@@ -74,15 +75,12 @@ class _RequestWidgetState extends State<RequestWidget> {
                   ),
                   Text(
                     // widget.requestModel!.senderName!,
-                    widget.requestModel?.senderName ?? "No Sender Name",
+                    widget.requestModel.senderName ?? "No Sender Name",
                     style: CustomTextStyle.font_20,
                   ),
                 ],
               ),
-              const Icon(
-                Icons.phone,
-                size: 30,
-              )
+              CallWidget(num: widget.requestModel.senderPhone!, context: context)
             ],
           ),
           SizedBox(

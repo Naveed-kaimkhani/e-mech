@@ -34,7 +34,11 @@ class CustomTextStyle {
     fontSize: 15.sp,
     fontWeight: FontWeight.w700,
   );
-
+static final font_10_black = TextStyle(
+    color: Colors.black,
+    fontSize: 10.sp,
+    fontWeight: FontWeight.w700,
+  );
   static final font_30 = TextStyle(
     color: Styling.primaryColor,
     fontSize: 30.sp,

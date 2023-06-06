@@ -3,4 +3,6 @@ class RoutesName{
  static const String sellerSignup = 'sellerSignup';
  static const String userLogin = 'userLogin';
  static const String userSingup = 'userSingup';
+ static const String PetrolProviders = 'PetrolProviders';
+
 }
