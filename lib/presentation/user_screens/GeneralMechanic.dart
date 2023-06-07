@@ -18,7 +18,7 @@ class GeneralMechanic extends StatelessWidget {
         child: Column(
           children: [
             SpecificServicesProviderHeader(
-              text: "General Mechanic",
+              text: "Mechanics",
               imageUrl: Images.mechanic_pic,
             ),
             SizedBox(

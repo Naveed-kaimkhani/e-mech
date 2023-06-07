@@ -13,24 +13,17 @@ import '../../../domain/entities/seller_model.dart';
 import '../../../style/custom_text_style.dart';
 import '../profile_pic.dart';
 
-class SpecificServiceProviderWidget extends StatefulWidget {
+class SellerInfoWindow extends StatefulWidget {
   SellerModel seller;
 
-  SpecificServiceProviderWidget({super.key, required this.seller});
+  SellerInfoWindow({super.key, required this.seller});
 
   @override
-  State<SpecificServiceProviderWidget> createState() =>
-      _SpecificServiceProviderWidgetState();
+  State<SellerInfoWindow> createState() => _SellerInfoWindowState();
 }
 
-class _SpecificServiceProviderWidgetState
-    extends State<SpecificServiceProviderWidget> {
+class _SellerInfoWindowState extends State<SellerInfoWindow> {
   bool isRequestSend = false;
-  void setBoolValue(bool value) {
-    setState(() {
-      isRequestSend = value;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,8 +37,8 @@ class _SpecificServiceProviderWidgetState
         padding:
             const EdgeInsets.only(left: 10, top: 10, bottom: 10, right: 10),
         // padding: EdgeInsets.all(20),
-        height: 119.h,
-        width: 355.w,
+        height: 150.h,
+        width: 300.w,
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border.all(width: 1, color: Colors.redAccent),
@@ -99,13 +92,13 @@ class _SpecificServiceProviderWidgetState
                             Icon(
                               Icons.location_on,
                               color: Styling.primaryColor,
-                              size: 16.h,
+                              size: 12.h,
                             ),
                             SizedBox(
-                              width: 6.w,
+                              width: 3.w,
                             ),
                             Text(
-                              // widget.requestModel!.senderName!,
+                              // widget.seller.workshopName!,
                               address,
                               style: CustomTextStyle.font_15_black,
                             ),
@@ -115,14 +108,14 @@ class _SpecificServiceProviderWidgetState
                     ),
                   ],
                 ),
-                CallWidget(num: widget.seller.phone!, context: context,radius: 20.r,iconSize: 12,),
+                // CallWidget(num: widget.seller.phone!, context: context),
               ],
             ),
             SizedBox(
-              height: 6.h,
+              height: 2.h,
             ),
             Padding(
-              padding: EdgeInsets.only(left: 60.w),
+              padding: EdgeInsets.only(left: 40.w),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -158,9 +151,18 @@ class _SpecificServiceProviderWidgetState
                     SendRequestBttnForSpecificSeller(
                       seller: widget.seller,
                       height: 30.h,
-                      widht: 145.w,
-                      textSize: 15.sp,
-                    )
+                      widht: 95.w,
+                      textSize: 13.sp,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: CallWidget(
+                        num: widget.seller.phone!,
+                        context: context,
+                        radius: 20.r,
+                        iconSize: 16.h,
+                      ),
+                    ),
                   ]),
             )
           ],

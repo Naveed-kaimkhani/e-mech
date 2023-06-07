@@ -1,3 +1,4 @@
+import 'package:e_mech/presentation/user_screens/profile.dart';
 import 'package:e_mech/presentation/user_screens/services.dart';
 import 'package:e_mech/presentation/user_screens/setting.dart';
 import 'package:e_mech/presentation/user_screens/user_home_page.dart';
@@ -17,7 +18,7 @@ class _NavigationPageState extends State<NavigationPage> {
     UserHomePage(),
     Services(),
     Setting(),
-    Setting()
+    Profile()
   ];
   int currentindex = 0;
   void onTap(int index) {
@@ -57,7 +58,7 @@ class _NavigationPageState extends State<NavigationPage> {
             ),
             GButton(
               icon: Icons.account_circle_outlined,
-              text: "Setting",
+              text: "Profile",
             ),
           ],
         ),

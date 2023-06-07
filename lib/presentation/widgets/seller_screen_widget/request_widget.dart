@@ -19,7 +19,7 @@ class RequestWidget extends StatefulWidget {
   final RequestModel requestModel;
   RequestWidget({
     Key? key,
-  required  this.requestModel,
+    required this.requestModel,
   }) : super(key: key);
   bool? isAccepted = false;
   String text = "Accepted";
@@ -80,7 +80,12 @@ class _RequestWidgetState extends State<RequestWidget> {
                   ),
                 ],
               ),
-              CallWidget(num: widget.requestModel.senderPhone!, context: context)
+              CallWidget(
+                num: widget.requestModel.senderPhone!,
+                context: context,
+                radius: 20.r,
+                iconSize: 12.h,
+              )
             ],
           ),
           SizedBox(
@@ -111,7 +116,7 @@ class _RequestWidgetState extends State<RequestWidget> {
                   ),
                   widget.isAccepted!
                       ? InkWell(
-                        child: Container(
+                          child: Container(
                             height: 30.h,
                             width: 89.w,
                             padding: const EdgeInsets.all(28.0),
@@ -129,15 +134,17 @@ class _RequestWidgetState extends State<RequestWidget> {
                               ),
                             ),
                           ),
-                          onTap: (){
-
-                  // });
-Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context)=> SellerUserTracing(requestModel: widget.requestModel,)),
-            );
+                          onTap: () {
+                            // });
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SellerUserTracing(
+                                        requestModel: widget.requestModel,
+                                      )),
+                            );
                           },
-                      )
+                        )
                       : Row(
                           children: [
                             InkWell(
@@ -147,7 +154,6 @@ Navigator.push(
                                 // setState(() {
                                 //   widget.isAccepted = false;
                                 //   widget.text = "Declined";
-              
 
                                 // await _firebaseRepository.declineConnectionRequest(
                                 //     requestModel: widget.requestModel!);
@@ -172,9 +178,8 @@ Navigator.push(
                                 });
                                 await FirebaseUserRepository.acceptRequest(
                                     widget.requestModel, context);
-           
+
                                 utils.toastMessage("Request Accepted");
-           
                               },
                             )
                           ],

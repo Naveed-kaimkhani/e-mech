@@ -6,8 +6,13 @@ import '../../../style/styling.dart';
 
 class CallWidget extends StatelessWidget {
   String num;
+  double radius;
+  
+  double iconSize;
   BuildContext context;
   CallWidget({
+    required this.iconSize,
+    required this.radius,
     required this.num,
     required this.context,
     super.key,
@@ -18,11 +23,11 @@ class CallWidget extends StatelessWidget {
     return InkWell(
       child: CircleAvatar(
         backgroundColor: Styling.primaryColor,
-        radius: 20.h,
+        radius: radius,
         child: Icon(
           Icons.call,
           color: Colors.white,
-          size: 24.h,
+          size: iconSize,
         ),
       ),
       onTap: () {

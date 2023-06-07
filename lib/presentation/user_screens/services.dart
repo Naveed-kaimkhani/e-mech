@@ -1,3 +1,4 @@
+import 'package:e_mech/presentation/user_screens/setting_services_screen_widget.dart';
 import 'package:e_mech/utils/routes/routes_name.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -20,58 +21,29 @@ class Services extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
-          ServicesNSettingHeader(text: 'Services Available'),
+          ServicesNSettingHeader(text: 'Services Available',icon: Icons.grid_view_rounded,),
           SizedBox(
             height: 10.h,
           ),
-          services_screen_widgets(
+         SettingServicesScreenWidget(
             text: "Petrol",
             imageURL: Images.petrol,
             routeName: RoutesName.PetrolProviders,
           ),
           k,
-          services_screen_widgets(
+          SettingServicesScreenWidget(
             text: "Puncture",
             imageURL: Images.wheel,
-            routeName: "",
+            routeName: RoutesName.punctureMaker,
           ),
           k,
-          services_screen_widgets(
+         SettingServicesScreenWidget(
             text: "General Mechanic",
             imageURL: Images.mechanic_pic,
-            routeName: "",
+            routeName:RoutesName.generalMechanic,
           ),
           k,
         ],
-      ),
-    );
-  }
-}
-
-class services_screen_widgets extends StatelessWidget {
-  String text;
-  String imageURL;
-  String routeName;
-  services_screen_widgets({
-    required this.routeName,
-    required this.imageURL,
-    required this.text,
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 10.0),
-      child: InkWell(
-        child: ListTile(
-          title: Text(text),
-          leading: Image.asset(imageURL),
-          trailing: Icon(Icons.arrow_forward_ios),
-        ),
-        onTap: () {
-          Navigator.pushNamed(context, routeName);
-        },
       ),
     );
   }

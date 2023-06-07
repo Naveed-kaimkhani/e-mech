@@ -7,9 +7,10 @@ import '../../../style/custom_text_style.dart';
 
 class ServicesNSettingHeader extends StatelessWidget {
   String text;
-
+IconData icon;
   ServicesNSettingHeader({
     required this.text,
+   required this.icon,
     super.key,
   });
 
@@ -37,7 +38,7 @@ class ServicesNSettingHeader extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Icon(
-              Icons.grid_view_rounded,
+              icon,
               size: 30.h,
               color: Styling.primaryColor,
             ),

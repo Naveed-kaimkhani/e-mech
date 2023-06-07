@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_mech/data/firebase_user_repository.dart';
 import 'package:e_mech/domain/entities/seller_model.dart';
+import 'package:e_mech/presentation/widgets/circle_progress.dart';
 import 'package:e_mech/presentation/widgets/user_screen_widget/specific_serviceprovider_widget.dart';
 import 'package:e_mech/presentation/widgets/user_screen_widget/specific_services_provider_header.dart';
 import 'package:e_mech/style/images.dart';
@@ -29,7 +30,7 @@ class PetrolProviders extends StatelessWidget {
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(
-                      child: CircularProgressIndicator(),
+                      child: CircleProgress(),
                     );
                   } else if (snapshot.hasData && snapshot.data!.length == 0) {
                     return const Center(

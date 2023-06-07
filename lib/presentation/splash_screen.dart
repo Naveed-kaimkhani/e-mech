@@ -23,21 +23,59 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  
   final FirebaseUserRepository _firebaseUserRepository =
       FirebaseUserRepository();
   @override
   void initState() {
-   loadData();
+    utils.checkConnectivity(context);
+    loadData();
     super.initState();
 
     // Timer(const Duration(seconds: 3), () {
     //   Navigator.of(context).pushReplacementNamed('/HomeScreen');
     // });
   }
+
+  Future<Position?> getUserCurrentLocations() async {
+    try {
+      print("location");
+      await Geolocator.requestPermission();
+      //  print(Geolocator.getCurrentPosition());
+      return await Geolocator.getCurrentPosition();
+    } catch (error) {
+      utils.flushBarErrorMessage(error.toString(), context);
+      return null; // or throw the error
+    }
+  }
+
   Future<Position?> getUserCurrentLocation() async {
     try {
-      // await Geolocator.requestPermission();
+      print("location");
+      await Geolocator.requestPermission();
+      var permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Location Permission Required"),
+              content: Text(
+                "Please enable location permission from the app settings to access your current location.",
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text("OK"),
+                ),
+              ],
+            );
+          },
+        );
+      } else if (permission == LocationPermission.denied) {
+        return null;
+      }
       return await Geolocator.getCurrentPosition();
     } catch (error) {
       utils.flushBarErrorMessage(error.toString(), context);
@@ -46,13 +84,19 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   loadData() async {
+    print("in splash");
     try {
       final value = await getUserCurrentLocation();
-      String address = await utils.getAddressFromLatLng(
-          value!.latitude, value.longitude);
+      print(value);
+      String address =
+          await utils.getAddressFromLatLng(value!.latitude, value.longitude);
 
       await _firebaseUserRepository.addlatLongToFirebaseDocument(
-          value.latitude, value.longitude, address, 'users',);
+        value.latitude,
+        value.longitude,
+        address,
+        'users',
+      );
 
       await Provider.of<UserProvider>(context, listen: false)
           .getUserFromServer(context);
@@ -70,6 +114,7 @@ class _SplashScreenState extends State<SplashScreen> {
       // Handle error if any
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -86,11 +131,10 @@ class _SplashScreenState extends State<SplashScreen> {
               height: 180.h,
               width: 180.w,
             ),
-           
             SizedBox(
               height: 230.w,
             ),
-          const  EmergencyServiceProviderText(),
+            const EmergencyServiceProviderText(),
             const Padding(
               padding: const EdgeInsets.only(top: 8.0),
               child: SpinKitSpinningLines(

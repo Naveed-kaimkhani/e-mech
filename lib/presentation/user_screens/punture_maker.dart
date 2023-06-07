@@ -6,8 +6,8 @@ import 'package:e_mech/presentation/widgets/user_screen_widget/specific_services
 import 'package:e_mech/style/images.dart';
 import 'package:flutter/material.dart';
 
-class GeneralMechanic extends StatelessWidget {
-  const GeneralMechanic({Key? key});
+class PunctureMaker extends StatelessWidget {
+  const PunctureMaker({Key? key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class GeneralMechanic extends StatelessWidget {
         child: Column(
           children: [
             SpecificServicesProviderHeader(
-              text: "Puncture Maker",
+              text: "Puncture Makers",
               imageUrl: Images.wheel,
             ),
             SizedBox(

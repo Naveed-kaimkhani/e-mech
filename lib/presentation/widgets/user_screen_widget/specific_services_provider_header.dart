@@ -38,17 +38,22 @@ class SpecificServicesProviderHeader extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            CircleAvatar(
-              backgroundColor: Styling.primaryColor,
-              radius: 20,
-              child: Padding(
-                padding: EdgeInsets.only(left: 12.0),
-                child: Icon(
-                  Icons.arrow_back_ios,
-                  color: Colors.white,
-                  size: 26.h,
+            InkWell(
+              child: CircleAvatar(
+                backgroundColor: Styling.primaryColor,
+                radius: 20,
+                child: Padding(
+                  padding: EdgeInsets.only(left: 12.0),
+                  child: Icon(
+                    Icons.arrow_back_ios,
+                    color: Colors.white,
+                    size: 26.h,
+                  ),
                 ),
               ),
+              onTap: () {
+                Navigator.pop(context);
+              },
             ),
             Image.asset(
               imageUrl,

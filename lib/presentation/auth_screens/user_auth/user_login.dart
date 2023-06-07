@@ -70,6 +70,7 @@ class _UserLoginState extends State<UserLogin> {
     _firebaseRepository
         .login("hii@gmail.com", "123456", context)
         .then((User? user) async {
+          print("user login");
       if (user != null) {
         //  final   currentLocation = await Geolocator.getCurrentPosition();
         _getUserDetails(user.uid);
@@ -85,6 +86,7 @@ class _UserLoginState extends State<UserLogin> {
   void _getUserDetails(String uid) {
     _firebaseRepository.getUser().then((UserModel? userModel) {
       if (userModel != null) {
+       print(userModel.name);
         StorageService.saveUser(userModel).then((value) async {
           Provider.of<UserProvider>(context, listen: false).getUserLocally();
           Provider.of<AllSellerDataProvider>(context, listen: false)
