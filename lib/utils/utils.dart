@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:another_flushbar/flushbar_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_mech/presentation/user_screens/no_internet_connection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -75,7 +76,7 @@ class utils {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => const Center(
-              child: Text("NO internet"),
+              child: NoInternetCnnection(),
             ),
           ),
         );
@@ -213,13 +214,13 @@ class utils {
   }
 
   static launchphone(String number, context) async {
-    Uri phone = Uri.parse(number);
-    if (await canLaunchUrl(phone)) {
-      await launchUrl(phone);
+    Uri phoneUri = Uri.parse("tel:$number");
+    if (await canLaunch(phoneUri.toString())) {
+      await launch(phoneUri.toString());
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("unable to open"),
+          content: Text("Unable to open"),
         ),
       );
     }

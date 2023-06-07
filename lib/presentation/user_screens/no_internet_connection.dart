@@ -1,9 +1,18 @@
+import 'dart:async';
+
 import 'package:e_mech/style/styling.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 
-class NoInternetCnnection extends StatelessWidget {
-  const NoInternetCnnection({super.key});
+class NoInternetCnnection extends StatefulWidget {
+  const NoInternetCnnection({Key? key}) : super(key: key);
+
+  @override
+  _NoInternetCnnectionState createState() => _NoInternetCnnectionState();
+}
+
+class _NoInternetCnnectionState extends State<NoInternetCnnection> {
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +23,11 @@ class NoInternetCnnection extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Center(
-              child: Image.asset("asset/NoInternet.png"),
+              child: Image.asset(
+                "assets/NoInternet.png",
+                height: 250.h,
+                width: 250.w,
+              ),
             ),
             SizedBox(
               height: 26.h,
@@ -22,22 +35,33 @@ class NoInternetCnnection extends StatelessWidget {
             Text(
               "Ooops!",
               style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black,
-                  fontSize: 29.sp),
+                fontWeight: FontWeight.w600,
+                color: Colors.black,
+                fontSize: 29.sp,
+              ),
             ),
             SizedBox(
               height: 14.h,
             ),
-            Text(
-                "You are not connected to the internet\n Please check your interent connection"),
+            const Text(
+              "You are not connected to the internet\nPlease check your internet connection",
+              textAlign: TextAlign.center,
+            ),
             SizedBox(
               height: 42.h,
             ),
             InkWell(
+              onTap: () {
+                InternetConnectionChecker().hasConnection.then((connected) {
+                  if (connected) {
+                    Navigator.pop(context);
+                    // Do something when connected
+                  }
+                });
+              },
               child: Container(
-                height: 67.h,
-                width: 321.w,
+                height: 50.h,
+                width: 300.w,
                 decoration: BoxDecoration(
                   color: Styling.primaryColor,
                   borderRadius: BorderRadius.circular(12.r),
@@ -46,22 +70,13 @@ class NoInternetCnnection extends StatelessWidget {
                   child: Text(
                     "Try Again",
                     style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        color: Colors.white,
-                        fontSize: 17.sp),
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                      fontSize: 17.sp,
+                    ),
                   ),
                 ),
               ),
-              onTap: () {
-              //   bool flag = utils.checkConnectivity(context);
-
-              //   if (flag) {
-              //   } else {
-              //     Navigator.pop(context);
-              //   }
-              // },
-                                Navigator.pop(context);
-              }
             ),
           ],
         ),

@@ -7,7 +7,7 @@ import '../../../style/styling.dart';
 class CallWidget extends StatelessWidget {
   String num;
   double radius;
-  
+
   double iconSize;
   BuildContext context;
   CallWidget({
@@ -31,7 +31,7 @@ class CallWidget extends StatelessWidget {
         ),
       ),
       onTap: () {
-        utils.launchphone('03103443527', context);
+        utils.launchphone(num, context);
       },
     );
   }
