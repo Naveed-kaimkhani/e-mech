@@ -28,7 +28,6 @@ class _AcceptedRequestState extends State<AcceptedRequest> {
   @override
   void initState() {
     super.initState();
-    // loadLocation();
   }
 
   @override
@@ -42,8 +41,8 @@ class _AcceptedRequestState extends State<AcceptedRequest> {
           child: Column(
             children: [
               UserHomePageHeader(
-                name: "Hii ${seller!.name}",
-                text: "All Requst",
+                name: seller!.name!,
+                text: "Accepted Requst",
                 imageUrl: seller.profileImage!,
               ),
               SizedBox(

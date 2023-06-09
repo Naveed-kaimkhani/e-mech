@@ -83,8 +83,8 @@ class _RequestWidgetState extends State<RequestWidget> {
               CallWidget(
                 num: widget.requestModel.senderPhone!,
                 context: context,
-                radius: 20.r,
-                iconSize: 12.h,
+                radius: 24.r,
+                iconSize: 18.h,
               )
             ],
           ),
@@ -105,7 +105,7 @@ class _RequestWidgetState extends State<RequestWidget> {
                         style: CustomTextStyle.font_15_black,
                       ),
                       Text(
-                        widget.requestModel?.serviceRequired ?? "Service Null",
+                        widget.requestModel.serviceRequired ?? "Service Null",
                         style: CustomTextStyle.font_14_red,
                       ),
                       // Text(
@@ -125,7 +125,7 @@ class _RequestWidgetState extends State<RequestWidget> {
                                 color: Colors.black),
                             child: Center(
                               child: Text(
-                                "Goto Locat",
+                                "Direction",
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 20.sp,
@@ -145,44 +145,41 @@ class _RequestWidgetState extends State<RequestWidget> {
                             );
                           },
                         )
-                      : Row(
-                          children: [
-                            InkWell(
-                              child: RequestWidgetButton(
-                                  text: "Cancel", color: Colors.black),
-                              onTap: () async {
-                                // setState(() {
-                                //   widget.isAccepted = false;
-                                //   widget.text = "Declined";
+                      : Padding(
+                          padding: const EdgeInsets.only(top: 12.0),
+                          child: Row(
+                            children: [
+                              InkWell(
+                                child: RequestWidgetButton(
+                                    text: "Cancel", color: Colors.black),
+                                onTap: () async {
+                                  await FirebaseUserRepository
+                                      .deleteRequestDocument(
+                                          utils.currentUserUid,
+                                          widget.requestModel.documentId!,
+                                          context);
+                                },
+                              ),
+                              SizedBox(
+                                width: 8.w,
+                              ),
+                              InkWell(
+                                child: RequestWidgetButton(
+                                    text: "Accept",
+                                    color: Styling.primaryColor),
+                                onTap: () async {
+                                  setState(() {
+                                    widget.isAccepted = true;
+                                    widget.text = "Accepted";
+                                  });
+                                  await FirebaseUserRepository.acceptRequest(
+                                      widget.requestModel, context);
 
-                                // await _firebaseRepository.declineConnectionRequest(
-                                //     requestModel: widget.requestModel!);
-
-                                utils.toastMessage("Request Declined");
-
-                                // await _firebaseRepository.acceptConnectionRequest(
-                                //     requestModel: widget.requestModel!);
-                                // utils.toastMessage("Request Accepted");
-                              },
-                            ),
-                            SizedBox(
-                              width: 8.w,
-                            ),
-                            InkWell(
-                              child: RequestWidgetButton(
-                                  text: "Accept", color: Styling.primaryColor),
-                              onTap: () async {
-                                setState(() {
-                                  widget.isAccepted = true;
-                                  widget.text = "Accepted";
-                                });
-                                await FirebaseUserRepository.acceptRequest(
-                                    widget.requestModel, context);
-
-                                utils.toastMessage("Request Accepted");
-                              },
-                            )
-                          ],
+                                  utils.toastMessage("Request Accepted");
+                                },
+                              )
+                            ],
+                          ),
                         ),
                 ]),
           )

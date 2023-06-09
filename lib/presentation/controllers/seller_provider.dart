@@ -28,6 +28,7 @@ class SellerProvider with ChangeNotifier {
 
   
   Future getSellerFromServer(context) async {
+    print("getSellerFromServer");
     final FirebaseUserRepository firebaseRepository = FirebaseUserRepository();
     _sellerDetails = await firebaseRepository.getSeller();
     if (_sellerDetails == null) {

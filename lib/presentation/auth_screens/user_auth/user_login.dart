@@ -70,7 +70,7 @@ class _UserLoginState extends State<UserLogin> {
     _firebaseRepository
         .login("hii@gmail.com", "123456", context)
         .then((User? user) async {
-          print("user login");
+          // print("user login");
       if (user != null) {
         //  final   currentLocation = await Geolocator.getCurrentPosition();
         _getUserDetails(user.uid);
@@ -86,18 +86,20 @@ class _UserLoginState extends State<UserLogin> {
   void _getUserDetails(String uid) {
     _firebaseRepository.getUser().then((UserModel? userModel) {
       if (userModel != null) {
-       print(userModel.name);
-        StorageService.saveUser(userModel).then((value) async {
-          Provider.of<UserProvider>(context, listen: false).getUserLocally();
-          Provider.of<AllSellerDataProvider>(context, listen: false)
-              .getSellersDataFromServer(context);
 
-          SharedPreferences preferences = await SharedPreferences.getInstance();
-          await preferences.setInt('initScreen', 1);
-          await preferences.setInt('isUser', 1);
+        StorageService.saveUser(userModel).then((value) async {
+          // Provider.of<UserProvider>(context, listen: false).getUserLocally();
+          // Provider.of<AllSellerDataProvider>(context, listen: false)
+          //     .getSellersDataFromServer(context);
+
+       await _firebaseRepository.loadDataOnAppInit(context);
+          // SharedPreferences preferences = await SharedPreferences.getInstance();
+          // await preferences.setInt('initScreen', 1);
+          // await preferences.setInt('isUser', 1);
+        await  StorageService.initUser();
           isLoading(false);
           Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => SplashScreen()));
+              MaterialPageRoute(builder: (context) => NavigationPage()));
         }).catchError((error) {
           isLoading(false);
           utils.flushBarErrorMessage(error.message.toString(), context);

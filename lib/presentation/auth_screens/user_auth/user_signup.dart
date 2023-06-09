@@ -15,6 +15,7 @@ import 'package:provider/provider.dart';
 import 'package:email_validator/email_validator.dart';
 import '../../../data/firebase_user_repository.dart';
 import '../../../domain/entities/user_model.dart';
+import '../../../navigation_page.dart';
 import '../../../style/styling.dart';
 import '../../../utils/storage_services.dart';
 import '../../controllers/user_provider.dart';
@@ -127,15 +128,20 @@ class _UserSignupState extends State<UserSignup> {
         // // initScreen = preferences.getInt('initScreen');
         // await preferences.setInt('initScreen', 1);
         // await preferences.setInt('isUser', 1);
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => UserHomePage()));
-      });
+          await  StorageService.initUser();
+         
+        _firebaseUserRepository.loadDataOnAppInit(context);
+          isLoading(false);
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => NavigationPage()));
+      
     }).catchError((error) {
       isLoading(false);
       // utils.hideLoading();
       // print(error);
       utils.flushBarErrorMessage(error.message.toString(), context);
     });
+  });
   }
 
   void _submitForm() {

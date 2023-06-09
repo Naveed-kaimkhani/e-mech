@@ -2,6 +2,7 @@ import 'package:e_mech/presentation/auth_screens/user_auth/user_login.dart';
 import 'package:e_mech/presentation/seller_screens/seller_user_tracing.dart';
 import 'package:e_mech/presentation/widgets/profile_pic.dart';
 import 'package:e_mech/presentation/widgets/seller_screen_widget/test.dart';
+import 'package:e_mech/presentation/widgets/user_screen_widget/call_widget.dart';
 import 'package:e_mech/style/custom_text_style.dart';
 import 'package:e_mech/style/images.dart';
 import 'package:e_mech/style/styling.dart';
@@ -76,10 +77,11 @@ class _AcceptedRequestWidgetState extends State<AcceptedRequestWidget> {
                   ),
                 ],
               ),
-              const Icon(
-                Icons.phone,
-                size: 30,
-              )
+              CallWidget(
+                  iconSize: 22.h,
+                  radius: 24.r,
+                  num: widget.requestModel.senderPhone!,
+                  context: context),
             ],
           ),
           SizedBox(
@@ -99,13 +101,15 @@ class _AcceptedRequestWidgetState extends State<AcceptedRequestWidget> {
                         style: CustomTextStyle.font_15_black,
                       ),
                       Text(
-                        widget.requestModel?.serviceRequired ?? "Service Null",
+                        widget.requestModel.serviceRequired ?? "Service Null",
                         style: CustomTextStyle.font_14_red,
                       ),
-                      // Text(
-                      //   "petrol",
-                      //   style: CustomTextStyle.font_14_red,
-                      // ),
+                      SizedBox(
+                        height: 10.h,
+                      ),
+                      Text(
+                          "${widget.requestModel.sentDate}  ${widget.requestModel.sentTime} ",
+                          style: CustomTextStyle.font_10_black),
                     ],
                   ),
                   InkWell(
@@ -114,8 +118,6 @@ class _AcceptedRequestWidgetState extends State<AcceptedRequestWidget> {
                       color: Colors.black,
                     ),
                     onTap: () {
-                      print("location button prassed");
-                      
                       Navigator.push(
                         context,
                         MaterialPageRoute(

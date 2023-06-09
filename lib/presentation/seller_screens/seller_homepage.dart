@@ -1,3 +1,4 @@
+import 'package:e_mech/presentation/widgets/circle_progress.dart';
 import 'package:e_mech/presentation/widgets/seller_screen_widget/request_widget.dart';
 import 'package:e_mech/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -24,40 +25,37 @@ class _SellerHomepageState extends State<SellerHomepage> {
   final FirebaseUserRepository _firebaseUserRepository =
       FirebaseUserRepository();
 
-  Future<Position?> getUserCurrentLocation() async {
-    try {
-      await Geolocator.requestPermission();
-      return await Geolocator.getCurrentPosition(
-                desiredAccuracy: LocationAccuracy.bestForNavigation,
+  // Future<Position?> getUserCurrentLocation() async {
+  //   try {
+  //     await Geolocator.requestPermission();
+  //     return await Geolocator.getCurrentPosition(
+  //               desiredAccuracy: LocationAccuracy.bestForNavigation,
 
-      );
-    } catch (error) {
-      utils.flushBarErrorMessage(error.toString(), context);
-      return null; // or throw the error
-    }
-  }
+  //     );
+  //   } catch (error) {
+  //     utils.flushBarErrorMessage(error.toString(), context);
+  //     return null; // or throw the error
+  //   }
+  // }
 // this function fill be used when the seller location is need to update everytime he open the app
-  loadLocation() {
-    getUserCurrentLocation().then((value) async {
-
-      String adress = await utils.getAddressFromLatLng(
-          value!.latitude, value.longitude);
-
-      await _firebaseUserRepository.addlatLongToFirebaseDocument(
-          value.latitude, value.longitude, adress, 'sellers');
-    });
-    Provider.of<SellerProvider>(context, listen: false)
+  loadSellerData() async {
+    print("in  load data");
+    await Provider.of<SellerProvider>(context, listen: false)
         .getSellerFromServer(context);
+    print("loadSellerData");
   }
 
   @override
   void initState() {
+    print("init state called");
+    //  loadSellerData();
+
     super.initState();
-   // loadLocation();
   }
 
   @override
   Widget build(BuildContext context) {
+    print("in build");
     SellerModel? seller =
         Provider.of<SellerProvider>(context, listen: false).seller;
 
@@ -67,7 +65,7 @@ class _SellerHomepageState extends State<SellerHomepage> {
           child: Column(
             children: [
               UserHomePageHeader(
-                name: "Hii ${seller!.name}",
+                name: seller!.name!,
                 text: "All Requst",
                 imageUrl: seller.profileImage!,
               ),
@@ -78,7 +76,7 @@ class _SellerHomepageState extends State<SellerHomepage> {
                 stream: FirebaseUserRepository.getRequests(context),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const CircularProgressIndicator();
+                    return const Center(child: CircleProgress());
                   } else if (snapshot.hasError) {
                     return const CircularProgressIndicator();
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {

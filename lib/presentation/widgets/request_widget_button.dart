@@ -13,8 +13,8 @@ class RequestWidgetButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 25.h,
-      width: 84.w,
+      height: 28.h,
+      width: 86.w,
       decoration:
           BoxDecoration(borderRadius: BorderRadius.circular(6.r), color: color),
       child: Center(

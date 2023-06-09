@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:e_mech/presentation/seller_screens/seller_homepage.dart';
+import 'package:e_mech/presentation/seller_screens/seller_navigation.dart';
 import 'package:e_mech/presentation/widgets/my_app_bar.dart';
 import 'package:e_mech/utils/routes/routes_name.dart';
 import 'package:e_mech/utils/utils.dart';
@@ -123,7 +124,7 @@ class _SellerSignUpState extends State<SellerSignUp> {
         .then((value) async {
       await StorageService.saveSeller(sellerModel).then((value) async {
         //await  StorageService.readUser();
-        Provider.of<SellerProvider>(context, listen: false).getSellerLocally();
+      await  Provider.of<SellerProvider>(context, listen: false).getSellerLocally();
         isLoading(false);
         // utils.hideLoading();
         // SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -131,7 +132,7 @@ class _SellerSignUpState extends State<SellerSignUp> {
         // await preferences.setInt('initScreen', 1);
         // await preferences.setInt('isUser', 1);
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => SellerHomepage()));
+            context, MaterialPageRoute(builder: (context) =>const SellerNavigation()));
       });
     }).catchError((error) {
       isLoading(false);

@@ -16,8 +16,8 @@ class SellerNavigation extends StatefulWidget {
 
 class _SellerNavigationState extends State<SellerNavigation> {
   List pages = [
-    SellerHomepage(),
-    AcceptedRequest(),
+    const SellerHomepage(),
+    const AcceptedRequest(),
     Setting(),
     Setting()
   ];
@@ -50,8 +50,8 @@ class _SellerNavigationState extends State<SellerNavigation> {
               text: "Home",
             ),
             GButton(
-              icon: Icons.grid_view_rounded,
-              text: "Services",
+              icon: Icons.done,
+              text: "Accepted",
             ),
             GButton(
               icon: Icons.settings_outlined,
@@ -59,7 +59,7 @@ class _SellerNavigationState extends State<SellerNavigation> {
             ),
             GButton(
               icon: Icons.account_circle_outlined,
-              text: "Setting",
+              text: "Profile",
             ),
           ],
         ),

@@ -46,8 +46,17 @@ class UserHomePageHeader extends StatelessWidget {
                   'Hi $name',
                   style: CustomTextStyle.font_25,
                 ),
+                // Text(
+                //   text.length.toString(),
+                //   style: CustomTextStyle.font_20,
+                // ),
                 Text(
                   text,
+                  style: CustomTextStyle.font_20,
+                ),
+
+                Text(
+                  text.length.toString(),
                   style: CustomTextStyle.font_20,
                 ),
               ],
@@ -55,7 +64,12 @@ class UserHomePageHeader extends StatelessWidget {
             SizedBox(
               width: 80.w,
             ),
-            ProfilePic(url: imageUrl, height: 50.h, width: 50.h),
+            Padding(
+              padding: text.length > 10
+                  ? EdgeInsets.only(left: 52.r)
+                  : EdgeInsets.only(left: 76.r),
+              child: ProfilePic(url: imageUrl, height: 50.h, width: 50.h),
+            ),
           ],
         ));
   }

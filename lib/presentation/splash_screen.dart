@@ -1,9 +1,13 @@
 import 'dart:async';
 
 import 'package:e_mech/presentation/controllers/all_sellerdata_provider.dart';
+import 'package:e_mech/presentation/seller_screens/seller_navigation.dart';
+import 'package:e_mech/presentation/user_or_seller.dart';
 import 'package:e_mech/presentation/user_screens/user_home_page.dart';
 import 'package:e_mech/presentation/widgets/emergency_service_provider_text.dart';
+import 'package:e_mech/utils/storage_services.dart';
 import 'package:e_mech/utils/utils.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -12,6 +16,7 @@ import 'package:provider/provider.dart';
 import '../data/firebase_user_repository.dart';
 import '../navigation_page.dart';
 import '../style/images.dart';
+import 'controllers/seller_provider.dart';
 import 'controllers/user_provider.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -28,87 +33,114 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     utils.checkConnectivity(context);
+    // loadData();
+    Timer(const Duration(seconds: 2), () {
     loadData();
-    super.initState();
+  });
+  super.initState();
 
     // Timer(const Duration(seconds: 3), () {
     //   Navigator.of(context).pushReplacementNamed('/HomeScreen');
     // });
   }
 
-  Future<Position?> getUserCurrentLocations() async {
-    try {
-      print("location");
-      await Geolocator.requestPermission();
-      //  print(Geolocator.getCurrentPosition());
-      return await Geolocator.getCurrentPosition();
-    } catch (error) {
-      utils.flushBarErrorMessage(error.toString(), context);
-      return null; // or throw the error
-    }
-  }
+  // Future<Position?> getUserCurrentLocations() async {
+  //   try {
+  //     print("location");
+  //     await Geolocator.requestPermission();
+  //     //  print(Geolocator.getCurrentPosition());
+  //     return await Geolocator.getCurrentPosition();
+  //   } catch (error) {
+  //     utils.flushBarErrorMessage(error.toString(), context);
+  //     return null; // or throw the error
+  //   }
+  // }
 
-  Future<Position?> getUserCurrentLocation() async {
-    try {
-      print("location");
-      await Geolocator.requestPermission();
-      var permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text("Location Permission Required"),
-              content: Text(
-                "Please enable location permission from the app settings to access your current location.",
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text("OK"),
-                ),
-              ],
-            );
-          },
-        );
-      } else if (permission == LocationPermission.denied) {
-        return null;
-      }
-      return await Geolocator.getCurrentPosition();
-    } catch (error) {
-      utils.flushBarErrorMessage(error.toString(), context);
-      return null; // or throw the error
-    }
-  }
+  // Future<Position?> getUserCurrentLocation() async {
+  //   try {
+  //     print("location");
+  //     await Geolocator.requestPermission();
+  //     var permission = await Geolocator.checkPermission();
+  //     if (permission == LocationPermission.denied) {
+  //       showDialog(
+  //         context: context,
+  //         builder: (BuildContext context) {
+  //           return AlertDialog(
+  //             title: const Text("Location Permission Required"),
+  //             content: const Text(
+  //               "Please enable location permission from the app settings to access your current location.",
+  //             ),
+  //             actions: [
+  //               TextButton(
+  //                 onPressed: () {
+  //                   Navigator.pop(context);
+  //                 },
+  //                 child: const Text("OK"),
+  //               ),
+  //             ],
+  //           );
+  //         },
+  //       );
+  //     } else if (permission == LocationPermission.denied) {
+  //       return null;
+  //     }
+  //     return await Geolocator.getCurrentPosition();
+  //   } catch (error) {
+  //     utils.flushBarErrorMessage(error.toString(), context);
+  //     return null; // or throw the error
+  //   }
+  // }
 
   loadData() async {
-    print("in splash");
+    User? user=utils.getCurrentUser();
+    int? isUser= await StorageService.checkUserInitialization();
+
     try {
-      final value = await getUserCurrentLocation();
-      print(value);
-      String address =
-          await utils.getAddressFromLatLng(value!.latitude, value.longitude);
-
-      await _firebaseUserRepository.addlatLongToFirebaseDocument(
-        value.latitude,
-        value.longitude,
-        address,
-        'users',
+if (user!=null ) {
+  if (isUser==1 && isUser!=null) {
+  await  _firebaseUserRepository.loadDataOnAppInit(context);
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const NavigationPage()),
       );
-
-      await Provider.of<UserProvider>(context, listen: false)
-          .getUserFromServer(context);
-
-      await Provider.of<AllSellerDataProvider>(context, listen: false)
-          .getSellersDataFromServer(context);
-
-      // Navigate to the home screen after loading the data
+  }else{
+    
+await  Provider.of<SellerProvider>(context, listen: false)
+              .getSellerLocally();
+     Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const SellerNavigation()),
+      );
+  }
+} else {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => NavigationPage()),
+        MaterialPageRoute(builder: (context) => const UserSellerScreen()),
       );
+}
+      // final value = await getUserCurrentLocation();
+      // print(value);
+      // String address =
+      //     await utils.getAddressFromLatLng(value!.latitude, value.longitude);
+
+      // await _firebaseUserRepository.addlatLongToFirebaseDocument(
+      //   value.latitude,
+      //   value.longitude,
+      //   address,
+      //   'users',
+      // );
+
+      // await Provider.of<UserProvider>(context, listen: false)
+      //     .getUserFromServer(context);
+
+      // await Provider.of<AllSellerDataProvider>(context, listen: false)
+      //     .getSellersDataFromServer(context);
+
+      // // Navigate to the home screen after loading the data
+      // Navigator.pushReplacement(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => NavigationPage()),
+      // );
     } catch (error) {
       utils.flushBarErrorMessage(error.toString(), context);
       // Handle error if any

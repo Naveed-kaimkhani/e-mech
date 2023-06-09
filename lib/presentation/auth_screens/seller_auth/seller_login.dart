@@ -69,8 +69,6 @@ class _SellerLoginState extends State<SellerLogin> {
       if (user != null) {
         _getSellerDetails();
 
-        SharedPreferences preferences = await SharedPreferences.getInstance();
-        await preferences.setInt('isUser', 1);
       } else {
         isLoading(false);
         //utils.flushBarErrorMessage("Failed to login", context);
@@ -82,15 +80,13 @@ class _SellerLoginState extends State<SellerLogin> {
     _firebaseRepository.getSellerDetails().then((SellerModel? sellerModel) {
       if (sellerModel != null) {
         StorageService.saveSeller(sellerModel).then((value) async {
-          Provider.of<SellerProvider>(context, listen: false)
-              .getSellerLocally();
 
-          SharedPreferences preferences = await SharedPreferences.getInstance();
-          await preferences.setInt('initScreen', 1);
-          await preferences.setInt('isSeller', 1);
+          
+await  Provider.of<SellerProvider>(context, listen: false)
+              .getSellerLocally();
           isLoading(false);
           Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => SellerNavigation()));
+              MaterialPageRoute(builder: (context) => const SellerNavigation()));
         }).catchError((error) {
           isLoading(false);
           utils.flushBarErrorMessage(error.message.toString(), context);

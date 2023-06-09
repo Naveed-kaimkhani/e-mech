@@ -15,7 +15,7 @@ class NavigationPage extends StatefulWidget {
 
 class _NavigationPageState extends State<NavigationPage> {
   List pages = [
-    UserHomePage(),
+    const UserHomePage(),
     Services(),
     Setting(),
     Profile()

@@ -38,14 +38,12 @@ Uint8List? sellerTracingIcon;
   Position? currentLocation;
   StreamSubscription<Position>? positionStreamSubscription;
   static const double distanceThreshold =
-      10; // Minimum distance in meters to trigger an update
+      2; // Minimum distance in meters to trigger an update
 
   List<Marker> _marker = [];
 
   void getUserCurrentLocation() async {
-    print("in getUserCurrentLocation");
     try {
-      print("in try");
 
       // await Geolocator.requestPermission();
       // currentLocation = await Geolocator.getCurrentPosition();
@@ -53,8 +51,7 @@ Uint8List? sellerTracingIcon;
       // currentLocation = await Geolocator.getCurrentPosition(
       //     desiredAccuracy: LocationAccuracy.high);
       currentLocation = await convertLatLngToPosition(
-          LatLng(sourceLocation!.latitude, sourceLocation!.latitude));
-      print(currentLocation);
+          LatLng(sourceLocation!.latitude, sourceLocation!.longitude));
       // utils.hideLoading();
       positionStreamSubscription = Geolocator.getPositionStream().listen(
         (Position position) async {
@@ -65,10 +62,6 @@ Uint8List? sellerTracingIcon;
             position.longitude,
           );
 
-          print("in getPositionStream");
-          print(position);
-          //currentLocation = position;
-          print(currentLocation);
           // Do something with the updated position
           if (distance > distanceThreshold) {
             GoogleMapController controller = await _controller.future;
@@ -208,7 +201,7 @@ Uint8List? sellerTracingIcon;
             : GoogleMap(
                 initialCameraPosition: CameraPosition(
                     target: LatLng(
-                        currentLocation!.latitude, currentLocation!.latitude),
+                        currentLocation!.latitude, currentLocation!.longitude),
                     zoom: 18),
                 compassEnabled: true,
                 // markers: Set<Marker>.of(_marker),

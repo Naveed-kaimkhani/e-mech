@@ -142,13 +142,23 @@ class utils {
     return db;
   }
 
-  static User getCurrentUser() {
-    return FirebaseAuth.instance.currentUser!;
+  static User? getCurrentUser() {
+    return FirebaseAuth.instance.currentUser;
   }
 
   static Future<SharedPreferences> getPreferencesObject() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     return preferences;
+  }
+
+  static Future<void> logOutUser(context) async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      await preferences.setInt('isUser', 0);
+    } catch (e) {
+      utils.flushBarErrorMessage(e.toString(), context);
+    }
   }
 
   static String getRandomid() {

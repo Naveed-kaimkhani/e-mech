@@ -1,15 +1,21 @@
-import 'dart:ffi';
+
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_mech/presentation/controllers/user_provider.dart';
 import 'package:e_mech/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:provider/provider.dart';
 
 import '../domain/entities/request_model.dart';
 import '../domain/entities/seller_model.dart';
 import '../domain/entities/user_model.dart';
 import '../domain/repositories/users_repository.dart';
+import '../navigation_page.dart';
+import '../presentation/controllers/all_sellerdata_provider.dart';
 
 class FirebaseUserRepository implements UsersRepository {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -150,7 +156,7 @@ static Future<void> acceptRequest(RequestModel requestModel, context) async {
 }
 
 
-Future<void> addlatLongToFirebaseDocument(double lat, double long, String address,String documentName) async {
+ Future<void> addlatLongToFirebaseDocument(double lat, double long, String address,String documentName) async {
   try {
     final userRef = FirebaseFirestore.instance.collection(documentName).doc(utils.currentUserUid);
 
@@ -198,6 +204,65 @@ static Future<void> sentRequest(
         plugin: 'FirebaseUserRepository',
         message: 'Failed to send request to sellers.',
       );
+    }
+  }
+  
+  Future<Position?> getUserCurrentLocation(context) async {
+    try {
+      await Geolocator.requestPermission();
+      var permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text("Location Permission Required"),
+              content: const Text(
+                "Please enable location permission from the app settings to access your current location.",
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    
+                  },
+                  child: const Text("OK"),
+                ),
+              ],
+            );
+          },
+        );
+      }
+      return await Geolocator.getCurrentPosition();
+    } catch (error) {
+      utils.flushBarErrorMessage(error.toString(), context);
+      return null; // or throw the error
+    }
+  }
+
+  loadDataOnAppInit(context) async {
+    try {
+      final value = await getUserCurrentLocation(context);
+      String address =
+          await utils.getAddressFromLatLng(value!.latitude, value.longitude);
+
+      await addlatLongToFirebaseDocument(
+        value.latitude,
+        value.longitude,
+        address,
+        'users',
+      );
+
+      await Provider.of<UserProvider>(context, listen: false)
+          .getUserFromServer(context);
+
+      await Provider.of<AllSellerDataProvider>(context, listen: false)
+          .getSellersDataFromServer(context);
+
+      // Navigate to the home screen after loading the data
+    } catch (error) {
+      utils.flushBarErrorMessage(error.toString(), context);
+      // Handle error if any
     }
   }
 
@@ -297,6 +362,24 @@ static Future<void> deleteRequestFromEverySeller(String documentId,context) asyn
     utils.flushBarErrorMessage('Error deleting documents: $e',context);
   }
 }
+
+static Future<void> deleteRequestDocument(String sellerId, String requestId , context) async {
+  try {
+    await FirebaseFirestore.instance
+        .collection('sellers')
+        .doc(sellerId)
+        .collection('request')
+        .doc(requestId)
+        .delete();
+        utils.toastMessage("Request deleted");
+    // print('Request document deleted successfully.');
+  } catch (error) {
+    utils.flushBarErrorMessage(error.toString(), context);
+    // print('Error deleting request document: $error');
+    // Handle the error as needed
+  }
+}
+
 static Future<List<Map<String, dynamic>>> getSellersBasedOnService(String service) async {
   List<Map<String, dynamic>> sellersList = [];
 

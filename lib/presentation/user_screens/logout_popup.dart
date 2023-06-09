@@ -1,9 +1,12 @@
 import 'package:e_mech/presentation/auth_screens/user_auth/user_login.dart';
 import 'package:e_mech/style/styling.dart';
+import 'package:e_mech/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../user_or_seller.dart';
 
 showLogoutPopup(context) async {
   return await showDialog(
@@ -22,16 +25,12 @@ showLogoutPopup(context) async {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () async {
-                          await FirebaseAuth.instance.signOut();
-                          SharedPreferences preferences =
-                              await SharedPreferences.getInstance();
-                          await preferences.setInt('initScreen', 0);
-                          await preferences.setInt('isUser', 0);
-                          // ignore: use_build_context_synchronously
+                         await     utils.logOutUser(context);
+
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const UserLogin()));
+                                  builder: (context) => UserSellerScreen()));
                         },
                         style: ElevatedButton.styleFrom(
                             backgroundColor: Styling.primaryColor),
