@@ -1,18 +1,11 @@
-import 'package:e_mech/presentation/auth_screens/user_auth/user_login.dart';
 import 'package:e_mech/presentation/seller_screens/seller_user_tracing.dart';
 import 'package:e_mech/presentation/widgets/profile_pic.dart';
-import 'package:e_mech/presentation/widgets/seller_screen_widget/test.dart';
 import 'package:e_mech/presentation/widgets/user_screen_widget/call_widget.dart';
 import 'package:e_mech/style/custom_text_style.dart';
-import 'package:e_mech/style/images.dart';
-import 'package:e_mech/style/styling.dart';
-import 'package:e_mech/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import '../../../data/firebase_user_repository.dart';
 import '../../../domain/entities/request_model.dart';
-import '../../auth_screens/seller_auth/seller_login.dart';
 
 class AcceptedRequestWidget extends StatefulWidget {
   final RequestModel requestModel;

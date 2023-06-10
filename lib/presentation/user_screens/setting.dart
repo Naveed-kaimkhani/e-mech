@@ -7,7 +7,6 @@ import 'package:e_mech/utils/routes/routes_name.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../style/images.dart';
 
 class Setting extends StatelessWidget {
   Divider k = const Divider(
@@ -49,14 +48,14 @@ class Setting extends StatelessWidget {
             text: "Contact Us",
             // imageURL: Images.mechanic_pic,
             icon: Icons.phone,
-            routeName: RoutesName.generalMechanic,
+            routeName: RoutesName.contactUs,
           ),
           k,
           SettingServicesScreenWidget(
             text: "About Us",
             // imageURL: Images.mechanic_pic,
             icon: Icons.phone,
-            routeName: RoutesName.generalMechanic,
+            routeName: RoutesName.contactUs,
           ),
           k,
           SizedBox(

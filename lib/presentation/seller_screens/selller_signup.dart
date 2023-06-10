@@ -1,6 +1,4 @@
 import 'dart:typed_data';
-
-import 'package:e_mech/presentation/seller_screens/seller_homepage.dart';
 import 'package:e_mech/presentation/seller_screens/seller_navigation.dart';
 import 'package:e_mech/presentation/widgets/my_app_bar.dart';
 import 'package:e_mech/utils/routes/routes_name.dart';
@@ -11,16 +9,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
-
 import '../../data/firebase_user_repository.dart';
 import '../../domain/entities/seller_model.dart';
 import '../../style/custom_text_style.dart';
 import '../../style/styling.dart';
 import '../../utils/storage_services.dart';
-import '../auth_screens/seller_auth/seller_login.dart';
 import '../controllers/seller_provider.dart';
-import '../controllers/user_provider.dart';
-import '../user_screens/user_home_page.dart';
 import '../widgets/auth_button.dart';
 import '../widgets/circle_progress.dart';
 import '../widgets/inputfields.dart';
@@ -126,18 +120,12 @@ class _SellerSignUpState extends State<SellerSignUp> {
         //await  StorageService.readUser();
       await  Provider.of<SellerProvider>(context, listen: false).getSellerLocally();
         isLoading(false);
-        // utils.hideLoading();
-        // SharedPreferences preferences = await SharedPreferences.getInstance();
-        // // initScreen = preferences.getInt('initScreen');
-        // await preferences.setInt('initScreen', 1);
-        // await preferences.setInt('isUser', 1);
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) =>const SellerNavigation()));
+
       });
     }).catchError((error) {
       isLoading(false);
-      // utils.hideLoading();
-      // print(error);
       utils.flushBarErrorMessage(error.message.toString(), context);
     });
   }
@@ -146,10 +134,8 @@ class _SellerSignUpState extends State<SellerSignUp> {
   void dispose() {
     _nameController.dispose();
     _phoneController.dispose();
-    // _cityController.dispose();
     _workshopController.dispose();
     _emailController.dispose();
-    // _addressController.dispose();
     _passwordController.dispose();
     _confirmpasswordController.dispose();
     _CNICController.dispose();
@@ -191,17 +177,12 @@ class _SellerSignUpState extends State<SellerSignUp> {
             key: _formKey,
             child: SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.only(left: 24, top: 16),
+              padding: const EdgeInsets.only(left: 22, top: 16, right: 18),
                 child: SizedBox(
                   height: MediaQuery.of(context).size.height,
                   child: Column(
-                    // mainAxisSize: MainAxisSize.min,
-                    // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // SizedBox(
-                      //   height: 16.h,
-                      // ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -411,10 +392,7 @@ class _SellerSignUpState extends State<SellerSignUp> {
     return image == null
         ? Stack(
             children: [
-              // Image.network(
-              //   "https://m.media-amazon.com/images/I/11uufjN3lYL._SX90_SY90_.png",
-              //   height: 60,
-              // ),
+           
               Image.asset(
                 "assets/avatar.png",
                 height: 60.h,

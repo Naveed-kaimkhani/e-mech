@@ -14,7 +14,6 @@ import '../domain/entities/request_model.dart';
 import '../domain/entities/seller_model.dart';
 import '../domain/entities/user_model.dart';
 import '../domain/repositories/users_repository.dart';
-import '../navigation_page.dart';
 import '../presentation/controllers/all_sellerdata_provider.dart';
 
 class FirebaseUserRepository implements UsersRepository {
@@ -50,7 +49,6 @@ class FirebaseUserRepository implements UsersRepository {
     if (documentSnapshot.data() != null) {
       UserModel? userModel =
           UserModel.fromMap(documentSnapshot.data() as Map<String, dynamic>);
-      print(userModel.lat);
       if (userModel != null) {
         return userModel;
       } else {
@@ -61,10 +59,6 @@ class FirebaseUserRepository implements UsersRepository {
   }
 
   Future<SellerModel?> getSeller() async {
-    // var url = Uri.parse('https://jsonplaceholder.typicode.com/users');
-    // var response = await http.get(url);
-    // var list = jsonDecode(response.body) as List;
-    // return list.map((e) => UserJson.fromJson(e).toDomain()).toList();
     DocumentSnapshot documentSnapshot =
         await _sellerCollection.doc(utils.currentUserUid).get();
     if (documentSnapshot.data() != null) {
@@ -89,7 +83,6 @@ class FirebaseUserRepository implements UsersRepository {
       );
       return userCredential.user;
     } on FirebaseAuthException catch (error) {
-      //  print(error);
       utils.flushBarErrorMessage(error.message.toString(), context);
     }
     return null;
@@ -143,15 +136,12 @@ static Future<void> acceptRequest(RequestModel requestModel, context) async {
         .doc(utils.currentUserUid)
         .collection('AcceptedRequest')
         .add(requestModel.toMap(requestModel));
-        print("request accepted");
-    // Delete the request from every seller
     await deleteRequestFromEverySeller(requestModel.documentId!, context);
 
     // Show success message or perform other operations
     utils.toastMessage("Request Accepted");
   } catch (e) {
     // Handle error
-    print('Error accepting request: $e');
   }
 }
 
@@ -165,9 +155,8 @@ static Future<void> acceptRequest(RequestModel requestModel, context) async {
       'long':long,
       'address':address,
     });
-    // utils.toastMessage("Location Updated");
   } catch (e) {
-    // utils.flushBarErrorMessage(e.toString(),context);
+utils.toastMessage(e.toString());
   }
 }
 
@@ -308,7 +297,6 @@ static Stream<List<RequestModel>> getRequests(context) async* {
   } catch (e) {
     // Handle any potential errors here
     utils.flushBarErrorMessage('Error fetching requests: $e', context);
-    // print('Error fetching requests: $e');
     yield []; // Yield an empty list in case of an error
   }
 }
@@ -356,7 +344,6 @@ static Future<void> deleteRequestFromEverySeller(String documentId,context) asyn
         await requestDocument.reference.delete();
       }
     }
-    print("request deleted ");
   } catch (e) {
     // print('Error deleting documents: $e');
     utils.flushBarErrorMessage('Error deleting documents: $e',context);
@@ -372,11 +359,8 @@ static Future<void> deleteRequestDocument(String sellerId, String requestId , co
         .doc(requestId)
         .delete();
         utils.toastMessage("Request deleted");
-    // print('Request document deleted successfully.');
   } catch (error) {
     utils.flushBarErrorMessage(error.toString(), context);
-    // print('Error deleting request document: $error');
-    // Handle the error as needed
   }
 }
 
@@ -395,7 +379,7 @@ static Future<List<Map<String, dynamic>>> getSellersBasedOnService(String servic
     });
   } catch (e) {
     // Handle any errors that may occur
-    print("Error: $e");
+  utils.toastMessage(e.toString());
   }
 
   return sellersList;

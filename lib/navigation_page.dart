@@ -14,12 +14,7 @@ class NavigationPage extends StatefulWidget {
 }
 
 class _NavigationPageState extends State<NavigationPage> {
-  List pages = [
-    const UserHomePage(),
-    Services(),
-    Setting(),
-    Profile()
-  ];
+  List pages = [const UserHomePage(), Services(),  Setting(), Profile()];
   int currentindex = 0;
   void onTap(int index) {
     setState(() {

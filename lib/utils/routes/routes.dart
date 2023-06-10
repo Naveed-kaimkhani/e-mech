@@ -22,19 +22,23 @@ class Routes {
 
       case RoutesName.userLogin:
         return _buildRoute(const UserLogin(), settings);
-       
-      case RoutesName.PetrolProviders:
-        return _buildRoute(const PetrolProviders(), settings); 
-        
+
+      case RoutesName.petrolProviders:
+        return _buildRoute(const PetrolProviders(), settings);
+
       case RoutesName.generalMechanic:
-        return _buildRoute(const GeneralMechanic(), settings); 
-        
+        return _buildRoute(const GeneralMechanic(), settings);
+
       case RoutesName.punctureMaker:
-        return _buildRoute(const PunctureMaker(), settings); 
+        return _buildRoute(const PunctureMaker(), settings);
       default:
-        return _buildRoute(const Scaffold(body: Center(
-          child: Text("NO Route Found"),
-        ),), settings);
+        return _buildRoute(
+            const Scaffold(
+              body: Center(
+                child: Text("NO Route Found"),
+              ),
+            ),
+            settings);
     }
   }
 

@@ -1,5 +1,3 @@
-import 'package:e_mech/presentation/auth_screens/user_auth/user_signup.dart';
-import 'package:e_mech/presentation/seller_screens/selller_signup.dart';
 import 'package:e_mech/presentation/widgets/emergency_service_provider_text.dart';
 import 'package:e_mech/presentation/widgets/user_seller_component.dart';
 import 'package:e_mech/utils/routes/routes_name.dart';
@@ -46,9 +44,6 @@ class UserSellerScreen extends StatelessWidget {
                 height: 37.h,
                 width: 129.w,
               ),
-              // SizedBox(
-              //   height: 20.h,
-              // ),
               const EmergencyServiceProviderText()
             ],
           ),

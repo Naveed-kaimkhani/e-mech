@@ -1,9 +1,5 @@
-import 'dart:typed_data';
+
 import 'package:e_mech/navigation_page.dart';
-import 'package:e_mech/presentation/controllers/all_sellerdata_provider.dart';
-import 'package:e_mech/presentation/splash_screen.dart';
-import 'package:e_mech/presentation/user_screens/get_user_current_location.dart';
-import 'package:e_mech/presentation/user_screens/user_home_page.dart';
 import 'package:e_mech/presentation/widgets/circle_progress.dart';
 import 'package:e_mech/presentation/widgets/inputfields.dart';
 import 'package:e_mech/presentation/widgets/my_app_bar.dart';
@@ -14,15 +10,11 @@ import 'package:e_mech/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:provider/provider.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../../data/firebase_user_repository.dart';
 import '../../../domain/entities/user_model.dart';
 import '../../../style/styling.dart';
 import '../../../utils/storage_services.dart';
-import '../../controllers/user_provider.dart';
 import '../../widgets/auth_button.dart';
 
 class UserLogin extends StatefulWidget {
@@ -70,12 +62,9 @@ class _UserLoginState extends State<UserLogin> {
     _firebaseRepository
         .login("hii@gmail.com", "123456", context)
         .then((User? user) async {
-          // print("user login");
       if (user != null) {
         //  final   currentLocation = await Geolocator.getCurrentPosition();
         _getUserDetails(user.uid);
-        // SharedPreferences preferences = await SharedPreferences.getInstance();
-        // await preferences.setInt('isUser', 1);
       } else {
         isLoading(false);
         utils.flushBarErrorMessage("Failed to login", context);
@@ -88,14 +77,9 @@ class _UserLoginState extends State<UserLogin> {
       if (userModel != null) {
 
         StorageService.saveUser(userModel).then((value) async {
-          // Provider.of<UserProvider>(context, listen: false).getUserLocally();
-          // Provider.of<AllSellerDataProvider>(context, listen: false)
-          //     .getSellersDataFromServer(context);
-
+         
        await _firebaseRepository.loadDataOnAppInit(context);
-          // SharedPreferences preferences = await SharedPreferences.getInstance();
-          // await preferences.setInt('initScreen', 1);
-          // await preferences.setInt('isUser', 1);
+         
         await  StorageService.initUser();
           isLoading(false);
           Navigator.pushReplacement(context,

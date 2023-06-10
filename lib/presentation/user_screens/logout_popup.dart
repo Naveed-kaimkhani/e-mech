@@ -1,11 +1,8 @@
-import 'package:e_mech/presentation/auth_screens/user_auth/user_login.dart';
+
 import 'package:e_mech/style/styling.dart';
 import 'package:e_mech/utils/utils.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import '../user_or_seller.dart';
 
 showLogoutPopup(context) async {
@@ -30,7 +27,7 @@ showLogoutPopup(context) async {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => UserSellerScreen()));
+                                  builder: (context) => const UserSellerScreen()));
                         },
                         style: ElevatedButton.styleFrom(
                             backgroundColor: Styling.primaryColor),

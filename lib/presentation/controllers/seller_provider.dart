@@ -4,13 +4,9 @@ import 'package:flutter/material.dart';
 
 import '../../data/firebase_user_repository.dart';
 import '../../domain/entities/seller_model.dart';
-//import '../../domain/repositories/users_repository.dart';
 import '../../utils/storage_services.dart';
 
 class SellerProvider with ChangeNotifier {
-  // final UsersRepository usersRepository;
-
-  // SellerProvider({required this.usersRepository});
   SellerModel? _sellerDetails;
   SellerModel? get seller => _sellerDetails;
 
@@ -21,12 +17,6 @@ class SellerProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // Future<void> getUser() async {
-  //   _userDetails = await usersRepository.getUser();
-  //   notifyListeners();
-  // }
-
-  
   Future getSellerFromServer(context) async {
     print("getSellerFromServer");
     final FirebaseUserRepository firebaseRepository = FirebaseUserRepository();

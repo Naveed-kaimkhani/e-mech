@@ -115,8 +115,6 @@ class _ProfileState extends State<Profile> {
   }
 
   Future<void> _getUserDetails(String uid) async {
-    //  isLoading(true);
-    FirebaseUserRepository _FirebaseUserRepository = FirebaseUserRepository();
     _FirebaseUserRepository.getUser().then((UserModel? userModel) {
       if (userModel != null) {
         StorageService.saveUser(userModel).then((value) async {
@@ -233,9 +231,6 @@ class _ProfileState extends State<Profile> {
                 SizedBox(
                   height: 35.h,
                 ),
-                // SizedBox(
-                //   height: 160.h,
-                // ),
                 Center(
                     child: isLoadingNow
                         ? const CircleProgress()
@@ -257,89 +252,6 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  // Widget UploadProfile(Uint8List? image) {
-  //   return image == null
-  //       ? Stack(
-  //           children: [
-  //             // ProfilePic(url: url, height: height, width: width)
-  //             ProfilePic(url: user!.profileImage!, height: 100.h, width: 100.w),
-
-  //             Positioned(
-  //               left: 45.w,
-  //               bottom: 0.h,
-  //               child: IconButton(
-  //                 onPressed: () async {
-  //                   Uint8List? _image = await utils.pickImage();
-  //                   if (_image != null) {
-  //                     setState(() {
-  //                       _profileImage = _image;
-  //                     });
-  //                   } else {
-  //                     debugPrint("Image not loaded");
-  //                   }
-  //                 },
-  //                 icon: Container(
-  //                   width: 36.w,
-  //                   height: 36.h,
-  //                   decoration: BoxDecoration(
-  //                     color: Styling.primaryColor,
-  //                     borderRadius: BorderRadius.circular(50.r),
-  //                   ),
-  //                   child: Container(
-  //                     width: 20.w,
-  //                     height: 20.h,
-  //                     child: Image.asset('assets/gallery.png'),
-  //                   ),
-  //                 ),
-  //               ),
-  //             ),
-  //           ],
-  //         )
-  //       : Stack(
-  //           children: [
-  //             CircleAvatar(
-  //               minRadius: 50.r,
-  //               maxRadius: 50.r,
-  //               child: ClipOval(
-  //                   child: Image.memory(
-  //                 image,
-  //                 height: 200.h,
-  //                 width: 200.w,
-  //                 fit: BoxFit.cover,
-  //               )),
-  //               // child: ,
-  //             ),
-  //             Positioned(
-  //               left: 45.w,
-  //               bottom: 0.h,
-  //               child: IconButton(
-  //                 onPressed: () async {
-  //                   Uint8List? _image = await utils.pickImage();
-  //                   if (_image != null) {
-  //                     setState(() {
-  //                       image = _image;
-  //                     });
-  //                   }
-  //                   debugPrint("Image not loaded");
-  //                 },
-  //                 icon: Container(
-  //                   width: 36.w,
-  //                   height: 36.h,
-  //                   decoration: BoxDecoration(
-  //                     color: Styling.primaryColor,
-  //                     borderRadius: BorderRadius.circular(50.r),
-  //                   ),
-  //                   child: Container(
-  //                     width: 20.w,
-  //                     height: 20.h,
-  //                     child: Image.asset('assets/gallery.png'),
-  //                   ),
-  //                 ),
-  //               ),
-  //             ),
-  //           ],
-  //         );
-  // }
   Widget UploadProfile(Uint8List? image) {
     return image == null
         ? Stack(
@@ -412,7 +324,7 @@ class _ProfileState extends State<Profile> {
                       color: Styling.primaryColor,
                       borderRadius: BorderRadius.circular(50.r),
                     ),
-                    child: Container(
+                    child: SizedBox(
                       width: 20.w,
                       height: 20.h,
                       child: Image.asset('assets/gallery.png'),

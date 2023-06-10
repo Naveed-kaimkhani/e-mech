@@ -1,4 +1,3 @@
-import 'package:e_mech/presentation/widgets/profile_pic.dart';
 import 'package:e_mech/style/styling.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

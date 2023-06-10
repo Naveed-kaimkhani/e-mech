@@ -1,11 +1,6 @@
-import 'package:e_mech/data/firebase_user_repository.dart';
-import 'package:e_mech/domain/entities/request_model.dart';
-import 'package:e_mech/presentation/widgets/circle_progress.dart';
 import 'package:e_mech/presentation/widgets/user_screen_widget/call_widget.dart';
-import 'package:e_mech/presentation/widgets/user_screen_widget/request_sent_dialogue.dart';
 import 'package:e_mech/presentation/widgets/user_screen_widget/send_request_to_specific_seller.dart';
 import 'package:e_mech/style/styling.dart';
-import 'package:e_mech/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -142,10 +137,7 @@ class _SellerInfoWindowState extends State<SellerInfoWindow> {
                             ),
                           ],
                         ),
-                        // Text(
-                        //   "petrol",
-                        //   style: CustomTextStyle.font_14_red,
-                        // ),
+                       
                       ],
                     ),
                     SendRequestBttnForSpecificSeller(

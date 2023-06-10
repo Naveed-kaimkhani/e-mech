@@ -1,17 +1,12 @@
 import 'package:e_mech/presentation/widgets/circle_progress.dart';
 import 'package:e_mech/presentation/widgets/seller_screen_widget/request_widget.dart';
-import 'package:e_mech/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
-
 import '../../data/firebase_user_repository.dart';
 import '../../domain/entities/request_model.dart';
 import '../../domain/entities/seller_model.dart';
 import '../controllers/seller_provider.dart';
-import '../controllers/user_provider.dart';
-import '../widgets/seller_screen_widget/test.dart';
 import '../widgets/user_homepage_header.dart';
 
 class SellerHomepage extends StatefulWidget {

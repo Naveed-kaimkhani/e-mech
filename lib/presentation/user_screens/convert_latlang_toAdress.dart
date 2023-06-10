@@ -1,3 +1,4 @@
+import 'package:e_mech/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 
@@ -8,25 +9,6 @@ class ConvertLatLangAddress extends StatefulWidget {
   State<ConvertLatLangAddress> createState() => _ConvertLatLangAddressState();
 }
 
-// Future<String?> getAddressFromCoordinates(
-//     double latitude, double longitude) async {
-//   print("button pressed");
-//   try {
-//     final coordinates = Coordinates(latitude, longitude);
-//     List<Address> addresses =
-//         await Geocoder.local.findAddressesFromCoordinates(coordinates);
-//     if (addresses != null && addresses.isNotEmpty) {
-//       Address firstAddress = addresses.first;
-//       String address = '${firstAddress.addressLine}';
-//       print(address);
-//       return address;
-//     }
-//   } catch (e) {
-//     print('Error getting address: $e');
-//   }
-//   return null;
-// }
-
 Future<String> getAddressFromLatLng(double latitude, double longitude) async {
   try {
     List<Placemark> placemarks = await placemarkFromCoordinates(latitude, longitude);
@@ -35,11 +17,10 @@ Future<String> getAddressFromLatLng(double latitude, double longitude) async {
       Placemark placemark = placemarks[0];
       String address =
           '${placemark.street}, ${placemark.postalCode}, ${placemark.locality}, ${placemark.administrativeArea}, ${placemark.country}';
-      print(address);
       return address;
     }
   } catch (e) {
-    print('Error: $e');
+    utils.toastMessage(e.toString());
   }
 
   return '';
@@ -61,7 +42,7 @@ class _ConvertLatLangAddressState extends State<ConvertLatLangAddress> {
               height: 100,
               width: 100,
               color: Colors.black,
-              child: Text("convert"),
+              child: const Text("convert"),
             ),
           ),
         ],

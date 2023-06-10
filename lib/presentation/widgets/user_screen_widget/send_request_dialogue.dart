@@ -4,7 +4,6 @@ import 'package:e_mech/domain/entities/seller_model.dart';
 import 'package:e_mech/domain/entities/user_model.dart';
 import 'package:e_mech/presentation/controllers/all_sellerdata_provider.dart';
 import 'package:e_mech/presentation/widgets/circle_progress.dart';
-import 'package:e_mech/presentation/widgets/user_screen_widget/request_sent_dialogue.dart';
 import 'package:e_mech/style/custom_text_style.dart';
 import 'package:e_mech/style/styling.dart';
 import 'package:e_mech/utils/utils.dart';
@@ -152,13 +151,10 @@ class _SendRequestDialogueState extends State<SendRequestDialogue> {
                       text: "Send Request",
                     ),
               onTap: () async {
-                print("in send request");
-                //send request to nearest mechanic
                 List<SellerModel> neededSellers =
                     filterSellersByService(allSellers!, _selectedService);
-                print("need seller $neededSellers");
+       
                 if (neededSellers.isNotEmpty) {
-                  print("in if");
                   await sendRequest(neededSellers, user!);
                 Navigator.pop(context);
                 utils.openRequestSentDialogue(context);
@@ -209,10 +205,7 @@ class _SendRequestDialogueState extends State<SendRequestDialogue> {
         senderLong: user.long,
         sentDate: utils.getCurrentDate(),
         sentTime: utils.getCurrentTime(),
-        senderProfileImage: user.profileImage)
-        
-        ;
-
+        senderProfileImage: user.profileImage);
     await FirebaseUserRepository.sentRequest(sellers, request, context);
     isLoading(false);
   }

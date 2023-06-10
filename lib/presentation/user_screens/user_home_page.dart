@@ -1,23 +1,16 @@
 import 'dart:async';
-import 'dart:typed_data';
 import 'package:custom_info_window/custom_info_window.dart';
-import 'package:e_mech/data/firebase_user_repository.dart';
 import 'package:e_mech/presentation/controllers/all_sellerdata_provider.dart';
-import 'package:e_mech/presentation/widgets/user_screen_widget/request_sent_dialogue.dart';
 import 'package:e_mech/presentation/widgets/user_screen_widget/seller_info_window.dart';
 import 'package:e_mech/presentation/widgets/user_screen_widget/send_request_dialogue.dart';
-import 'package:e_mech/style/custom_text_style.dart';
 import 'package:e_mech/style/styling.dart';
 import 'package:e_mech/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 import 'package:flutter/services.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
-
 import '../../domain/entities/seller_model.dart';
 import '../../domain/entities/user_model.dart';
 import '../../style/images.dart';

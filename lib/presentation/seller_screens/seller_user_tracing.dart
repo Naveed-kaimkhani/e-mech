@@ -1,16 +1,11 @@
 import 'dart:async';
-import 'dart:typed_data';
 import 'dart:ui' as ui;
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_mech/domain/entities/request_model.dart';
-import 'package:e_mech/style/images.dart';
 import 'package:e_mech/style/styling.dart';
 import 'package:e_mech/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -31,7 +26,7 @@ class _SellerUserTracingState extends State<SellerUserTracing> {
   LatLng? sourceLocation = const LatLng(0.0, 0.0);
   LatLng? destinationLocation;
   SellerModel? seller;
-Uint8List? sellerTracingIcon;
+  Uint8List? sellerTracingIcon;
   final Completer<GoogleMapController> _controller = Completer();
 
   List<LatLng> polyLineCoordinates = [];
@@ -43,9 +38,9 @@ Uint8List? sellerTracingIcon;
   List<Marker> _marker = [];
 
   void getUserCurrentLocation() async {
+    print("in getUserCurrentLocation");
     try {
-
-      // await Geolocator.requestPermission();
+      await Geolocator.requestPermission();
       // currentLocation = await Geolocator.getCurrentPosition();
 
       // currentLocation = await Geolocator.getCurrentPosition(
@@ -54,38 +49,29 @@ Uint8List? sellerTracingIcon;
           LatLng(sourceLocation!.latitude, sourceLocation!.longitude));
       // utils.hideLoading();
       positionStreamSubscription = Geolocator.getPositionStream().listen(
-        (Position position) async {
-          double distance = Geolocator.distanceBetween(
-            currentLocation!.latitude,
-            currentLocation!.longitude,
-            position.latitude,
-            position.longitude,
-          );
+  (Position position) async {
+    print("in position listen");
+    GoogleMapController controller = await _controller.future;
 
-          // Do something with the updated position
-          if (distance > distanceThreshold) {
-            GoogleMapController controller = await _controller.future;
-
-            setState(() {
-              print("distance $distance");
-              print("location initialized");
-              currentLocation = position;
-              print(currentLocation);
-              controller
-                  .animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
-                target: LatLng(
-                    currentLocation!.latitude, currentLocation!.longitude),
-                zoom: 18,
-              )));
-            });
-          }
-
-          // print('Latitude: ${position.latitude}, Longitude: ${position.longitude}');
-        },
-        onError: (e) {
-          print(e);
-        },
+    setState(() {
+      print("location initialized");
+      currentLocation = position;
+      print(currentLocation);
+      controller.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target: LatLng(currentLocation!.latitude, currentLocation!.longitude),
+            zoom: 18,
+          ),
+        ),
       );
+    });
+    print("end");
+  },
+  onError: (e) {
+    print(e);
+  },
+);
     } catch (error) {
       utils.flushBarErrorMessage(error.toString(), context);
       return null; // or throw the error
@@ -94,6 +80,7 @@ Uint8List? sellerTracingIcon;
 
   void getPolyPoints() async {
     print("in getpolyPoints");
+    //  await Geolocator.checkPermission();
     PolylinePoints polylinePoints = PolylinePoints();
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
         apiKey,
@@ -139,8 +126,7 @@ Uint8List? sellerTracingIcon;
   }
 
   addMarker() async {
-     sellerTracingIcon =
-        await getByteFromAssets(Images.sellerTracingIcon, 100);
+    sellerTracingIcon = await getByteFromAssets("assets/man.png", 100);
     // final Uint8List sellerInitialPosition =
     //     await getByteFromAssets(Images.sellerInitialPosition, 100);
     // // final Uint8List sellerTracingIcon=await getByteFromAssets(Images.sellerTracingIcon, 50);
@@ -176,21 +162,40 @@ Uint8List? sellerTracingIcon;
     super.dispose();
   }
 
-  @override
-  void initState() {
-    super.initState();
+//   @override
+//   void initState() {
+//     super.initState();
 
-    utils.checkConnectivity(context);
-// utils.showLoading(context);
-    seller = Provider.of<SellerProvider>(context, listen: false).seller;
-    sourceLocation = LatLng(seller!.lat!, seller!.long!);
-    destinationLocation =
-        LatLng(widget.requestModel.senderLat!, widget.requestModel.senderLong!);
-    addMarker();
-    getPolyPoints();
+//     utils.checkConnectivity(context);
 
-    getUserCurrentLocation();
-  }
+// // utils.showLoading(context);
+//     seller = Provider.of<SellerProvider>(context, listen: false).seller;
+//     sourceLocation = LatLng(seller!.lat!, seller!.long!);
+//     destinationLocation =
+//         LatLng(widget.requestModel.senderLat!, widget.requestModel.senderLong!);
+//     addMarker();
+//     getPolyPoints();
+//     getUserCurrentLocation();
+//   }
+@override
+void initState() {
+  super.initState();
+
+  utils.checkConnectivity(context);
+
+  seller = Provider.of<SellerProvider>(context, listen: false).seller;
+  sourceLocation = LatLng(seller!.lat!, seller!.long!);
+  destinationLocation =
+      LatLng(widget.requestModel.senderLat!, widget.requestModel.senderLong!);
+  addMarker();
+  getPolyPoints();
+   getUserCurrentLocation();
+  // Delay the execution of getUserCurrentLocation
+  // Future.delayed(Duration.zero, () {
+  //   getUserCurrentLocation();
+  // });
+}
+
 
   @override
   Widget build(BuildContext context) {

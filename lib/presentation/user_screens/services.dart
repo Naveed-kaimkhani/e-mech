@@ -28,7 +28,7 @@ class Services extends StatelessWidget {
          SettingServicesScreenWidget(
             text: "Petrol",
             imageURL: Images.petrol,
-            routeName: RoutesName.PetrolProviders,
+            routeName: RoutesName.petrolProviders,
           ),
           k,
           SettingServicesScreenWidget(
