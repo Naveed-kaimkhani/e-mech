@@ -9,17 +9,25 @@ class LoadingMap extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       body: Center(
-        child: 
-        Column(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-         const   SpinKitSpinningLines(
-      color: Styling.primaryColor,
-      size: 50.0,
-    ),
-const    SizedBox(height: 10,),
-    Text("Loading Map...",style: CustomTextStyle.font_14_red,)
+            const Center(
+              child: SpinKitDancingSquare(
+                color: Styling.primaryColor,
+                size: 50.0,
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              "Loading Map...",
+              style: CustomTextStyle.font_14_red,
+            )
           ],
         ),
       ),

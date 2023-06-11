@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:custom_info_window/custom_info_window.dart';
+import 'package:e_mech/presentation/widgets/user_screen_widget/location.dart';
 import 'package:e_mech/providers/all_sellerdata_provider.dart';
 import 'package:e_mech/presentation/widgets/user_screen_widget/seller_info_window.dart';
 import 'package:e_mech/presentation/widgets/user_screen_widget/send_request_dialogue.dart';
@@ -135,7 +136,8 @@ class _UserHomePageState extends State<UserHomePage> {
           children: [
             callButton(),
             SizedBox(height: 20.h),
-            locationButton(),
+            // locationButton(),
+            Locationbttn(func: animateCamera),
             SizedBox(height: 20.h),
             InkWell(
               child: GeneralBttnForUserHmPg(

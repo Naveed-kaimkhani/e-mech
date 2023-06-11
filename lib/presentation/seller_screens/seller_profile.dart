@@ -1,6 +1,8 @@
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_mech/data/firebase_user_repository.dart';
+import 'package:e_mech/presentation/seller_screens/seller_homepage.dart';
+import 'package:e_mech/presentation/seller_screens/seller_navigation.dart';
 import 'package:e_mech/presentation/widgets/auth_button.dart';
 import 'package:e_mech/presentation/widgets/circle_progress.dart';
 import 'package:e_mech/presentation/widgets/profile_pic.dart';
@@ -10,8 +12,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import '../../domain/entities/seller_model.dart';
 import '../../domain/entities/user_model.dart';
 import '../../navigation_page.dart';
+import '../../providers/seller_provider.dart';
 import '../../style/custom_text_style.dart';
 import '../../utils/storage_services.dart';
 import '../../providers/user_provider.dart';
@@ -63,8 +67,8 @@ class _ProfileState extends State<Profile> {
     right: 10.h,
     // top: 10.h,
   );
-  final users = FirebaseFirestore.instance.collection('users');
-  UserModel? user;
+  final users = FirebaseFirestore.instance.collection('sellers');
+  SellerModel? user;
   Future<String> updateProfile() async {
     String profileUrl = await _FirebaseUserRepository.uploadProfileImage(
         imageFile: _profileImage!, uid: utils.currentUserUid);
@@ -101,8 +105,8 @@ class _ProfileState extends State<Profile> {
           "phone": _phoneController.text.isEmpty
               ? user!.phone
               : _phoneController.text,
-          "city":
-              _cityController.text.isEmpty ? user!.city : _cityController.text,
+          "service":
+              _cityController.text.isEmpty ? user!.service : _cityController.text,
         })
         .then((value) => {
               isLoading(false),
@@ -121,7 +125,7 @@ class _ProfileState extends State<Profile> {
           await Provider.of<UserProvider>(context, listen: false)
               .getUserFromServer(context);
           Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return const NavigationPage();
+            return const SellerNavigation();
           }));
         }).catchError((error) {
           isLoading(false);
@@ -133,14 +137,13 @@ class _ProfileState extends State<Profile> {
       }
     }).catchError((error) {
       isLoading(false);
-      // isLoading(false);
       utils.flushBarErrorMessage(error.message.toString(), context);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    user = Provider.of<UserProvider>(context, listen: false).user;
+    user = Provider.of<SellerProvider>(context, listen: false).seller;
     return SafeArea(
       child: Scaffold(
           backgroundColor: Colors.white,
@@ -188,7 +191,7 @@ class _ProfileState extends State<Profile> {
                 Padding(
                   padding: const EdgeInsets.only(left: 8.0),
                   child: Text(
-                    "City",
+                    "Service",
                     style:
                         TextStyle(fontSize: 17.sp, fontWeight: FontWeight.w700),
                   ),
@@ -199,7 +202,7 @@ class _ProfileState extends State<Profile> {
                     currentNode: cityFocusNode,
                     focusNode: cityFocusNode,
                     nextNode: phoneFocusNode,
-                    hint_text: user!.city,
+                    hint_text: user!.service,
                     controller: _cityController,
                   ),
                 ),

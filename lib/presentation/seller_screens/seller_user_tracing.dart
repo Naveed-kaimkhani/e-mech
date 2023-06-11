@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:ui' as ui;
+import 'package:custom_info_window/custom_info_window.dart';
 import 'package:e_mech/domain/entities/request_model.dart';
 import 'package:e_mech/presentation/widgets/user_screen_widget/loading_map.dart';
 import 'package:e_mech/style/styling.dart';
@@ -7,12 +8,15 @@ import 'package:e_mech/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../../domain/entities/seller_model.dart';
 import '../../providers/seller_provider.dart';
+import '../widgets/seller_screen_widget/user_marker_infowindow.dart';
+import '../widgets/user_screen_widget/seller_info_window.dart';
 
 class SellerUserTracing extends StatefulWidget {
   RequestModel requestModel;
@@ -23,11 +27,15 @@ class SellerUserTracing extends StatefulWidget {
 }
 
 class _SellerUserTracingState extends State<SellerUserTracing> {
+  final CustomInfoWindowController _windowinfoController =
+      CustomInfoWindowController();
   final String apiKey = 'AIzaSyD6sruWDaBsYEfYdMDCuEwTvq_5Mk5bK7o';
   LatLng? sourceLocation = const LatLng(0.0, 0.0);
   LatLng? destinationLocation;
   SellerModel? seller;
   Uint8List? sellerTracingIcon;
+  
+  Uint8List? sellerLocation;
   final Completer<GoogleMapController> _controller = Completer();
 
   List<LatLng> polyLineCoordinates = [];
@@ -41,7 +49,7 @@ class _SellerUserTracingState extends State<SellerUserTracing> {
   void getUserCurrentLocation() async {
     print("in getUserCurrentLocation");
     try {
-      await Geolocator.requestPermission();
+      // await Geolocator.requestPermission();
       // currentLocation = await Geolocator.getCurrentPosition();
 
       // currentLocation = await Geolocator.getCurrentPosition(
@@ -50,29 +58,30 @@ class _SellerUserTracingState extends State<SellerUserTracing> {
           LatLng(sourceLocation!.latitude, sourceLocation!.longitude));
       // utils.hideLoading();
       positionStreamSubscription = Geolocator.getPositionStream().listen(
-  (Position position) async {
-    print("in position listen");
-    GoogleMapController controller = await _controller.future;
+        (Position position) async {
+          print("in position listen");
+          GoogleMapController controller = await _controller.future;
 
-    setState(() {
-      print("location initialized");
-      currentLocation = position;
-      print(currentLocation);
-      controller.animateCamera(
-        CameraUpdate.newCameraPosition(
-          CameraPosition(
-            target: LatLng(currentLocation!.latitude, currentLocation!.longitude),
-            zoom: 18,
-          ),
-        ),
+          setState(() {
+            print("location initialized");
+            currentLocation = position;
+            print(currentLocation);
+            controller.animateCamera(
+              CameraUpdate.newCameraPosition(
+                CameraPosition(
+                  target: LatLng(
+                      currentLocation!.latitude, currentLocation!.longitude),
+                  zoom: 18,
+                ),
+              ),
+            );
+          });
+          print("end");
+        },
+        onError: (e) {
+          print(e);
+        },
       );
-    });
-    print("end");
-  },
-  onError: (e) {
-    print(e);
-  },
-);
     } catch (error) {
       utils.flushBarErrorMessage(error.toString(), context);
       return null; // or throw the error
@@ -128,6 +137,7 @@ class _SellerUserTracingState extends State<SellerUserTracing> {
 
   addMarker() async {
     sellerTracingIcon = await getByteFromAssets("assets/man.png", 100);
+    sellerLocation = await getByteFromAssets("assets/SellerLocation", 100);
     // final Uint8List sellerInitialPosition =
     //     await getByteFromAssets(Images.sellerInitialPosition, 100);
     // // final Uint8List sellerTracingIcon=await getByteFromAssets(Images.sellerTracingIcon, 50);
@@ -178,33 +188,30 @@ class _SellerUserTracingState extends State<SellerUserTracing> {
 //     getPolyPoints();
 //     getUserCurrentLocation();
 //   }
-@override
-void initState() {
-  super.initState();
+  @override
+  void initState() {
+    super.initState();
 
-  utils.checkConnectivity(context);
+    utils.checkConnectivity(context);
 
-  seller = Provider.of<SellerProvider>(context, listen: false).seller;
-  sourceLocation = LatLng(seller!.lat!, seller!.long!);
-  destinationLocation =
-      LatLng(widget.requestModel.senderLat!, widget.requestModel.senderLong!);
-  addMarker();
-  getPolyPoints();
-   getUserCurrentLocation();
-  // Delay the execution of getUserCurrentLocation
-  // Future.delayed(Duration.zero, () {
-  //   getUserCurrentLocation();
-  // });
-}
-
+    seller = Provider.of<SellerProvider>(context, listen: false).seller;
+    sourceLocation = LatLng(seller!.lat!, seller!.long!);
+    destinationLocation =
+        LatLng(widget.requestModel.senderLat!, widget.requestModel.senderLong!);
+    addMarker();
+    getPolyPoints();
+    getUserCurrentLocation();
+    // Delay the execution of getUserCurrentLocation
+    // Future.delayed(Duration.zero, () {
+    //   getUserCurrentLocation();
+    // });
+  }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        body: currentLocation == null
-            ? const LoadingMap()
-            : GoogleMap(
+      child:currentLocation == null?const LoadingMap():Scaffold(
+        body:GoogleMap(
                 initialCameraPosition: CameraPosition(
                     target: LatLng(
                         currentLocation!.latitude, currentLocation!.longitude),
@@ -225,12 +232,23 @@ void initState() {
                       markerId: const MarkerId("1"),
                       position: LatLng(
                           sourceLocation!.latitude, sourceLocation!.longitude),
-                      icon: BitmapDescriptor.defaultMarker,
+                      icon: BitmapDescriptor.fromBytes(sellerLocation!),
                       infoWindow: const InfoWindow(title: "Your Position")),
                   Marker(
-                      markerId: const MarkerId("2"),
-                      position: destinationLocation!,
-                      infoWindow: const InfoWindow(title: "User Position")),
+                    markerId: const MarkerId("2"),
+                    position: destinationLocation!,
+                    icon: BitmapDescriptor.fromBytes(sellerLocation!),
+                    // infoWindow: const InfoWindow(title: "User Position"),
+                    onTap: () {
+                      _windowinfoController.addInfoWindow!(
+                        UserMarkerInfoWindow(
+                          seller: widget.requestModel,
+                        ),
+                        LatLng(widget.requestModel.senderLat!,
+                            widget.requestModel.senderLat!),
+                      );
+                    },
+                  ),
                 },
                 onMapCreated: (GoogleMapController controller) {
                   _controller.complete(controller);

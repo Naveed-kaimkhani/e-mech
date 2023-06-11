@@ -60,29 +60,6 @@ await  Provider.of<SellerProvider>(context, listen: false)
         MaterialPageRoute(builder: (context) => const UserSellerScreen()),
       );
 }
-      // final value = await getUserCurrentLocation();
-      // print(value);
-      // String address =
-      //     await utils.getAddressFromLatLng(value!.latitude, value.longitude);
-
-      // await _firebaseUserRepository.addlatLongToFirebaseDocument(
-      //   value.latitude,
-      //   value.longitude,
-      //   address,
-      //   'users',
-      // );
-
-      // await Provider.of<UserProvider>(context, listen: false)
-      //     .getUserFromServer(context);
-
-      // await Provider.of<AllSellerDataProvider>(context, listen: false)
-      //     .getSellersDataFromServer(context);
-
-      // // Navigate to the home screen after loading the data
-      // Navigator.pushReplacement(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => NavigationPage()),
-      // );
     } catch (error) {
       utils.flushBarErrorMessage(error.toString(), context);
       // Handle error if any
