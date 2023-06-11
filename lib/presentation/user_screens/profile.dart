@@ -14,7 +14,7 @@ import '../../domain/entities/user_model.dart';
 import '../../navigation_page.dart';
 import '../../style/custom_text_style.dart';
 import '../../utils/storage_services.dart';
-import '../controllers/user_provider.dart';
+import '../../providers/user_provider.dart';
 import '../widgets/inputfields.dart';
 import '../widgets/user_screen_widget/services_n_setting_header.dart';
 

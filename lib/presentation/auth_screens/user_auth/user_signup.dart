@@ -15,7 +15,7 @@ import '../../../domain/entities/user_model.dart';
 import '../../../navigation_page.dart';
 import '../../../style/styling.dart';
 import '../../../utils/storage_services.dart';
-import '../../controllers/user_provider.dart';
+import '../../../providers/user_provider.dart';
 import '../../widgets/auth_button.dart';
 
 class UserSignup extends StatefulWidget {

@@ -2,7 +2,7 @@
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:e_mech/presentation/controllers/user_provider.dart';
+import 'package:e_mech/providers/user_provider.dart';
 import 'package:e_mech/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -14,7 +14,7 @@ import '../domain/entities/request_model.dart';
 import '../domain/entities/seller_model.dart';
 import '../domain/entities/user_model.dart';
 import '../domain/repositories/users_repository.dart';
-import '../presentation/controllers/all_sellerdata_provider.dart';
+import '../providers/all_sellerdata_provider.dart';
 
 class FirebaseUserRepository implements UsersRepository {
   final FirebaseAuth _auth = FirebaseAuth.instance;

@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import '../../data/firebase_user_repository.dart';
 import '../../domain/entities/request_model.dart';
 import '../../domain/entities/seller_model.dart';
-import '../controllers/seller_provider.dart';
+import '../../providers/seller_provider.dart';
 import '../widgets/user_homepage_header.dart';
 
 class SellerHomepage extends StatefulWidget {

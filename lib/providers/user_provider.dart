@@ -2,9 +2,9 @@
 import 'package:e_mech/utils/utils.dart';
 import 'package:flutter/material.dart';
 
-import '../../data/firebase_user_repository.dart';
-import '../../domain/entities/user_model.dart';
-import '../../utils/storage_services.dart';
+import '../data/firebase_user_repository.dart';
+import '../domain/entities/user_model.dart';
+import '../utils/storage_services.dart';
 
 class UserProvider with ChangeNotifier {
   UserModel? _userDetails;

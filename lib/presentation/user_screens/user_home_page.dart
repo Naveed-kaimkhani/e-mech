@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:custom_info_window/custom_info_window.dart';
-import 'package:e_mech/presentation/controllers/all_sellerdata_provider.dart';
+import 'package:e_mech/providers/all_sellerdata_provider.dart';
 import 'package:e_mech/presentation/widgets/user_screen_widget/seller_info_window.dart';
 import 'package:e_mech/presentation/widgets/user_screen_widget/send_request_dialogue.dart';
 import 'package:e_mech/style/styling.dart';
@@ -14,7 +14,7 @@ import 'package:provider/provider.dart';
 import '../../domain/entities/seller_model.dart';
 import '../../domain/entities/user_model.dart';
 import '../../style/images.dart';
-import '../controllers/user_provider.dart';
+import '../../providers/user_provider.dart';
 import '../widgets/general_bttn_for_userhmpg.dart';
 import '../widgets/user_homepage_header.dart';
 

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:ui' as ui;
 import 'package:e_mech/domain/entities/request_model.dart';
+import 'package:e_mech/presentation/widgets/user_screen_widget/loading_map.dart';
 import 'package:e_mech/style/styling.dart';
 import 'package:e_mech/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../../domain/entities/seller_model.dart';
-import '../controllers/seller_provider.dart';
+import '../../providers/seller_provider.dart';
 
 class SellerUserTracing extends StatefulWidget {
   RequestModel requestModel;
@@ -202,7 +203,7 @@ void initState() {
     return SafeArea(
       child: Scaffold(
         body: currentLocation == null
-            ? const Text("Loading")
+            ? const LoadingMap()
             : GoogleMap(
                 initialCameraPosition: CameraPosition(
                     target: LatLng(

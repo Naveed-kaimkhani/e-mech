@@ -2,7 +2,7 @@ import 'package:e_mech/data/firebase_user_repository.dart';
 import 'package:e_mech/domain/entities/request_model.dart';
 import 'package:e_mech/domain/entities/seller_model.dart';
 import 'package:e_mech/domain/entities/user_model.dart';
-import 'package:e_mech/presentation/controllers/all_sellerdata_provider.dart';
+import 'package:e_mech/providers/all_sellerdata_provider.dart';
 import 'package:e_mech/presentation/widgets/circle_progress.dart';
 import 'package:e_mech/style/custom_text_style.dart';
 import 'package:e_mech/style/styling.dart';
@@ -10,7 +10,7 @@ import 'package:e_mech/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import '../../controllers/user_provider.dart';
+import '../../../providers/user_provider.dart';
 import '../general_bttn_for_userhmpg.dart';
 
 class SendRequestDialogue extends StatefulWidget {

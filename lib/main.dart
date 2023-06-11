@@ -1,7 +1,7 @@
 
-import 'package:e_mech/presentation/controllers/all_sellerdata_provider.dart';
-import 'package:e_mech/presentation/controllers/seller_provider.dart';
-import 'package:e_mech/presentation/controllers/user_provider.dart';
+import 'package:e_mech/providers/all_sellerdata_provider.dart';
+import 'package:e_mech/providers/seller_provider.dart';
+import 'package:e_mech/providers/user_provider.dart';
 import 'package:e_mech/presentation/splash_screen.dart';
 import 'package:e_mech/utils/routes/routes.dart';
 import 'package:firebase_core/firebase_core.dart';

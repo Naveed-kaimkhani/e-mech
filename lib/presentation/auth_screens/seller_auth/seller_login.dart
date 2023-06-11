@@ -15,7 +15,7 @@ import '../../../data/firebase_user_repository.dart';
 import '../../../domain/entities/seller_model.dart';
 import '../../../style/styling.dart';
 import '../../../utils/storage_services.dart';
-import '../../controllers/seller_provider.dart';
+import '../../../providers/seller_provider.dart';
 import '../../widgets/auth_button.dart';
 
 class SellerLogin extends StatefulWidget {

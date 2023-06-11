@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 import '../data/firebase_user_repository.dart';
 import '../navigation_page.dart';
 import '../style/images.dart';
-import 'controllers/seller_provider.dart';
+import '../providers/seller_provider.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
