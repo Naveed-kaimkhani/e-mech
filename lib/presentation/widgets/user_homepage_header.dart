@@ -36,7 +36,7 @@ class UserHomePageHeader extends StatelessWidget {
           ],
         ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,14 +52,12 @@ class UserHomePageHeader extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(
-              width: 80.w,
-            ),
+            // SizedBox(
+            //   width: 80.w,
+            // ),
             Padding(
-              padding: text.length > 10
-                  ? EdgeInsets.only(left: 16.r)
-                  : EdgeInsets.only(left: 76.r),
-              child: ProfilePic(url: imageUrl, height: 50.h, width: 50.h),
+              padding: EdgeInsets.only(right: 10.w),
+              child: ProfilePic(url: imageUrl, height: 52.h, width: 58.w),
             ),
           ],
         ));

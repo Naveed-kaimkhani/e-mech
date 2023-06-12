@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import '../../../style/styling.dart';
 
 class CallWidget extends StatelessWidget {
-  String num;
-  double radius;
+final  String num;
+ final double radius;
 
-  double iconSize;
-  BuildContext context;
-  CallWidget({
+ final double iconSize;
+ final BuildContext context;
+ const CallWidget({
     required this.iconSize,
     required this.radius,
     required this.num,

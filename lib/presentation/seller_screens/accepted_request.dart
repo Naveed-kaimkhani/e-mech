@@ -2,6 +2,7 @@ import 'package:e_mech/presentation/widgets/seller_screen_widget/accepted_reques
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/firebase_user_repository.dart';
@@ -18,7 +19,6 @@ class AcceptedRequest extends StatefulWidget {
 }
 
 class _AcceptedRequestState extends State<AcceptedRequest> {
-
   @override
   void initState() {
     super.initState();
@@ -50,7 +50,14 @@ class _AcceptedRequestState extends State<AcceptedRequest> {
                   } else if (snapshot.hasError) {
                     return const CircularProgressIndicator();
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return const Center(child: Text("No Request"));
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Lottie.asset("assets/noDataAnimation.json",
+                            height: 300.h, width: 300.w),
+                        const Text("No Accepted Request")
+                      ],
+                    );
                   } else {
                     return SizedBox(
                       height: MediaQuery.of(context).size.height,

@@ -1,5 +1,4 @@
 import 'package:e_mech/presentation/widgets/user_screen_widget/call_widget.dart';
-import 'package:e_mech/presentation/widgets/user_screen_widget/send_request_to_specific_seller.dart';
 import 'package:e_mech/style/styling.dart';
 import 'package:e_mech/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -9,29 +8,21 @@ import '../../../style/custom_text_style.dart';
 import '../profile_pic.dart';
 
 class UserMarkerInfoWindow extends StatefulWidget {
-  RequestModel seller;
+  final RequestModel request;
 
-  UserMarkerInfoWindow({super.key, required this.seller});
+  const UserMarkerInfoWindow({super.key, required this.request});
 
   @override
   State<UserMarkerInfoWindow> createState() => _UserMarkerInfoWindowState();
 }
 
 class _UserMarkerInfoWindowState extends State<UserMarkerInfoWindow> {
-  // bool isRequestSend = false;
-  String? address='';
-getAddress()async{
-
-        address = await utils.getAddressFromLatLng(widget.seller.senderLat!, widget.seller.senderLong!);
-
-}
-
   @override
   Widget build(BuildContext context) {
     int midIndex =
-        address!.length ~/ 2; // Calculate the middle index
+        widget.request.senderAddress!.length ~/ 2; // Calculate the middle index
 
-    String firstLine = address!.substring(0, midIndex);
+    String? firstLine = widget.request.senderAddress!.substring(0, midIndex);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
@@ -71,7 +62,7 @@ getAddress()async{
                           child: ProfilePic(
                             height: 35.h,
                             width: 35.w,
-                            url: widget.seller.senderProfileImage,
+                            url: widget.request.senderProfileImage,
                           )),
                     ),
                     SizedBox(
@@ -82,7 +73,7 @@ getAddress()async{
                       children: [
                         Text(
                           // widget.requestModel!.senderName!,
-                          widget.seller.senderName ?? "No Sender Name",
+                          widget.request.senderName ?? "No Sender Name",
                           style: CustomTextStyle.font_20,
                         ),
                         const SizedBox(
@@ -99,8 +90,8 @@ getAddress()async{
                               width: 3.w,
                             ),
                             Text(
-                              // widget.seller.workshopName!,
-                              firstLine,
+                              // widget.request.workshopName!,
+                              firstLine ?? "",
                               style: CustomTextStyle.font_15_black,
                             ),
                           ],
@@ -109,7 +100,7 @@ getAddress()async{
                     ),
                   ],
                 ),
-                // CallWidget(num: widget.seller.phone!, context: context),
+                // CallWidget(num: widget.request.phone!, context: context),
               ],
             ),
             SizedBox(
@@ -125,7 +116,7 @@ getAddress()async{
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Service",
+                          "Service Required",
                           style: CustomTextStyle.font_15_black,
                         ),
                         Row(
@@ -138,18 +129,25 @@ getAddress()async{
                               width: 5.w,
                             ),
                             Text(
-                              widget.seller.serviceRequired ?? "Service Null",
+                              widget.request.serviceRequired ?? "Service Null",
                               style: CustomTextStyle.font_14_red,
                             ),
                           ],
                         ),
-                       
+                        SizedBox(
+                          height: 10.h,
+                        ),
+                        Text(
+                          "${widget.request.sentDate}   ${widget.request.sentTime}" ??
+                              "Service Null",
+                          style: CustomTextStyle.font_10_black,
+                        ),
                       ],
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 8.0),
                       child: CallWidget(
-                        num: widget.seller.senderPhone!,
+                        num: widget.request.senderPhone ?? "12345678123",
                         context: context,
                         radius: 20.r,
                         iconSize: 16.h,

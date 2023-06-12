@@ -11,12 +11,15 @@ class RequestModel {
   double? senderLat;
   double? senderLong;
   String? senderProfileImage;
+  
+  String? senderAddress;
   RequestModel({
     // this.receiverUid,
     this.documentId,
     this.serviceId,
     this.senderLat,
     this.senderLong,
+    this.senderAddress,
     this.senderUid,
     this.serviceRequired,
     this.senderName,
@@ -35,6 +38,7 @@ class RequestModel {
     data['senderLat'] = request.senderLat;
     data['senderLong'] = request.senderLong;
     data['senderPhone'] = request.senderPhone;
+    data['senderAddress'] = request.senderAddress;
     data['serviceId'] = request.serviceId;
     data['senderName'] = request.senderName;
     data['senderProfileImage'] = request.senderProfileImage;
@@ -53,6 +57,7 @@ class RequestModel {
     senderLat = mapData['senderLat'];
     senderLong = mapData['senderLong'];
     senderPhone = mapData['senderPhone'];
+    senderAddress = mapData['senderAddress'];
     serviceId = mapData['serviceId'];
     senderProfileImage = mapData['senderProfileImage'];
     sentDate = mapData['sentDate'];

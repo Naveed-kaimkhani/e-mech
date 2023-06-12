@@ -203,6 +203,7 @@ class _SendRequestDialogueState extends State<SendRequestDialogue> {
         senderPhone: user.phone,
         senderLat: user.lat,
         senderLong: user.long,
+        senderAddress: user.address,
         sentDate: utils.getCurrentDate(),
         sentTime: utils.getCurrentTime(),
         senderProfileImage: user.profileImage);

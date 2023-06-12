@@ -185,22 +185,22 @@ class _UserHomePageState extends State<UserHomePage> {
     );
   }
 
-  Padding locationButton() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 110.0),
-      child: FloatingActionButton(
-        backgroundColor: Styling.primaryColor,
-        heroTag: "btn2",
-        child: const Icon(
-          Icons.location_searching_outlined,
-          color: Colors.white,
-        ),
-        onPressed: () async {
-          animateCamera();
-        },
-      ),
-    );
-  }
+  // Padding locationButton() {
+  //   return Padding(
+  //     padding: const EdgeInsets.only(left: 110.0),
+  //     child: FloatingActionButton(
+  //       backgroundColor: Styling.primaryColor,
+  //       heroTag: "btn2",
+  //       child: const Icon(
+  //         Icons.location_searching_outlined,
+  //         color: Colors.white,
+  //       ),
+  //       onPressed: () async {
+  //         animateCamera();
+  //       },
+  //     ),
+  //   );
+  // }
 
   Padding callButton() {
     return Padding(

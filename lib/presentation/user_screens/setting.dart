@@ -7,7 +7,6 @@ import 'package:e_mech/utils/routes/routes_name.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-
 class Setting extends StatelessWidget {
   Divider k = const Divider(
     color: Color.fromARGB(255, 174, 171, 171), //color of divider
@@ -54,7 +53,7 @@ class Setting extends StatelessWidget {
           SettingServicesScreenWidget(
             text: "About Us",
             // imageURL: Images.mechanic_pic,
-            icon: Icons.phone,
+            icon: Icons.admin_panel_settings,
             routeName: RoutesName.contactUs,
           ),
           k,

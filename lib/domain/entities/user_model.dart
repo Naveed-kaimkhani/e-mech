@@ -4,7 +4,7 @@ class UserModel {
   String? name;
  double? lat;
  double? long; 
- //String? serviceId;
+ String? address;
  String? phone;
   String? email;
  String? gender;
@@ -31,7 +31,7 @@ class UserModel {
     data['name'] = user.name;
     data['lat'] = user.lat;
     data['long'] = user.long;
-   // data['serviceId'] = user.serviceId;
+   data['address'] = user.address;
     data['phone'] = user.phone;
     data['email'] = user.email;
     data['gender'] = user.gender;
@@ -46,7 +46,7 @@ class UserModel {
     name = mapData['name'];
     lat = mapData['lat'];
     long = mapData['long'];
-    //serviceId = mapData['serviceId'];
+    address = mapData['address'];
     phone = mapData['phone'];
     email = mapData['email'];
     gender = mapData['gender'];

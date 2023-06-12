@@ -132,11 +132,19 @@ class FirebaseUserRepository implements UsersRepository {
 static Future<void> acceptRequest(RequestModel requestModel, context) async {
   try {
     // Add the request to the "AcceptedRequest" subcollection of the current seller
-    await _sellerCollection
-        .doc(utils.currentUserUid)
-        .collection('AcceptedRequest')
-        .add(requestModel.toMap(requestModel));
-    await deleteRequestFromEverySeller(requestModel.documentId!, context);
+    // await _sellerCollection
+    //     .doc(utils.currentUserUid)
+    //     .collection('AcceptedRequest')
+    //     .add(requestModel.toMap(requestModel));
+
+                final DocumentReference requestRef = await _sellerCollection
+            .doc(utils.currentUserUid)
+            .collection('AcceptedRequest')
+            .add(requestModel.toMap(requestModel));
+            
+        final String documentId = requestRef.id;
+        await requestRef.update({'documentId': documentId});
+    await deleteRequestFromEverySeller(requestModel.serviceId!, context);
 
     // Show success message or perform other operations
     utils.toastMessage("Request Accepted");
@@ -323,7 +331,7 @@ static Stream<List<RequestModel>> getAcceptedRequests(context) async* {
 }
 
 
-static Future<void> deleteRequestFromEverySeller(String documentId,context) async {
+static Future<void> deleteRequestFromEverySeller(String serviceId,context) async {
   try {
 
     // Retrieve all documents in the sellers collection
@@ -337,7 +345,7 @@ static Future<void> deleteRequestFromEverySeller(String documentId,context) asyn
 
       // Query for documents that contain the specified document ID
       QuerySnapshot requestQuerySnapshot =
-          await requestCollection.where('documentId', isEqualTo: documentId).get();
+          await requestCollection.where('serviceId', isEqualTo: serviceId).get();
 
       // Delete each document in the "Request" subcollection
       for (DocumentSnapshot requestDocument in requestQuerySnapshot.docs) {
@@ -350,12 +358,12 @@ static Future<void> deleteRequestFromEverySeller(String documentId,context) asyn
   }
 }
 
-static Future<void> deleteRequestDocument(String sellerId, String requestId , context) async {
+static Future<void> deleteRequestDocument(String subCollection, String requestId , context) async {
   try {
     await FirebaseFirestore.instance
         .collection('sellers')
-        .doc(sellerId)
-        .collection('request')
+        .doc(utils.currentUserUid)
+        .collection(subCollection)
         .doc(requestId)
         .delete();
         utils.toastMessage("Request deleted");

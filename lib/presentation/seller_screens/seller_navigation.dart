@@ -1,5 +1,6 @@
 import 'package:e_mech/presentation/seller_screens/accepted_request.dart';
 import 'package:e_mech/presentation/seller_screens/seller_homepage.dart';
+import 'package:e_mech/presentation/seller_screens/seller_profile.dart';
 import 'package:e_mech/presentation/user_screens/setting.dart';
 import 'package:e_mech/style/styling.dart';
 import 'package:flutter/material.dart';
@@ -16,8 +17,8 @@ class _SellerNavigationState extends State<SellerNavigation> {
   List pages = [
     const SellerHomepage(),
     const AcceptedRequest(),
+    SellerProfile(),
     Setting(),
-    Setting()
   ];
   int currentindex = 0;
   void onTap(int index) {
@@ -48,16 +49,16 @@ class _SellerNavigationState extends State<SellerNavigation> {
               text: "Home",
             ),
             GButton(
-              icon: Icons.done,
+              icon: Icons.done_outline_outlined,
               text: "Accepted",
-            ),
-            GButton(
-              icon: Icons.settings_outlined,
-              text: "Setting",
             ),
             GButton(
               icon: Icons.account_circle_outlined,
               text: "Profile",
+            ),
+            GButton(
+              icon: Icons.settings_outlined,
+              text: "Setting",
             ),
           ],
         ),

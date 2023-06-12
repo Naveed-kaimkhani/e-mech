@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 import 'package:custom_info_window/custom_info_window.dart';
 import 'package:e_mech/domain/entities/request_model.dart';
 import 'package:e_mech/presentation/widgets/user_screen_widget/loading_map.dart';
+import 'package:e_mech/presentation/widgets/user_screen_widget/location.dart';
 import 'package:e_mech/style/styling.dart';
 import 'package:e_mech/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +35,7 @@ class _SellerUserTracingState extends State<SellerUserTracing> {
   LatLng? destinationLocation;
   SellerModel? seller;
   Uint8List? sellerTracingIcon;
-  
+
   Uint8List? sellerLocation;
   final Completer<GoogleMapController> _controller = Completer();
 
@@ -43,8 +44,15 @@ class _SellerUserTracingState extends State<SellerUserTracing> {
   StreamSubscription<Position>? positionStreamSubscription;
   static const double distanceThreshold =
       2; // Minimum distance in meters to trigger an update
+  double? distance;
 
-  List<Marker> _marker = [];
+  double getDistancebtwRiderNSeller(double riderLat,double riderLong,) {
+    return Geolocator.distanceBetween(
+       riderLat,
+        riderLong,
+        destinationLocation!.latitude,
+        destinationLocation!.longitude);
+  }
 
   void getUserCurrentLocation() async {
     print("in getUserCurrentLocation");
@@ -65,6 +73,8 @@ class _SellerUserTracingState extends State<SellerUserTracing> {
           setState(() {
             print("location initialized");
             currentLocation = position;
+
+            distance=getDistancebtwRiderNSeller(position.latitude,position.longitude);
             print(currentLocation);
             controller.animateCamera(
               CameraUpdate.newCameraPosition(
@@ -137,7 +147,7 @@ class _SellerUserTracingState extends State<SellerUserTracing> {
 
   addMarker() async {
     sellerTracingIcon = await getByteFromAssets("assets/man.png", 100);
-    sellerLocation = await getByteFromAssets("assets/SellerLocation", 100);
+    sellerLocation = await getByteFromAssets("assets/SellerLocation.png", 70);
     // final Uint8List sellerInitialPosition =
     //     await getByteFromAssets(Images.sellerInitialPosition, 100);
     // // final Uint8List sellerTracingIcon=await getByteFromAssets(Images.sellerTracingIcon, 50);
@@ -198,6 +208,7 @@ class _SellerUserTracingState extends State<SellerUserTracing> {
     sourceLocation = LatLng(seller!.lat!, seller!.long!);
     destinationLocation =
         LatLng(widget.requestModel.senderLat!, widget.requestModel.senderLong!);
+    distance = getDistancebtwRiderNSeller(sourceLocation!.latitude,sourceLocation!.longitude);
     addMarker();
     getPolyPoints();
     getUserCurrentLocation();
@@ -209,60 +220,115 @@ class _SellerUserTracingState extends State<SellerUserTracing> {
 
   @override
   Widget build(BuildContext context) {
+    String dis=distance.toString();
+    double halfLength =dis.length / 3; // Calculate the half length of the string
+
     return SafeArea(
-      child:currentLocation == null?const LoadingMap():Scaffold(
-        body:GoogleMap(
-                initialCameraPosition: CameraPosition(
-                    target: LatLng(
-                        currentLocation!.latitude, currentLocation!.longitude),
-                    zoom: 18),
-                compassEnabled: true,
-                // markers: Set<Marker>.of(_marker),
-                markers: {
-                  Marker(
-                      markerId: const MarkerId(
-                        "0",
-                      ),
-                      position: LatLng(currentLocation!.latitude,
-                          currentLocation!.longitude),
-                      icon: BitmapDescriptor.fromBytes(sellerTracingIcon!),
-                      // icon: BitmapDescriptor.defaultMarker,
-                      infoWindow: const InfoWindow(title: "Current Position")),
-                  Marker(
-                      markerId: const MarkerId("1"),
-                      position: LatLng(
-                          sourceLocation!.latitude, sourceLocation!.longitude),
-                      icon: BitmapDescriptor.fromBytes(sellerLocation!),
-                      infoWindow: const InfoWindow(title: "Your Position")),
-                  Marker(
-                    markerId: const MarkerId("2"),
-                    position: destinationLocation!,
-                    icon: BitmapDescriptor.fromBytes(sellerLocation!),
-                    // infoWindow: const InfoWindow(title: "User Position"),
-                    onTap: () {
-                      _windowinfoController.addInfoWindow!(
-                        UserMarkerInfoWindow(
-                          seller: widget.requestModel,
+      child: currentLocation == null
+          ? const LoadingMap()
+          : Scaffold(
+              floatingActionButton: Padding(
+                padding: EdgeInsets.only(right: 28.w),
+                child: InkWell(
+                  child: Container(
+                    height: 46.h,
+                    width: 260.w,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.r),
+                      color: Styling.primaryColor,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        const Icon(
+                          Icons.call,
+                          color: Colors.white,
                         ),
-                        LatLng(widget.requestModel.senderLat!,
-                            widget.requestModel.senderLat!),
-                      );
+                        Text(
+                          "Call User ${distance.toString().substring(0,halfLength.toInt())}",
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    ),
+                  ),
+                  onTap: () {
+                    utils.launchphone(
+                        widget.requestModel.senderPhone!, context);
+                  },
+                ),
+              ),
+              body: Stack(
+                children: [
+                  GoogleMap(
+                    initialCameraPosition: CameraPosition(
+                        target: LatLng(currentLocation!.latitude,
+                            currentLocation!.longitude),
+                        zoom: 18),
+
+                    compassEnabled: true,
+                    // markers: Set<Marker>.of(_marker),
+                    markers: {
+                      Marker(
+                          markerId: const MarkerId(
+                            "0",
+                          ),
+                          position: LatLng(currentLocation!.latitude,
+                              currentLocation!.longitude),
+                          icon: BitmapDescriptor.fromBytes(sellerTracingIcon!),
+                          // icon: BitmapDescriptor.defaultMarker,
+                          infoWindow:
+                              const InfoWindow(title: "Current Position")),
+                      Marker(
+                          markerId: const MarkerId("1"),
+                          position: LatLng(sourceLocation!.latitude,
+                              sourceLocation!.longitude),
+                          icon: BitmapDescriptor.fromBytes(sellerLocation!),
+                          infoWindow: const InfoWindow(title: "Your Position")),
+                      Marker(
+                        markerId: const MarkerId("2"),
+                        position: destinationLocation!,
+                        icon: BitmapDescriptor.defaultMarker,
+                        // infoWindow: const InfoWindow(title: "User Position"),
+                        onTap: () {
+                          _windowinfoController.addInfoWindow!(
+                            UserMarkerInfoWindow(
+                              request: widget.requestModel,
+                            ),
+                            LatLng(widget.requestModel.senderLat!,
+                                widget.requestModel.senderLong!),
+                          );
+                        },
+                      ),
+                    },
+                    onMapCreated: (GoogleMapController controller) {
+                      _controller.complete(controller);
+                      _windowinfoController.googleMapController = controller;
+                    },
+                    onTap: (position) {
+                      _windowinfoController.hideInfoWindow!();
+                    },
+                    polylines: {
+                      Polyline(
+                        polylineId: const PolylineId('route'),
+                        points: polyLineCoordinates,
+                        color: Styling.primaryColor,
+                        width: 6,
+                      )
                     },
                   ),
-                },
-                onMapCreated: (GoogleMapController controller) {
-                  _controller.complete(controller);
-                },
-                polylines: {
-                  Polyline(
-                    polylineId: const PolylineId('route'),
-                    points: polyLineCoordinates,
-                    color: Styling.primaryColor,
-                    width: 6,
-                  )
-                },
+                  BackButton(),
+                  CustomInfoWindow(
+                    controller: _windowinfoController,
+                    height: 150,
+                    width: 300,
+                    offset: 10,
+                  ),
+                ],
               ),
-      ),
+            ),
     );
   }
 }

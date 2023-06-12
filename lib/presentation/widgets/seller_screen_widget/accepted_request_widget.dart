@@ -2,6 +2,7 @@ import 'package:e_mech/presentation/seller_screens/seller_user_tracing.dart';
 import 'package:e_mech/presentation/widgets/profile_pic.dart';
 import 'package:e_mech/presentation/widgets/user_screen_widget/call_widget.dart';
 import 'package:e_mech/style/custom_text_style.dart';
+import 'package:e_mech/style/styling.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../data/firebase_user_repository.dart';
@@ -18,12 +19,12 @@ class AcceptedRequestWidget extends StatefulWidget {
 }
 
 class _AcceptedRequestWidgetState extends State<AcceptedRequestWidget> {
-  final FirebaseUserRepository _firebaseRepository = FirebaseUserRepository();
+  // final FirebaseUserRepository _firebaseRepository = FirebaseUserRepository();
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(left: 10, top: 10, bottom: 10, right: 10),
+      padding: const EdgeInsets.only(left: 10, top: 10, bottom: 10, right: 10),
       height: 119.h,
       width: 355.w,
       decoration: BoxDecoration(
@@ -35,7 +36,7 @@ class _AcceptedRequestWidgetState extends State<AcceptedRequestWidget> {
             color: Colors.grey.withOpacity(0.5),
             spreadRadius: 2,
             blurRadius: 5,
-            offset: Offset(0, 3), // changes position of shadow
+            offset: const Offset(0, 3), // changes position of shadow
           ),
         ],
       ),
@@ -105,25 +106,63 @@ class _AcceptedRequestWidgetState extends State<AcceptedRequestWidget> {
                           style: CustomTextStyle.font_10_black),
                     ],
                   ),
-                  InkWell(
-                    child: request_widget_button(
-                      text: "Location",
-                      color: Colors.black,
-                    ),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => SellerUserTracing(
-                                  requestModel: widget.requestModel,
-                                )),
-                      );
-                    },
-                  )
+                  MarkCompleted(widget: widget),
+                  GotoLocationbttn(widget: widget),
                 ]),
           )
         ],
       ),
+    );
+  }
+}
+
+class GotoLocationbttn extends StatelessWidget {
+  const GotoLocationbttn({
+    super.key,
+    required this.widget,
+  });
+
+  final AcceptedRequestWidget widget;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      child: request_widget_button(
+        text: "Location",
+        color: Colors.black,
+      ),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => SellerUserTracing(
+                    requestModel: widget.requestModel,
+                  )),
+        );
+      },
+    );
+  }
+}
+
+class MarkCompleted extends StatelessWidget {
+  const MarkCompleted({
+    super.key,
+    required this.widget,
+  });
+
+  final AcceptedRequestWidget widget;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      child: request_widget_button(
+        text: "Completed",
+        color: Styling.primaryColor,
+      ),
+      onTap: () async {
+        await FirebaseUserRepository.deleteRequestDocument(
+            "AcceptedRequest", widget.requestModel.documentId!, context);
+      },
     );
   }
 }
@@ -149,7 +188,7 @@ class request_widget_button extends StatelessWidget {
           text,
           style: TextStyle(
             color: Colors.white,
-            fontSize: 18.sp,
+            fontSize: 16.sp,
             fontWeight: FontWeight.w500,
           ),
         ),

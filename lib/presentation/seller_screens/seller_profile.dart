@@ -22,14 +22,14 @@ import '../../providers/user_provider.dart';
 import '../widgets/inputfields.dart';
 import '../widgets/user_screen_widget/services_n_setting_header.dart';
 
-class Profile extends StatefulWidget {
-  Profile({Key? key}) : super(key: key);
+class SellerProfile extends StatefulWidget {
+  SellerProfile({Key? key}) : super(key: key);
 
   @override
-  State<Profile> createState() => _ProfileState();
+  State<SellerProfile> createState() => _SellerProfileState();
 }
 
-class _ProfileState extends State<Profile> {
+class _SellerProfileState extends State<SellerProfile> {
   @override
   void initState() {
     _nameController.text = "";
@@ -56,9 +56,9 @@ class _ProfileState extends State<Profile> {
   FocusNode nameFocusNode = FocusNode();
   FocusNode phoneFocusNode = FocusNode();
   FocusNode cityFocusNode = FocusNode();
-  TextEditingController _nameController = TextEditingController();
-  TextEditingController _phoneController = TextEditingController();
-  TextEditingController _cityController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _cityController = TextEditingController();
 
   final FirebaseUserRepository _FirebaseUserRepository =
       FirebaseUserRepository();

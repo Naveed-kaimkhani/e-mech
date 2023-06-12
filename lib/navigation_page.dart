@@ -14,7 +14,12 @@ class NavigationPage extends StatefulWidget {
 }
 
 class _NavigationPageState extends State<NavigationPage> {
-  List pages = [const UserHomePage(), Services(),  Setting(), Profile()];
+  List pages = [
+    const UserHomePage(),
+    Services(),
+    Profile(),
+    Setting(),
+  ];
   int currentindex = 0;
   void onTap(int index) {
     setState(() {
@@ -48,12 +53,12 @@ class _NavigationPageState extends State<NavigationPage> {
               text: "Services",
             ),
             GButton(
-              icon: Icons.settings_outlined,
-              text: "Setting",
-            ),
-            GButton(
               icon: Icons.account_circle_outlined,
               text: "Profile",
+            ),
+            GButton(
+              icon: Icons.settings_outlined,
+              text: "Setting",
             ),
           ],
         ),

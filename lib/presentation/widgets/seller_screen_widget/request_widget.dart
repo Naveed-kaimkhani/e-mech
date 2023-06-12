@@ -23,11 +23,10 @@ class RequestWidget extends StatefulWidget {
 }
 
 class _RequestWidgetState extends State<RequestWidget> {
- 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(left: 10, top: 10, bottom: 10, right: 10),
+      padding: const EdgeInsets.only(left: 10, top: 10, bottom: 10, right: 10),
       height: 119.h,
       width: 355.w,
       decoration: BoxDecoration(
@@ -39,7 +38,7 @@ class _RequestWidgetState extends State<RequestWidget> {
             color: Colors.grey.withOpacity(0.5),
             spreadRadius: 2,
             blurRadius: 5,
-            offset: Offset(0, 3), // changes position of shadow
+            offset: const Offset(0, 3), // changes position of shadow
           ),
         ],
       ),
@@ -109,35 +108,23 @@ class _RequestWidgetState extends State<RequestWidget> {
                     ],
                   ),
                   widget.isAccepted!
-                      ? InkWell(
-                          child: Container(
-                            height: 30.h,
-                            width: 89.w,
-                            padding: const EdgeInsets.all(28.0),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30.r),
-                                color: Colors.black),
-                            child: Center(
-                              child: Text(
-                                "Direction",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20.sp,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                      ? Container(
+                          height: 30.h,
+                          width: 89.w,
+                          padding: const EdgeInsets.all(28.0),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30.r),
+                              color: Colors.black),
+                          child: Center(
+                            child: Text(
+                              widget.text,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
                           ),
-                          onTap: () {
-                            // });
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => SellerUserTracing(
-                                        requestModel: widget.requestModel,
-                                      )),
-                            );
-                          },
                         )
                       : Padding(
                           padding: const EdgeInsets.only(top: 12.0),
@@ -145,11 +132,16 @@ class _RequestWidgetState extends State<RequestWidget> {
                             children: [
                               InkWell(
                                 child: RequestWidgetButton(
-                                    text: "Cancel", color: Colors.black),
+                                    text: "Delete",
+                                    color: Styling.primaryColor),
                                 onTap: () async {
+                                  setState(() {
+                                    widget.isAccepted = true;
+                                    widget.text = "Accepted";
+                                  });
                                   await FirebaseUserRepository
                                       .deleteRequestDocument(
-                                          utils.currentUserUid,
+                                          "Request",
                                           widget.requestModel.documentId!,
                                           context);
                                 },
@@ -159,8 +151,7 @@ class _RequestWidgetState extends State<RequestWidget> {
                               ),
                               InkWell(
                                 child: RequestWidgetButton(
-                                    text: "Accept",
-                                    color: Styling.primaryColor),
+                                    text: "Accept", color: Colors.black),
                                 onTap: () async {
                                   setState(() {
                                     widget.isAccepted = true;
