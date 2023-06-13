@@ -119,6 +119,8 @@ class _SellerSignUpState extends State<SellerSignUp> {
       await StorageService.saveSeller(sellerModel).then((value) async {
         //await  StorageService.readUser();
       await  Provider.of<SellerProvider>(context, listen: false).getSellerLocally();
+      await _firebaseUserRepository.loadSellerDataOnAppInit(context);
+         
         isLoading(false);
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) =>const SellerNavigation()));

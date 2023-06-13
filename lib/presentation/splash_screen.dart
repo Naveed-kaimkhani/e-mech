@@ -46,9 +46,10 @@ if (user!=null ) {
         MaterialPageRoute(builder: (context) => const NavigationPage()),
       );
   }else{
-    
-await  Provider.of<SellerProvider>(context, listen: false)
-              .getSellerLocally();
+    await _firebaseUserRepository.loadSellerDataOnAppInit(context);
+         
+// await  Provider.of<SellerProvider>(context, listen: false)
+//               .getSellerLocally();
      Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const SellerNavigation()),

@@ -15,6 +15,7 @@ import '../domain/entities/seller_model.dart';
 import '../domain/entities/user_model.dart';
 import '../domain/repositories/users_repository.dart';
 import '../providers/all_sellerdata_provider.dart';
+import '../providers/seller_provider.dart';
 
 class FirebaseUserRepository implements UsersRepository {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -250,11 +251,31 @@ static Future<void> sentRequest(
         'users',
       );
 
-      await Provider.of<UserProvider>(context, listen: false)
-          .getUserFromServer(context);
+      await Provider.of<SellerProvider>(context, listen: false)
+          .getSellerFromServer(context);
 
-      await Provider.of<AllSellerDataProvider>(context, listen: false)
-          .getSellersDataFromServer(context);
+      // Navigate to the home screen after loading the data
+    } catch (error) {
+      utils.flushBarErrorMessage(error.toString(), context);
+      // Handle error if any
+    }
+  }
+
+  loadSellerDataOnAppInit(context) async {
+    try {
+      final value = await getUserCurrentLocation(context);
+      String address =
+          await utils.getAddressFromLatLng(value!.latitude, value.longitude);
+
+      await addlatLongToFirebaseDocument(
+        value.latitude,
+        value.longitude,
+        address,
+        'sellers',
+      );
+
+      await Provider.of<SellerProvider>(context, listen: false)
+          .getSellerFromServer(context);
 
       // Navigate to the home screen after loading the data
     } catch (error) {

@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:ui' as ui;
 import 'package:custom_info_window/custom_info_window.dart';
 import 'package:e_mech/domain/entities/request_model.dart';
+import 'package:e_mech/presentation/seller_screens/tracing_screen_bottonnavigation.dart';
 import 'package:e_mech/presentation/widgets/user_screen_widget/loading_map.dart';
-import 'package:e_mech/presentation/widgets/user_screen_widget/location.dart';
 import 'package:e_mech/style/styling.dart';
 import 'package:e_mech/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -17,11 +17,10 @@ import 'package:provider/provider.dart';
 import '../../domain/entities/seller_model.dart';
 import '../../providers/seller_provider.dart';
 import '../widgets/seller_screen_widget/user_marker_infowindow.dart';
-import '../widgets/user_screen_widget/seller_info_window.dart';
 
 class SellerUserTracing extends StatefulWidget {
-  RequestModel requestModel;
-  SellerUserTracing({super.key, required this.requestModel});
+final  RequestModel requestModel;
+const  SellerUserTracing({super.key, required this.requestModel});
 
   @override
   State<SellerUserTracing> createState() => _SellerUserTracingState();
@@ -42,40 +41,29 @@ class _SellerUserTracingState extends State<SellerUserTracing> {
   List<LatLng> polyLineCoordinates = [];
   Position? currentLocation;
   StreamSubscription<Position>? positionStreamSubscription;
-  static const double distanceThreshold =
-      2; // Minimum distance in meters to trigger an update
   double? distance;
 
-  double getDistancebtwRiderNSeller(double riderLat,double riderLong,) {
-    return Geolocator.distanceBetween(
-       riderLat,
-        riderLong,
-        destinationLocation!.latitude,
-        destinationLocation!.longitude);
+  double getDistancebtwRiderNSeller(
+    double riderLat,
+    double riderLong,
+  ) {
+    return Geolocator.distanceBetween(riderLat, riderLong,
+        destinationLocation!.latitude, destinationLocation!.longitude);
   }
 
   void getUserCurrentLocation() async {
-    print("in getUserCurrentLocation");
     try {
-      // await Geolocator.requestPermission();
-      // currentLocation = await Geolocator.getCurrentPosition();
-
-      // currentLocation = await Geolocator.getCurrentPosition(
-      //     desiredAccuracy: LocationAccuracy.high);
       currentLocation = await convertLatLngToPosition(
           LatLng(sourceLocation!.latitude, sourceLocation!.longitude));
-      // utils.hideLoading();
       positionStreamSubscription = Geolocator.getPositionStream().listen(
         (Position position) async {
-          print("in position listen");
           GoogleMapController controller = await _controller.future;
 
           setState(() {
-            print("location initialized");
             currentLocation = position;
 
-            distance=getDistancebtwRiderNSeller(position.latitude,position.longitude);
-            print(currentLocation);
+            distance = getDistancebtwRiderNSeller(
+                position.latitude, position.longitude);
             controller.animateCamera(
               CameraUpdate.newCameraPosition(
                 CameraPosition(
@@ -86,10 +74,9 @@ class _SellerUserTracingState extends State<SellerUserTracing> {
               ),
             );
           });
-          print("end");
         },
         onError: (e) {
-          print(e);
+         utils.flushBarErrorMessage(e.toString(), context);
         },
       );
     } catch (error) {
@@ -99,25 +86,18 @@ class _SellerUserTracingState extends State<SellerUserTracing> {
   }
 
   void getPolyPoints() async {
-    print("in getpolyPoints");
-    //  await Geolocator.checkPermission();
     PolylinePoints polylinePoints = PolylinePoints();
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
         apiKey,
         PointLatLng(sourceLocation!.latitude, sourceLocation!.longitude),
         PointLatLng(
             destinationLocation!.latitude, destinationLocation!.longitude));
-    print("end getRouteBetweenCoordinates");
     if (result.points.isNotEmpty) {
-      print(result.points);
-      print("in if");
       result.points.forEach((PointLatLng point) =>
           polyLineCoordinates.add(LatLng(point.latitude, point.longitude)));
       setState(() {});
-      print("if end");
     }
 
-    print("end get");
   }
 
   Future<Uint8List> getByteFromAssets(String path, int widht) async {
@@ -148,34 +128,7 @@ class _SellerUserTracingState extends State<SellerUserTracing> {
   addMarker() async {
     sellerTracingIcon = await getByteFromAssets("assets/man.png", 100);
     sellerLocation = await getByteFromAssets("assets/SellerLocation.png", 70);
-    // final Uint8List sellerInitialPosition =
-    //     await getByteFromAssets(Images.sellerInitialPosition, 100);
-    // // final Uint8List sellerTracingIcon=await getByteFromAssets(Images.sellerTracingIcon, 50);
-
-    // _marker.add(
-    //   Marker(
-    //       markerId: const MarkerId(
-    //         "0",
-    //       ),
-    //       position:
-    //           LatLng(currentLocation!.latitude, currentLocation!.longitude),
-    //       icon: BitmapDescriptor.fromBytes(sellerTracingIcon),
-    //       // icon: BitmapDescriptor.defaultMarker,
-    //       infoWindow: const InfoWindow(title: "Current Position")),
-    // );
-    // _marker.add(
-    //   Marker(
-    //       markerId: const MarkerId("1"),
-    //       position: LatLng(sourceLocation!.latitude, sourceLocation!.longitude),
-    //       icon: BitmapDescriptor.fromBytes(sellerInitialPosition),
-    //       infoWindow: const InfoWindow(title: "Your Position")),
-    // );
-    // _marker.add(Marker(
-    //     markerId: const MarkerId("2"),
-    //     position: destinationLocation!,
-    //     infoWindow: const InfoWindow(title: "User Position")));
-    // setState(() {});
-  }
+      }
 
   @override
   void dispose() {
@@ -183,21 +136,6 @@ class _SellerUserTracingState extends State<SellerUserTracing> {
     super.dispose();
   }
 
-//   @override
-//   void initState() {
-//     super.initState();
-
-//     utils.checkConnectivity(context);
-
-// // utils.showLoading(context);
-//     seller = Provider.of<SellerProvider>(context, listen: false).seller;
-//     sourceLocation = LatLng(seller!.lat!, seller!.long!);
-//     destinationLocation =
-//         LatLng(widget.requestModel.senderLat!, widget.requestModel.senderLong!);
-//     addMarker();
-//     getPolyPoints();
-//     getUserCurrentLocation();
-//   }
   @override
   void initState() {
     super.initState();
@@ -208,58 +146,25 @@ class _SellerUserTracingState extends State<SellerUserTracing> {
     sourceLocation = LatLng(seller!.lat!, seller!.long!);
     destinationLocation =
         LatLng(widget.requestModel.senderLat!, widget.requestModel.senderLong!);
-    distance = getDistancebtwRiderNSeller(sourceLocation!.latitude,sourceLocation!.longitude);
+    distance = getDistancebtwRiderNSeller(
+        sourceLocation!.latitude, sourceLocation!.longitude);
     addMarker();
     getPolyPoints();
     getUserCurrentLocation();
-    // Delay the execution of getUserCurrentLocation
-    // Future.delayed(Duration.zero, () {
-    //   getUserCurrentLocation();
-    // });
+   
   }
 
   @override
   Widget build(BuildContext context) {
-    String dis=distance.toString();
-    double halfLength =dis.length / 3; // Calculate the half length of the string
-
+    String dis = distance.toString();
+    double halfLength =
+        dis.length / 3; // Calculate the half length of the string
+    double firstLine = (widget.requestModel.senderAddress!.length / 2);
     return SafeArea(
       child: currentLocation == null
           ? const LoadingMap()
           : Scaffold(
-              floatingActionButton: Padding(
-                padding: EdgeInsets.only(right: 28.w),
-                child: InkWell(
-                  child: Container(
-                    height: 46.h,
-                    width: 260.w,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.r),
-                      color: Styling.primaryColor,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        const Icon(
-                          Icons.call,
-                          color: Colors.white,
-                        ),
-                        Text(
-                          "Call User ${distance.toString().substring(0,halfLength.toInt())}",
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold),
-                        )
-                      ],
-                    ),
-                  ),
-                  onTap: () {
-                    utils.launchphone(
-                        widget.requestModel.senderPhone!, context);
-                  },
-                ),
-              ),
+              bottomNavigationBar: TracingScreenBottomNavigation(distance: distance, halfLength: halfLength, widget: widget, firstLine: firstLine,),
               body: Stack(
                 children: [
                   GoogleMap(
@@ -269,7 +174,6 @@ class _SellerUserTracingState extends State<SellerUserTracing> {
                         zoom: 18),
 
                     compassEnabled: true,
-                    // markers: Set<Marker>.of(_marker),
                     markers: {
                       Marker(
                           markerId: const MarkerId(
@@ -278,7 +182,6 @@ class _SellerUserTracingState extends State<SellerUserTracing> {
                           position: LatLng(currentLocation!.latitude,
                               currentLocation!.longitude),
                           icon: BitmapDescriptor.fromBytes(sellerTracingIcon!),
-                          // icon: BitmapDescriptor.defaultMarker,
                           infoWindow:
                               const InfoWindow(title: "Current Position")),
                       Marker(
@@ -291,7 +194,6 @@ class _SellerUserTracingState extends State<SellerUserTracing> {
                         markerId: const MarkerId("2"),
                         position: destinationLocation!,
                         icon: BitmapDescriptor.defaultMarker,
-                        // infoWindow: const InfoWindow(title: "User Position"),
                         onTap: () {
                           _windowinfoController.addInfoWindow!(
                             UserMarkerInfoWindow(
@@ -319,7 +221,7 @@ class _SellerUserTracingState extends State<SellerUserTracing> {
                       )
                     },
                   ),
-                  BackButton(),
+                  const BackButton(),
                   CustomInfoWindow(
                     controller: _windowinfoController,
                     height: 150,

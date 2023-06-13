@@ -79,6 +79,8 @@ class _SellerLoginState extends State<SellerLogin> {
           
 await  Provider.of<SellerProvider>(context, listen: false)
               .getSellerLocally();
+              await _firebaseRepository.loadSellerDataOnAppInit(context);
+         
           isLoading(false);
           Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (context) => const SellerNavigation()));
