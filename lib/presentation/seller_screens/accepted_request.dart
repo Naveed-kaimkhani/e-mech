@@ -1,3 +1,4 @@
+import 'package:e_mech/presentation/seller_screens/shimmer_screen.dart';
 import 'package:e_mech/presentation/widgets/seller_screen_widget/accepted_request_widget.dart';
 
 import 'package:flutter/material.dart';
@@ -46,7 +47,8 @@ class _AcceptedRequestState extends State<AcceptedRequest> {
                 stream: FirebaseUserRepository.getAcceptedRequests(context),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const CircularProgressIndicator();
+                    return const ShimmerScreen();
+                    
                   } else if (snapshot.hasError) {
                     return const CircularProgressIndicator();
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {

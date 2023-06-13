@@ -7,14 +7,10 @@ import 'package:e_mech/utils/routes/routes_name.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../widgets/seller_screen_widget/custom_divider.dart';
+
 class Setting extends StatelessWidget {
-  Divider k = const Divider(
-    color: Color.fromARGB(255, 174, 171, 171), //color of divider
-    height: 4, //height spacing of divider
-    thickness: 1, //thickness of divier line
-    indent: 25, //spacing at the start of divider
-    endIndent: 25, //spacing at the end of divider
-  );
+  
   Setting({super.key});
 
   @override

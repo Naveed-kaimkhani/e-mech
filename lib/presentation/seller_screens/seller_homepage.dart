@@ -1,5 +1,7 @@
+import 'package:e_mech/presentation/seller_screens/shimmer_screen.dart';
 import 'package:e_mech/presentation/widgets/circle_progress.dart';
 import 'package:e_mech/presentation/widgets/seller_screen_widget/request_widget.dart';
+import 'package:e_mech/presentation/widgets/seller_screen_widget/shimmer_effect.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
@@ -24,7 +26,6 @@ class _SellerHomepageState extends State<SellerHomepage> {
         .getSellerFromServer(context);
   }
 
-
   @override
   Widget build(BuildContext context) {
     SellerModel? seller =
@@ -47,7 +48,7 @@ class _SellerHomepageState extends State<SellerHomepage> {
                 stream: FirebaseUserRepository.getRequests(context),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircleProgress());
+                    return const ShimmerScreen();
                   } else if (snapshot.hasError) {
                     return const CircularProgressIndicator();
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -59,7 +60,6 @@ class _SellerHomepageState extends State<SellerHomepage> {
                         const Text("No Pending Request")
                       ],
                     );
-                    // return const Center(child: Text("No Pending Request"));
                   } else {
                     return SizedBox(
                       height: MediaQuery.of(context).size.height,
