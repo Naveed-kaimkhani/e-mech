@@ -10,6 +10,7 @@ import '../../data/firebase_user_repository.dart';
 import '../../domain/entities/request_model.dart';
 import '../../domain/entities/seller_model.dart';
 import '../../providers/seller_provider.dart';
+import '../widgets/seller_screen_widget/no_data_found_screen.dart';
 import '../widgets/user_homepage_header.dart';
 
 class SellerHomepage extends StatefulWidget {
@@ -52,13 +53,8 @@ class _SellerHomepageState extends State<SellerHomepage> {
                   } else if (snapshot.hasError) {
                     return const CircularProgressIndicator();
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Lottie.asset("assets/noDataAnimation.json",
-                            height: 300.h, width: 300.w),
-                        const Text("No Pending Request")
-                      ],
+                    return const NoDataFoundScreen(
+                      text: "No pending request",
                     );
                   } else {
                     return SizedBox(

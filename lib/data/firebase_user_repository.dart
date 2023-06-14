@@ -251,8 +251,11 @@ static Future<void> sentRequest(
         'users',
       );
 
-      await Provider.of<SellerProvider>(context, listen: false)
-          .getSellerFromServer(context);
+      await Provider.of<UserProvider>(context, listen: false)
+          .getUserFromServer(context);
+
+      await Provider.of<AllSellerDataProvider>(context, listen: false)
+          .getSellersDataFromServer(context);
 
       // Navigate to the home screen after loading the data
     } catch (error) {
@@ -276,6 +279,9 @@ static Future<void> sentRequest(
 
       await Provider.of<SellerProvider>(context, listen: false)
           .getSellerFromServer(context);
+          
+      await Provider.of<AllSellerDataProvider>(context, listen: false)
+          .getSellersDataFromServer(context);
 
       // Navigate to the home screen after loading the data
     } catch (error) {

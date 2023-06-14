@@ -1,6 +1,7 @@
 import 'package:e_mech/presentation/seller_screens/seller_user_tracing.dart';
 import 'package:e_mech/presentation/widgets/profile_pic.dart';
 import 'package:e_mech/presentation/widgets/request_widget_button.dart';
+import 'package:e_mech/presentation/widgets/seller_screen_widget/ride_cancel_popup.dart';
 import 'package:e_mech/presentation/widgets/user_screen_widget/call_widget.dart';
 import 'package:e_mech/style/custom_text_style.dart';
 import 'package:e_mech/style/styling.dart';
@@ -107,65 +108,38 @@ class _RequestWidgetState extends State<RequestWidget> {
                       // ),
                     ],
                   ),
-                  widget.isAccepted!
-                      ? Container(
-                          height: 30.h,
-                          width: 89.w,
-                          padding: const EdgeInsets.all(28.0),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30.r),
-                              color: Colors.black),
-                          child: Center(
-                            child: Text(
-                              widget.text,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                        )
-                      : Padding(
-                          padding: const EdgeInsets.only(top: 12.0),
-                          child: Row(
-                            children: [
-                              InkWell(
-                                child: RequestWidgetButton(
-                                    text: "Delete",
-                                    color: Styling.primaryColor),
-                                onTap: () async {
-                                  setState(() {
-                                    widget.isAccepted = true;
-                                    widget.text = "Accepted";
-                                  });
-                                  await FirebaseUserRepository
-                                      .deleteRequestDocument(
-                                          "Request",
-                                          widget.requestModel.documentId!,
-                                          context);
-                                },
-                              ),
-                              SizedBox(
-                                width: 8.w,
-                              ),
-                              InkWell(
-                                child: RequestWidgetButton(
-                                    text: "Accept", color: Colors.black),
-                                onTap: () async {
-                                  setState(() {
-                                    widget.isAccepted = true;
-                                    widget.text = "Accepted";
-                                  });
-                                  await FirebaseUserRepository.acceptRequest(
-                                      widget.requestModel, context);
-
-                                  utils.toastMessage("Request Accepted");
-                                },
-                              )
-                            ],
-                          ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 12.0),
+                    child: Row(
+                      children: [
+                        InkWell(
+                          child: RequestWidgetButton(
+                              text: "Delete", color: Styling.primaryColor),
+                          onTap: () async {
+                            await FirebaseUserRepository.deleteRequestDocument(
+                                "Request",
+                                widget.requestModel.documentId!,
+                                context);
+                          },
                         ),
+                        SizedBox(
+                          width: 8.w,
+                        ),
+                        InkWell(
+                          child: RequestWidgetButton(
+                              text: "Accept", color: Colors.black),
+                          onTap: () async {
+                            showRideCancelPopup("Request Accepted",
+                                "Go to Accepted Request", context);
+                            await FirebaseUserRepository.acceptRequest(
+                                widget.requestModel, context);
+
+                            // utils.toastMessage("Request Accepted");
+                          },
+                        )
+                      ],
+                    ),
+                  ),
                 ]),
           )
         ],

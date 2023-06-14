@@ -1,32 +1,36 @@
 import 'dart:async';
 import 'dart:ui' as ui;
 import 'package:custom_info_window/custom_info_window.dart';
+import 'package:e_mech/data/firebase_user_repository.dart';
 import 'package:e_mech/domain/entities/request_model.dart';
 import 'package:e_mech/presentation/seller_screens/tracing_screen_bottonnavigation.dart';
+import 'package:e_mech/presentation/user_screens/logout_popup.dart';
+import 'package:e_mech/presentation/widgets/seller_screen_widget/ride_cancel_popup.dart';
 import 'package:e_mech/presentation/widgets/user_screen_widget/loading_map.dart';
 import 'package:e_mech/style/styling.dart';
 import 'package:e_mech/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../../domain/entities/seller_model.dart';
+import '../../providers/all_sellerdata_provider.dart';
 import '../../providers/seller_provider.dart';
 import '../widgets/seller_screen_widget/user_marker_infowindow.dart';
 
 class SellerUserTracing extends StatefulWidget {
-final  RequestModel requestModel;
-const  SellerUserTracing({super.key, required this.requestModel});
+  final RequestModel requestModel;
+  const SellerUserTracing({super.key, required this.requestModel});
 
   @override
   State<SellerUserTracing> createState() => _SellerUserTracingState();
 }
 
 class _SellerUserTracingState extends State<SellerUserTracing> {
+  List<SellerModel>? _listOfSellers;
   final CustomInfoWindowController _windowinfoController =
       CustomInfoWindowController();
   final String apiKey = 'AIzaSyD6sruWDaBsYEfYdMDCuEwTvq_5Mk5bK7o';
@@ -76,7 +80,7 @@ class _SellerUserTracingState extends State<SellerUserTracing> {
           });
         },
         onError: (e) {
-         utils.flushBarErrorMessage(e.toString(), context);
+          utils.flushBarErrorMessage(e.toString(), context);
         },
       );
     } catch (error) {
@@ -97,7 +101,6 @@ class _SellerUserTracingState extends State<SellerUserTracing> {
           polyLineCoordinates.add(LatLng(point.latitude, point.longitude)));
       setState(() {});
     }
-
   }
 
   Future<Uint8List> getByteFromAssets(String path, int widht) async {
@@ -128,12 +131,37 @@ class _SellerUserTracingState extends State<SellerUserTracing> {
   addMarker() async {
     sellerTracingIcon = await getByteFromAssets("assets/man.png", 100);
     sellerLocation = await getByteFromAssets("assets/SellerLocation.png", 70);
-      }
+  }
 
   @override
   void dispose() {
     positionStreamSubscription?.cancel();
     super.dispose();
+  }
+
+  void startRideTimer() {
+    Timer(Duration(seconds: 10), () async {
+      // Timer expired, cancel the ride and assign to another rider
+      int initialDistance = getDistancebtwRiderNSeller(
+              sourceLocation!.latitude, sourceLocation!.longitude)
+          .toInt();
+      int currentDistance = getDistancebtwRiderNSeller(
+              currentLocation!.latitude, currentLocation!.longitude)
+          .toInt();
+      // double CalculatedDistance=currentDistance-initialDistance;
+      print(initialDistance);
+      print(currentDistance);
+
+      if (currentDistance > initialDistance) {
+        // showLogoutPopup(context);
+      } else {
+        await FirebaseUserRepository.sentRequest(
+            _listOfSellers!, widget.requestModel, context);
+        await FirebaseUserRepository.deleteRequestDocument(
+            "AcceptedRequest", widget.requestModel.documentId!, context);
+        showRideCancelPopup("Ride has been canceled","You are not reaching to user",context);
+      }
+    });
   }
 
   @override
@@ -143,6 +171,9 @@ class _SellerUserTracingState extends State<SellerUserTracing> {
     utils.checkConnectivity(context);
 
     seller = Provider.of<SellerProvider>(context, listen: false).seller;
+    _listOfSellers =
+        Provider.of<AllSellerDataProvider>(context, listen: false).sellers;
+
     sourceLocation = LatLng(seller!.lat!, seller!.long!);
     destinationLocation =
         LatLng(widget.requestModel.senderLat!, widget.requestModel.senderLong!);
@@ -151,7 +182,7 @@ class _SellerUserTracingState extends State<SellerUserTracing> {
     addMarker();
     getPolyPoints();
     getUserCurrentLocation();
-   
+    startRideTimer();
   }
 
   @override
@@ -164,7 +195,12 @@ class _SellerUserTracingState extends State<SellerUserTracing> {
       child: currentLocation == null
           ? const LoadingMap()
           : Scaffold(
-              bottomNavigationBar: TracingScreenBottomNavigation(distance: distance, halfLength: halfLength, widget: widget, firstLine: firstLine,),
+              bottomNavigationBar: TracingScreenBottomNavigation(
+                distance: distance,
+                halfLength: halfLength,
+                widget: widget,
+                firstLine: firstLine,
+              ),
               body: Stack(
                 children: [
                   GoogleMap(
@@ -172,7 +208,6 @@ class _SellerUserTracingState extends State<SellerUserTracing> {
                         target: LatLng(currentLocation!.latitude,
                             currentLocation!.longitude),
                         zoom: 18),
-
                     compassEnabled: true,
                     markers: {
                       Marker(

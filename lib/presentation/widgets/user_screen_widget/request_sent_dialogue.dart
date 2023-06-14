@@ -22,7 +22,7 @@ class _RequestSentDialogueState extends State<RequestSentDialogue> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            DoneIcon(),
+            const DoneIcon(),
             Text(
               "Request Sent",
               style: CustomTextStyle.font_25,

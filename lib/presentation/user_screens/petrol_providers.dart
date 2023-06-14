@@ -1,6 +1,8 @@
 import 'package:e_mech/data/firebase_user_repository.dart';
 import 'package:e_mech/domain/entities/seller_model.dart';
+import 'package:e_mech/presentation/seller_screens/shimmer_screen.dart';
 import 'package:e_mech/presentation/widgets/circle_progress.dart';
+import 'package:e_mech/presentation/widgets/seller_screen_widget/no_data_found_screen.dart';
 import 'package:e_mech/presentation/widgets/user_screen_widget/specific_serviceprovider_widget.dart';
 import 'package:e_mech/presentation/widgets/user_screen_widget/specific_services_provider_header.dart';
 import 'package:e_mech/style/images.dart';
@@ -28,12 +30,11 @@ class PetrolProviders extends StatelessWidget {
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(
-                      child: CircleProgress(),
+                      child: ShimmerScreen(),
                     );
-                  } else if (snapshot.hasData && snapshot.data!.length == 0) {
-                    return const Center(
-                      child: Text("No Petrol Filler Available"),
-                    );
+                  } else if (snapshot.hasData && snapshot.data!.isEmpty) {
+                    return const NoDataFoundScreen(
+                        text: "No Petrol Filler Available");
                   } else if (snapshot.hasData) {
                     return ListView.builder(
                       itemCount: snapshot.data!.length,
