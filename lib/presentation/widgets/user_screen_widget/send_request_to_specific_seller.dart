@@ -1,12 +1,13 @@
-
-
+import 'package:e_mech/domain/entities/user_model.dart';
 import 'package:e_mech/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 import '../../../data/firebase_user_repository.dart';
 import '../../../domain/entities/request_model.dart';
 import '../../../domain/entities/seller_model.dart';
+import '../../../providers/user_provider.dart';
 import '../../../style/styling.dart';
 
 class SendRequestBttnForSpecificSeller extends StatelessWidget {
@@ -16,7 +17,6 @@ class SendRequestBttnForSpecificSeller extends StatelessWidget {
     required this.height,
     required this.widht,
     required this.textSize,
-  
   });
 
   final SellerModel seller;
@@ -26,6 +26,8 @@ class SendRequestBttnForSpecificSeller extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    UserModel? user = Provider.of<UserProvider>(context, listen: false).user;
+
     return Padding(
         padding: const EdgeInsets.only(top: 10.0),
         child: InkWell(
@@ -48,18 +50,18 @@ class SendRequestBttnForSpecificSeller extends StatelessWidget {
               ),
             ),
             onTap: () async {
-              
               utils.toastMessage("Sending Request...");
               RequestModel request = RequestModel(
                 serviceId: utils.getRandomid(),
                 sentDate: utils.getCurrentDate(),
                 sentTime: utils.getCurrentTime(),
-                senderLat: seller.lat,
-                senderLong: seller.long,
+                senderLat: user!.lat,
+                senderLong: user.long,
                 serviceRequired: seller.service,
-                senderName: seller.name,
-                senderPhone: seller.phone,
-                senderProfileImage: seller.profileImage,
+                senderAddress: user.address,
+                senderName: user.name,
+                senderPhone: user.phone,
+                senderProfileImage: user.profileImage,
               );
               await FirebaseUserRepository.sendRequestForSpecificService(
                   seller.uid!, request, context);

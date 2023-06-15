@@ -114,24 +114,7 @@ class utils {
         return Dialog(
           // The background color
           backgroundColor: Colors.white,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            child: SizedBox(
-              height: 100.h,
-              width: 20.w,
-              child: const Column(
-                // mainAxisSize: MainAxisSize.min,
-                children: [
-                  CircleProgress(),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  // Some text
-                  Text('Uploading... ')
-                ],
-              ),
-            ),
-          ),
+          child: CircleProgress(),
         );
       },
     );

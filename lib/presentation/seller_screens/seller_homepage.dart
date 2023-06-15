@@ -51,7 +51,7 @@ class _SellerHomepageState extends State<SellerHomepage> {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const ShimmerScreen();
                   } else if (snapshot.hasError) {
-                    return const CircularProgressIndicator();
+                    return Text(snapshot.error.toString());
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                     return const NoDataFoundScreen(
                       text: "No pending request",

@@ -1,4 +1,3 @@
-import 'package:e_mech/presentation/seller_screens/seller_user_tracing.dart';
 import 'package:e_mech/presentation/widgets/profile_pic.dart';
 import 'package:e_mech/presentation/widgets/request_widget_button.dart';
 import 'package:e_mech/presentation/widgets/seller_screen_widget/ride_cancel_popup.dart';
@@ -13,12 +12,12 @@ import '../../../domain/entities/request_model.dart';
 
 class RequestWidget extends StatefulWidget {
   final RequestModel requestModel;
-  RequestWidget({
+  const RequestWidget({
     Key? key,
     required this.requestModel,
   }) : super(key: key);
-  bool? isAccepted = false;
-  String text = "Accepted";
+  // bool? isAccepted = false;
+  // String text = "Accepted";
   @override
   State<RequestWidget> createState() => _RequestWidgetState();
 }
@@ -102,6 +101,13 @@ class _RequestWidgetState extends State<RequestWidget> {
                         widget.requestModel.serviceRequired ?? "Service Null",
                         style: CustomTextStyle.font_14_red,
                       ),
+                      SizedBox(
+                        height: 6.h,
+                      ),
+
+                      Text(
+                          "${widget.requestModel.sentDate}  ${widget.requestModel.sentTime} ",
+                          style: CustomTextStyle.font_10_black),
                       // Text(
                       //   "petrol",
                       //   style: CustomTextStyle.font_14_red,
@@ -131,9 +137,11 @@ class _RequestWidgetState extends State<RequestWidget> {
                           onTap: () async {
                             showRideCancelPopup("Request Accepted",
                                 "Go to Accepted Request", context);
+                            // utils.showLoading(context);
                             await FirebaseUserRepository.acceptRequest(
                                 widget.requestModel, context);
 
+                            // ignore: use_build_context_synchronously
                             // utils.toastMessage("Request Accepted");
                           },
                         )

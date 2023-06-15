@@ -118,13 +118,13 @@ class _SellerSignUpState extends State<SellerSignUp> {
         .then((value) async {
       await StorageService.saveSeller(sellerModel).then((value) async {
         //await  StorageService.readUser();
-      await  Provider.of<SellerProvider>(context, listen: false).getSellerLocally();
-      await _firebaseUserRepository.loadSellerDataOnAppInit(context);
-         
-        isLoading(false);
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) =>const SellerNavigation()));
+        await Provider.of<SellerProvider>(context, listen: false)
+            .getSellerLocally();
+        await _firebaseUserRepository.loadSellerDataOnAppInit(context);
 
+        isLoading(false);
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => const SellerNavigation()));
       });
     }).catchError((error) {
       isLoading(false);
@@ -179,7 +179,7 @@ class _SellerSignUpState extends State<SellerSignUp> {
             key: _formKey,
             child: SingleChildScrollView(
               child: Padding(
-              padding: const EdgeInsets.only(left: 22, top: 16, right: 18),
+                padding: const EdgeInsets.only(left: 22, top: 16, right: 18),
                 child: SizedBox(
                   height: MediaQuery.of(context).size.height,
                   child: Column(
@@ -286,7 +286,7 @@ class _SellerSignUpState extends State<SellerSignUp> {
                         obsecureText: false,
                         preicon: SizedBox(
                           width: 60.w,
-                          height: 60.h,
+                          height: 40.h,
                           child: Row(
                             children: [
                               Text(
@@ -394,7 +394,6 @@ class _SellerSignUpState extends State<SellerSignUp> {
     return image == null
         ? Stack(
             children: [
-           
               Image.asset(
                 "assets/avatar.png",
                 height: 60.h,

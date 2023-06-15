@@ -1,4 +1,3 @@
-
 import 'package:e_mech/navigation_page.dart';
 import 'package:e_mech/presentation/widgets/circle_progress.dart';
 import 'package:e_mech/presentation/widgets/inputfields.dart';
@@ -49,18 +48,14 @@ class _UserLoginState extends State<UserLogin> {
 
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
-      // Form is valid, perform signup logic here
-
-      // Perform signup logic
-      // ...
+      _login();
     }
-    _login();
   }
 
   void _login() {
     isLoading(true);
     _firebaseRepository
-        .login("hii@gmail.com", "123456", context)
+        .login(_emailController.text, _passwordController.text, context)
         .then((User? user) async {
       if (user != null) {
         //  final   currentLocation = await Geolocator.getCurrentPosition();
@@ -75,12 +70,10 @@ class _UserLoginState extends State<UserLogin> {
   void _getUserDetails(String uid) {
     _firebaseRepository.getUser().then((UserModel? userModel) {
       if (userModel != null) {
-
         StorageService.saveUser(userModel).then((value) async {
-         
-       await _firebaseRepository.loadDataOnAppInit(context);
-         
-        await  StorageService.initUser();
+          await _firebaseRepository.loadDataOnAppInit(context);
+
+          await StorageService.initUser();
           isLoading(false);
           Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (context) => NavigationPage()));

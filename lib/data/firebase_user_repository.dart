@@ -1,4 +1,3 @@
-
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -115,7 +114,8 @@ class FirebaseUserRepository implements UsersRepository {
 
   @override
   Future<SellerModel?> getSellerDetails() async {
-    DocumentSnapshot documentSnapshot = await _sellerCollection.doc(utils.currentUserUid).get();
+    DocumentSnapshot documentSnapshot =
+        await _sellerCollection.doc(utils.currentUserUid).get();
     if (documentSnapshot.data() != null) {
       SellerModel seller =
           SellerModel.fromMap(documentSnapshot.data() as Map<String, dynamic>);
@@ -130,54 +130,58 @@ class FirebaseUserRepository implements UsersRepository {
     // }
   }
 
-static Future<void> acceptRequest(RequestModel requestModel, context) async {
-  try {
-    // Add the request to the "AcceptedRequest" subcollection of the current seller
-    // await _sellerCollection
-    //     .doc(utils.currentUserUid)
-    //     .collection('AcceptedRequest')
-    //     .add(requestModel.toMap(requestModel));
+  static Future<void> acceptRequest(RequestModel requestModel, context) async {
+    try {
+      // Add the request to the "AcceptedRequest" subcollection of the current seller
+      // await _sellerCollection
+      //     .doc(utils.currentUserUid)
+      //     .collection('AcceptedRequest')
+      //     .add(requestModel.toMap(requestModel));
 
-                final DocumentReference requestRef = await _sellerCollection
-            .doc(utils.currentUserUid)
-            .collection('AcceptedRequest')
-            .add(requestModel.toMap(requestModel));
-            
-        final String documentId = requestRef.id;
-        await requestRef.update({'documentId': documentId});
-    await deleteRequestFromEverySeller(requestModel.serviceId!, context);
+      final DocumentReference requestRef = await _sellerCollection
+          .doc(utils.currentUserUid)
+          .collection('AcceptedRequest')
+          .add(requestModel.toMap(requestModel));
 
-    // Show success message or perform other operations
-    utils.toastMessage("Request Accepted");
-  } catch (e) {
-    // Handle error
+      final String documentId = requestRef.id;
+      await requestRef.update({'documentId': documentId});
+      await deleteRequestFromEverySeller(requestModel.serviceId!, context);
+
+      // Show success message or perform other operations
+      // utils.toastMessage("Request Accepted");
+    } catch (e) {
+      utils.flushBarErrorMessage(e.toString(), context);
+      // Handle error
+    }
   }
-}
 
+  Future<void> addlatLongToFirebaseDocument(
+      double lat, double long, String address, String documentName) async {
+    try {
+      final userRef = FirebaseFirestore.instance
+          .collection(documentName)
+          .doc(utils.currentUserUid);
 
- Future<void> addlatLongToFirebaseDocument(double lat, double long, String address,String documentName) async {
-  try {
-    final userRef = FirebaseFirestore.instance.collection(documentName).doc(utils.currentUserUid);
-
-    await userRef.update({
-      'lat':lat,
-      'long':long,
-      'address':address,
-    });
-  } catch (e) {
-utils.toastMessage(e.toString());
+      await userRef.update({
+        'lat': lat,
+        'long': long,
+        'address': address,
+      });
+    } catch (e) {
+      utils.toastMessage(e.toString());
+    }
   }
-}
 
-Future<List<SellerModel>> getSellersData() async {
-  final snapshot =
-      await FirebaseFirestore.instance.collection("sellers").get();
-  return snapshot.docs.map((doc) {
-    final data = doc.data();
-    return SellerModel.fromMap(data);
-  }).toList();
-}
-static Future<void> sentRequest(
+  Future<List<SellerModel>> getSellersData() async {
+    final snapshot =
+        await FirebaseFirestore.instance.collection("sellers").get();
+    return snapshot.docs.map((doc) {
+      final data = doc.data();
+      return SellerModel.fromMap(data);
+    }).toList();
+  }
+
+  static Future<void> sentRequest(
     List<SellerModel> sellers,
     RequestModel requestModel,
     context,
@@ -193,7 +197,7 @@ static Future<void> sentRequest(
 
         await requestRef.update({'documentId': documentId});
       }
-      
+
       // utils.toastMessage("Request Sent");
     } catch (error) {
       // Handle the error appropriately
@@ -204,7 +208,7 @@ static Future<void> sentRequest(
       );
     }
   }
-  
+
   Future<Position?> getUserCurrentLocation(context) async {
     try {
       await Geolocator.requestPermission();
@@ -222,7 +226,6 @@ static Future<void> sentRequest(
                 TextButton(
                   onPressed: () {
                     Navigator.pop(context);
-                    
                   },
                   child: const Text("OK"),
                 ),
@@ -279,7 +282,7 @@ static Future<void> sentRequest(
 
       await Provider.of<SellerProvider>(context, listen: false)
           .getSellerFromServer(context);
-          
+
       await Provider.of<AllSellerDataProvider>(context, listen: false)
           .getSellersDataFromServer(context);
 
@@ -290,22 +293,20 @@ static Future<void> sentRequest(
     }
   }
 
-static Future<void> sendRequestForSpecificService(
+  static Future<void> sendRequestForSpecificService(
     String sellerId,
     RequestModel requestModel,
     context,
   ) async {
     try {
-        final DocumentReference requestRef = await _sellerCollection
-            .doc(sellerId)
-            .collection('Request')
-            .add(requestModel.toMap(requestModel));
+      final DocumentReference requestRef = await _sellerCollection
+          .doc(sellerId)
+          .collection('Request')
+          .add(requestModel.toMap(requestModel));
 
-        final String documentId = requestRef.id;
+      final String documentId = requestRef.id;
 
-        await requestRef.update({'documentId': documentId});
-      
-      utils.toastMessage("Request Sent");
+      await requestRef.update({'documentId': documentId});
     } catch (error) {
       // Handle the error appropriately
       utils.flushBarErrorMessage('Error sending request: $error', context);
@@ -316,108 +317,108 @@ static Future<void> sendRequestForSpecificService(
     }
   }
 
-static Stream<List<RequestModel>> getRequests(context) async* {
-  try {
-    final CollectionReference requestCollection = FirebaseFirestore.instance
-        .collection("sellers")
-        .doc(utils.currentUserUid)
-        .collection('Request');
+  static Stream<List<RequestModel>> getRequests(context) async* {
+    try {
+      final CollectionReference requestCollection = FirebaseFirestore.instance
+          .collection("sellers")
+          .doc(utils.currentUserUid)
+          .collection('Request');
 
-    yield* requestCollection.snapshots().map((snapshot) {
-      final List<RequestModel> models = snapshot.docs
-          .map((docsSnap) => RequestModel.fromMap(docsSnap.data() as dynamic))
-          .toList();
-      return models;
-    });
-  } catch (e) {
-    // Handle any potential errors here
-    utils.flushBarErrorMessage('Error fetching requests: $e', context);
-    yield []; // Yield an empty list in case of an error
-  }
-}
-
-static Stream<List<RequestModel>> getAcceptedRequests(context) async* {
-  try {
-    final CollectionReference requestCollection = FirebaseFirestore.instance
-        .collection("sellers")
-        .doc(utils.currentUserUid)
-        .collection('AcceptedRequest');
-
-    yield* requestCollection.snapshots().map((snapshot) {
-      final List<RequestModel> models = snapshot.docs
-          .map((docsSnap) => RequestModel.fromMap(docsSnap.data() as dynamic))
-          .toList();
-      return models;
-    });
-  } catch (e) {
-    // Handle any potential errors here
-    utils.flushBarErrorMessage('Error fetching requests: $e', context);
-    // print('Error fetching requests: $e');
-    yield []; // Yield an empty list in case of an error
-  }
-}
-
-
-static Future<void> deleteRequestFromEverySeller(String serviceId,context) async {
-  try {
-
-    // Retrieve all documents in the sellers collection
-    QuerySnapshot querySnapshot = await _sellerCollection.get();
-
-    // Iterate over the documents
-    for (DocumentSnapshot sellerDocument in querySnapshot.docs) {
-      // Get a reference to the "Request" subcollection of the current seller document
-      CollectionReference requestCollection =
-          sellerDocument.reference.collection('Request');
-
-      // Query for documents that contain the specified document ID
-      QuerySnapshot requestQuerySnapshot =
-          await requestCollection.where('serviceId', isEqualTo: serviceId).get();
-
-      // Delete each document in the "Request" subcollection
-      for (DocumentSnapshot requestDocument in requestQuerySnapshot.docs) {
-        await requestDocument.reference.delete();
-      }
+      yield* requestCollection.snapshots().map((snapshot) {
+        final List<RequestModel> models = snapshot.docs
+            .map((docsSnap) => RequestModel.fromMap(docsSnap.data() as dynamic))
+            .toList();
+        return models;
+      });
+    } catch (e) {
+      // Handle any potential errors here
+      utils.flushBarErrorMessage('Error fetching requests: $e', context);
+      yield []; // Yield an empty list in case of an error
     }
-  } catch (e) {
-    // print('Error deleting documents: $e');
-    utils.flushBarErrorMessage('Error deleting documents: $e',context);
-  }
-}
-
-static Future<void> deleteRequestDocument(String subCollection, String requestId , context) async {
-  try {
-    await FirebaseFirestore.instance
-        .collection('sellers')
-        .doc(utils.currentUserUid)
-        .collection(subCollection)
-        .doc(requestId)
-        .delete();
-        utils.toastMessage("Request deleted");
-  } catch (error) {
-    utils.flushBarErrorMessage(error.toString(), context);
-  }
-}
-
-static Future<List<Map<String, dynamic>>> getSellersBasedOnService(String service) async {
-  List<Map<String, dynamic>> sellersList = [];
-
-  try {
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection("sellers")
-        .where("service", isEqualTo: service)
-        .get();
-
-    querySnapshot.docs.forEach((doc) {
-    sellersList.add(doc.data() as Map<String, dynamic>);
-
-    });
-  } catch (e) {
-    // Handle any errors that may occur
-  utils.toastMessage(e.toString());
   }
 
-  return sellersList;
-}
+  static Stream<List<RequestModel>> getAcceptedRequests(context) async* {
+    try {
+      final CollectionReference requestCollection = FirebaseFirestore.instance
+          .collection("sellers")
+          .doc(utils.currentUserUid)
+          .collection('AcceptedRequest');
 
+      yield* requestCollection.snapshots().map((snapshot) {
+        final List<RequestModel> models = snapshot.docs
+            .map((docsSnap) => RequestModel.fromMap(docsSnap.data() as dynamic))
+            .toList();
+        return models;
+      });
+    } catch (e) {
+      // Handle any potential errors here
+      utils.flushBarErrorMessage('Error fetching requests: $e', context);
+      // print('Error fetching requests: $e');
+      yield []; // Yield an empty list in case of an error
+    }
+  }
+
+  static Future<void> deleteRequestFromEverySeller(
+      String serviceId, context) async {
+    try {
+      // Retrieve all documents in the sellers collection
+      QuerySnapshot querySnapshot = await _sellerCollection.get();
+
+      // Iterate over the documents
+      for (DocumentSnapshot sellerDocument in querySnapshot.docs) {
+        // Get a reference to the "Request" subcollection of the current seller document
+        CollectionReference requestCollection =
+            sellerDocument.reference.collection('Request');
+
+        // Query for documents that contain the specified document ID
+        QuerySnapshot requestQuerySnapshot = await requestCollection
+            .where('serviceId', isEqualTo: serviceId)
+            .get();
+
+        // Delete each document in the "Request" subcollection
+        for (DocumentSnapshot requestDocument in requestQuerySnapshot.docs) {
+          await requestDocument.reference.delete();
+        }
+      }
+    } catch (e) {
+      // print('Error deleting documents: $e');
+      utils.flushBarErrorMessage('Error deleting documents: $e', context);
+    }
+  }
+
+  static Future<void> deleteRequestDocument(
+      String subCollection, String requestId, context) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('sellers')
+          .doc(utils.currentUserUid)
+          .collection(subCollection)
+          .doc(requestId)
+          .delete();
+      utils.toastMessage("Request deleted");
+    } catch (error) {
+      utils.flushBarErrorMessage(error.toString(), context);
+    }
+  }
+
+  static Future<List<Map<String, dynamic>>> getSellersBasedOnService(
+      String service) async {
+    List<Map<String, dynamic>> sellersList = [];
+
+    try {
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection("sellers")
+          .where("service", isEqualTo: service)
+          .get();
+
+      querySnapshot.docs.forEach((doc) {
+        sellersList.add(doc.data() as Map<String, dynamic>);
+      });
+    } catch (e) {
+      // Handle any errors that may occur
+      utils.toastMessage(e.toString());
+    }
+
+    return sellersList;
+  }
 }

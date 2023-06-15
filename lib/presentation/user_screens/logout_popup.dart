@@ -23,8 +23,8 @@ showLogoutPopup(context) async {
                       child: ElevatedButton(
                         onPressed: () async {
                          await     utils.logOutUser(context);
-
-                          Navigator.push(
+                          // ignore: use_build_context_synchronously
+                          Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => const UserSellerScreen()));

@@ -59,11 +59,10 @@ class _SellerLoginState extends State<SellerLogin> {
   void _login() {
     isLoading(true);
     _firebaseRepository
-        .login("navv@gmail.com", "111111", context)
+        .login(_emailController.text, _passwordController.text, context)
         .then((User? user) async {
       if (user != null) {
         _getSellerDetails();
-
       } else {
         isLoading(false);
         //utils.flushBarErrorMessage("Failed to login", context);
@@ -75,15 +74,15 @@ class _SellerLoginState extends State<SellerLogin> {
     _firebaseRepository.getSellerDetails().then((SellerModel? sellerModel) {
       if (sellerModel != null) {
         StorageService.saveSeller(sellerModel).then((value) async {
-
-          
-await  Provider.of<SellerProvider>(context, listen: false)
+          await Provider.of<SellerProvider>(context, listen: false)
               .getSellerLocally();
-              await _firebaseRepository.loadSellerDataOnAppInit(context);
-         
+          await _firebaseRepository.loadSellerDataOnAppInit(context);
+
           isLoading(false);
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => const SellerNavigation()));
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const SellerNavigation()));
         }).catchError((error) {
           isLoading(false);
           utils.flushBarErrorMessage(error.message.toString(), context);
@@ -100,12 +99,8 @@ await  Provider.of<SellerProvider>(context, listen: false)
 
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
-      // Form is valid, perform signup logic here
-
-      // Perform signup logic
-      // ...
+      _login();
     }
-    _login();
   }
 
   @override
