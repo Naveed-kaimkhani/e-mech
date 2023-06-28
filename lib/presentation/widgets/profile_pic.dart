@@ -16,7 +16,8 @@ class ProfilePic extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CachedNetworkImage(
-      imageBuilder: (context, imageProvider) => Container(
+      imageBuilder: (context, imageProvider) => 
+      Container(
         height: height,
         width: width,
         decoration: BoxDecoration(

@@ -7,5 +7,6 @@ class RoutesName{
  static const String punctureMaker = 'PunctureMaker';
  static const String contactUs = 'ContactUs';
 static const String generalMechanic = 'GeneralMechanic';
+static const String sellerNavigation = 'SellerNavigation';
 
 }

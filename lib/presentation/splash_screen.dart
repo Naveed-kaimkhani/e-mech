@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:e_mech/data/notification_services.dart';
 import 'package:e_mech/presentation/seller_screens/seller_navigation.dart';
 import 'package:e_mech/presentation/user_or_seller.dart';
 import 'package:e_mech/presentation/widgets/emergency_service_provider_text.dart';
@@ -8,11 +9,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:provider/provider.dart';
 import '../data/firebase_user_repository.dart';
 import '../navigation_page.dart';
 import '../style/images.dart';
-import '../providers/seller_provider.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -24,9 +23,17 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   final FirebaseUserRepository _firebaseUserRepository =
       FirebaseUserRepository();
+  NotificationServices _notificationServices =NotificationServices();
   @override
   void initState() {
+    _notificationServices.requestNotificationPermission();
+    _notificationServices.firebaseInit(context);
+    _notificationServices.isTokenRefresh();
+    _notificationServices.setupInteractMessage(context);
+    _notificationServices.getDeviceToken().then((value) {
+    });
     utils.checkConnectivity(context);
+    
     Timer(const Duration(seconds: 2), () {
     loadData();
   });
@@ -47,9 +54,6 @@ if (user!=null ) {
       );
   }else{
     await _firebaseUserRepository.loadSellerDataOnAppInit(context);
-         
-// await  Provider.of<SellerProvider>(context, listen: false)
-//               .getSellerLocally();
      Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const SellerNavigation()),

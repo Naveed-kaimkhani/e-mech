@@ -137,7 +137,6 @@ class _SellerInfoWindowState extends State<SellerInfoWindow> {
                             ),
                           ],
                         ),
-                       
                       ],
                     ),
                     SendRequestBttnForSpecificSeller(

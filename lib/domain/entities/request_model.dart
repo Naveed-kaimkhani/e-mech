@@ -8,6 +8,7 @@ class RequestModel {
   String? sentTime;
   String? serviceRequired;
   String? serviceId;
+  String? senderDeviceToken;
   double? senderLat;
   double? senderLong;
   String? senderProfileImage;
@@ -20,6 +21,7 @@ class RequestModel {
     this.senderLat,
     this.senderLong,
     this.senderAddress,
+    this.senderDeviceToken,
     this.senderUid,
     this.serviceRequired,
     this.senderName,
@@ -44,6 +46,7 @@ class RequestModel {
     data['senderProfileImage'] = request.senderProfileImage;
     data['sentDate'] = request.sentDate;
     data['sentTime'] = request.sentTime;
+    data['senderDeviceToken'] = request.senderDeviceToken;
 
     return data;
   }
@@ -62,6 +65,7 @@ class RequestModel {
     senderProfileImage = mapData['senderProfileImage'];
     sentDate = mapData['sentDate'];
     sentTime = mapData['sentTime'];
+    senderDeviceToken = mapData['senderDeviceToken'];
   }
 
   // bool equals(RequestModel user) => user.uid == this.uid;

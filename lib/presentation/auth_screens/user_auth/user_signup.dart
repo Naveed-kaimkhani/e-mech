@@ -11,6 +11,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:email_validator/email_validator.dart';
 import '../../../data/firebase_user_repository.dart';
+import '../../../data/notification_services.dart';
 import '../../../domain/entities/user_model.dart';
 import '../../../navigation_page.dart';
 import '../../../style/styling.dart';
@@ -46,10 +47,10 @@ class _UserSignupState extends State<UserSignup> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _numberController = TextEditingController();
-  final TextEditingController _cityController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmpasswordController =
       TextEditingController();
+  NotificationServices notificationServices = NotificationServices();
 
   bool? obsecureText = true;
   bool isLoadingNow = false;
@@ -69,7 +70,6 @@ class _UserSignupState extends State<UserSignup> {
     _emailController.dispose();
     _nameController.dispose();
     _numberController.dispose();
-    _cityController.dispose();
     _passwordController.dispose();
     _confirmpasswordController.dispose();
     super.dispose();
@@ -89,15 +89,14 @@ class _UserSignupState extends State<UserSignup> {
         .then((User? user) async {
       if (user != null) {
         UserModel userModel = UserModel(
-          uid: user.uid,
-          name: _nameController.text,
-          phone: _numberController.text,
-          email: _emailController.text,
-          gender: gender,
-          city: _cityController.text,
-          profileImage: await _firebaseUserRepository.uploadProfileImage(
-              imageFile: _profileImage!, uid: user.uid),
-        );
+            uid: user.uid,
+            name: _nameController.text,
+            phone: _numberController.text,
+            email: _emailController.text,
+            gender: gender,
+            profileImage: await _firebaseUserRepository.uploadProfileImage(
+                imageFile: _profileImage!, uid: user.uid),
+            deviceToken: await notificationServices.getDeviceToken());
         _saveUser(user, userModel);
       } else {
         isLoading(false);
@@ -119,7 +118,7 @@ class _UserSignupState extends State<UserSignup> {
         isLoading(false);
         await StorageService.initUser();
 
-        _firebaseUserRepository.loadDataOnAppInit(context);
+        await _firebaseUserRepository.loadDataOnAppInit(context);
         isLoading(false);
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => NavigationPage()));
@@ -222,50 +221,35 @@ class _UserSignupState extends State<UserSignup> {
                         },
                       ),
                       k,
-                      IntrinsicHeight(
-                        child: InputField(
-                          hint_text: "Phone",
-                          currentNode: numberFocusNode,
-                          focusNode: numberFocusNode,
-                          nextNode: cityFocusNode,
-                          controller: _numberController,
-                          keyboardType: TextInputType.number,
-                          obsecureText: false,
-                          preicon: Row(
+                      InputField(
+                        hint_text: "Phone",
+                        currentNode: numberFocusNode,
+                        focusNode: numberFocusNode,
+                        nextNode: passwordFocusNode,
+                        controller: _numberController,
+                        keyboardType: TextInputType.number,
+                        obsecureText: false,
+                        preicon: SizedBox(
+                          width: 60.w,
+                          height: 40.h,
+                          child: Row(
                             children: [
                               Text(
                                 "  +92",
                                 style: TextStyle(fontSize: 17.sp),
                               ),
                               VerticalDivider(
-                                indent: 10,
-                                endIndent: 10,
                                 thickness: 2.r,
                                 color: Colors.grey.shade700,
                               ),
                             ],
                           ),
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return "Enter phone number";
-                            } else if (value.length != 10) {
-                              return "Invalid phone number";
-                            }
-                          },
                         ),
-                      ),
-                      k,
-                      InputField(
-                        hint_text: "City",
-                        currentNode: cityFocusNode,
-                        focusNode: cityFocusNode,
-                        nextNode: passwordFocusNode,
-                        controller: _cityController,
-                        obsecureText: false,
-                        keyboardType: TextInputType.emailAddress,
                         validator: (value) {
                           if (value.isEmpty) {
-                            return "City";
+                            return "Enter phone number";
+                          } else if (value.length != 10) {
+                            return "Invalid phone number";
                           }
                         },
                       ),
@@ -312,7 +296,6 @@ class _UserSignupState extends State<UserSignup> {
                       ),
                       k,
                       genderSelection(),
-                     
                       Padding(
                         padding: const EdgeInsets.only(left: 20.0),
                         child: isLoadingNow

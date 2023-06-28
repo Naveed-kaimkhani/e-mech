@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:e_mech/data/firebase_user_repository.dart';
 import 'package:e_mech/domain/entities/request_model.dart';
 import 'package:e_mech/domain/entities/seller_model.dart';
@@ -7,6 +9,7 @@ import 'package:e_mech/presentation/widgets/circle_progress.dart';
 import 'package:e_mech/style/custom_text_style.dart';
 import 'package:e_mech/style/styling.dart';
 import 'package:e_mech/utils/utils.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -204,6 +207,7 @@ class _SendRequestDialogueState extends State<SendRequestDialogue> {
         senderLat: user.lat,
         senderLong: user.long,
         senderAddress: user.address,
+        senderDeviceToken: user.deviceToken,
         sentDate: utils.getCurrentDate(),
         sentTime: utils.getCurrentTime(),
         senderProfileImage: user.profileImage);

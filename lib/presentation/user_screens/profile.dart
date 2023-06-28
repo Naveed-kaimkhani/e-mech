@@ -58,6 +58,12 @@ class _ProfileState extends State<Profile> {
 
   final FirebaseUserRepository _FirebaseUserRepository =
       FirebaseUserRepository();
+  SizedBox spaceBtwHeadnField = SizedBox(
+    height: 5.h,
+  );
+  SizedBox spaceAfterEveryField = SizedBox(
+    height: 11.h,
+  );
   EdgeInsetsGeometry k = EdgeInsets.only(
     left: 10.h,
     right: 10.h,
@@ -101,8 +107,9 @@ class _ProfileState extends State<Profile> {
           "phone": _phoneController.text.isEmpty
               ? user!.phone
               : _phoneController.text,
-          "city":
-              _cityController.text.isEmpty ? user!.city : _cityController.text,
+          "address": _cityController.text.isEmpty
+              ? user!.address
+              : _cityController.text,
         })
         .then((value) => {
               isLoading(false),
@@ -169,9 +176,7 @@ class _ProfileState extends State<Profile> {
                         TextStyle(fontSize: 17.sp, fontWeight: FontWeight.w700),
                   ),
                 ),
-                SizedBox(
-                  height: 7.h,
-                ),
+                spaceBtwHeadnField,
                 Padding(
                   padding: k,
                   child: InputField(
@@ -182,9 +187,7 @@ class _ProfileState extends State<Profile> {
                     controller: _nameController,
                   ),
                 ),
-                SizedBox(
-                  height: 19.h,
-                ),
+                spaceAfterEveryField,
                 Padding(
                   padding: const EdgeInsets.only(left: 8.0),
                   child: Text(
@@ -193,19 +196,18 @@ class _ProfileState extends State<Profile> {
                         TextStyle(fontSize: 17.sp, fontWeight: FontWeight.w700),
                   ),
                 ),
+                spaceBtwHeadnField,
                 Padding(
                   padding: k,
                   child: InputField(
                     currentNode: cityFocusNode,
                     focusNode: cityFocusNode,
                     nextNode: phoneFocusNode,
-                    hint_text: user!.city,
+                    hint_text: user!.address,
                     controller: _cityController,
                   ),
                 ),
-                SizedBox(
-                  height: 11.h,
-                ),
+                spaceAfterEveryField,
                 Padding(
                   padding: const EdgeInsets.only(left: 8.0),
                   child: Text(
@@ -214,9 +216,7 @@ class _ProfileState extends State<Profile> {
                         TextStyle(fontSize: 17.sp, fontWeight: FontWeight.w700),
                   ),
                 ),
-                SizedBox(
-                  height: 7.h,
-                ),
+                spaceBtwHeadnField,
                 Padding(
                   padding: k,
                   child: InputField(
@@ -228,7 +228,7 @@ class _ProfileState extends State<Profile> {
                   ),
                 ),
                 SizedBox(
-                  height: 35.h,
+                  height: 46.h,
                 ),
                 Center(
                     child: isLoadingNow
@@ -256,7 +256,7 @@ class _ProfileState extends State<Profile> {
         ? Stack(
             children: [
               // ProfilePic(url: url, height: height, width: width)
-              ProfilePic(url: user!.profileImage!, height: 86.h, width: 100.w),
+              ProfilePic(url: user!.profileImage!, height: 80.h, width: 94.w),
 
               Positioned(
                 left: 45.w,

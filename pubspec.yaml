@@ -57,8 +57,11 @@ dependencies:
   custom_info_window: ^1.0.1
   url_launcher: ^6.1.11
   lottie: ^2.4.0
+  firebase_messaging: ^14.6.3
+  flutter_local_notifications: ^14.1.1
   shimmer: ^3.0.0
-
+  app_settings: ^4.2.0
+  http: ^0.13.6
 dev_dependencies:
   flutter_test:
     sdk: flutter

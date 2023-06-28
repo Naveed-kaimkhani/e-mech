@@ -4,11 +4,13 @@ import 'package:e_mech/presentation/widgets/seller_screen_widget/ride_cancel_pop
 import 'package:e_mech/presentation/widgets/user_screen_widget/call_widget.dart';
 import 'package:e_mech/style/custom_text_style.dart';
 import 'package:e_mech/style/styling.dart';
-import 'package:e_mech/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 import '../../../data/firebase_user_repository.dart';
 import '../../../domain/entities/request_model.dart';
+import '../../../domain/entities/seller_model.dart';
+import '../../../providers/seller_provider.dart';
 
 class RequestWidget extends StatefulWidget {
   final RequestModel requestModel;
@@ -25,6 +27,10 @@ class RequestWidget extends StatefulWidget {
 class _RequestWidgetState extends State<RequestWidget> {
   @override
   Widget build(BuildContext context) {
+    
+    SellerModel? seller =
+        Provider.of<SellerProvider>(context, listen: false).seller;
+
     return Container(
       padding: const EdgeInsets.only(left: 10, top: 10, bottom: 10, right: 10),
       height: 119.h,
@@ -140,6 +146,9 @@ class _RequestWidgetState extends State<RequestWidget> {
                             // utils.showLoading(context);
                             await FirebaseUserRepository.acceptRequest(
                                 widget.requestModel, context);
+                             await FirebaseUserRepository.notifyUserOnRequestAccepted(
+                                widget.requestModel.senderDeviceToken!,seller!.name!);
+                                
 
                             // ignore: use_build_context_synchronously
                             // utils.toastMessage("Request Accepted");

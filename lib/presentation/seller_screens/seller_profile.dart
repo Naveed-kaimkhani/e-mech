@@ -105,8 +105,9 @@ class _SellerProfileState extends State<SellerProfile> {
           "phone": _phoneController.text.isEmpty
               ? user!.phone
               : _phoneController.text,
-          "service":
-              _cityController.text.isEmpty ? user!.service : _cityController.text,
+          "service": _cityController.text.isEmpty
+              ? user!.service
+              : _cityController.text,
         })
         .then((value) => {
               isLoading(false),
@@ -259,7 +260,7 @@ class _SellerProfileState extends State<SellerProfile> {
         ? Stack(
             children: [
               // ProfilePic(url: url, height: height, width: width)
-              ProfilePic(url: user!.profileImage!, height: 86.h, width: 100.w),
+              ProfilePic(url: user!.profileImage!, height: 82.h, width: 94.w),
 
               Positioned(
                 left: 45.w,

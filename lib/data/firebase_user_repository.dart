@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_mech/data/notification_services.dart';
 import 'package:e_mech/providers/user_provider.dart';
 import 'package:e_mech/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,6 +10,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
 import '../domain/entities/request_model.dart';
 import '../domain/entities/seller_model.dart';
@@ -24,7 +27,7 @@ class FirebaseUserRepository implements UsersRepository {
   static final CollectionReference _sellerCollection =
       firestore.collection('sellers');
   final Reference _storageReference = FirebaseStorage.instance.ref();
-
+  NotificationServices _notificationServices = NotificationServices();
   @override
   Future<User?> login(String email, String password, context) async {
     try {
@@ -156,17 +159,31 @@ class FirebaseUserRepository implements UsersRepository {
   }
 
   Future<void> addlatLongToFirebaseDocument(
-      double lat, double long, String address, String documentName) async {
+    double lat,
+    double long,
+    String address,
+    String? refreshedToken,
+    String documentName,
+  ) async {
     try {
       final userRef = FirebaseFirestore.instance
           .collection(documentName)
           .doc(utils.currentUserUid);
 
-      await userRef.update({
-        'lat': lat,
-        'long': long,
-        'address': address,
-      });
+      if (refreshedToken == null) {
+        await userRef.update({
+          'lat': lat,
+          'long': long,
+          'address': address,
+        });
+      } else {
+        await userRef.update({
+          'lat': lat,
+          'long': long,
+          'address': address,
+          'deviceToken': refreshedToken,
+        });
+      }
     } catch (e) {
       utils.toastMessage(e.toString());
     }
@@ -241,16 +258,17 @@ class FirebaseUserRepository implements UsersRepository {
     }
   }
 
-  loadDataOnAppInit(context) async {
+  Future<void> loadDataOnAppInit(context) async {
     try {
       final value = await getUserCurrentLocation(context);
       String address =
           await utils.getAddressFromLatLng(value!.latitude, value.longitude);
-
+      String? refreshedToken = await _notificationServices.isTokenRefresh();
       await addlatLongToFirebaseDocument(
         value.latitude,
         value.longitude,
         address,
+        refreshedToken,
         'users',
       );
 
@@ -272,11 +290,12 @@ class FirebaseUserRepository implements UsersRepository {
       final value = await getUserCurrentLocation(context);
       String address =
           await utils.getAddressFromLatLng(value!.latitude, value.longitude);
-
+      String? refreshedToken = await _notificationServices.isTokenRefresh();
       await addlatLongToFirebaseDocument(
         value.latitude,
         value.longitude,
         address,
+        refreshedToken,
         'sellers',
       );
 
@@ -420,5 +439,71 @@ class FirebaseUserRepository implements UsersRepository {
     }
 
     return sellersList;
+  }
+
+  static notifySelleronComingRequest(
+      String sellerDeviceToken, String userName) async {
+    // send notification from one device to another
+    var data = {
+      'to': sellerDeviceToken,
+      'notification': {
+        'title': 'New Request',
+        'body': '${userName} want your service',
+        // "sound": "jetsons_doorbell.mp3"
+      },
+      'android': {
+        'notification': {
+          'notification_count': 23,
+        },
+      },
+      'data': {'type': 'msj', 'id': 'Asif Taj'}
+    };
+
+    await http
+        .post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
+            body: jsonEncode(data),
+            headers: {
+              'Content-Type': 'application/json; charset=UTF-8',
+              'Authorization':
+                  'key=AAAAxDHbazE:APA91bEK6_7-USKl15JqE4bH_ZZUrMHGCZTr1QCAT-WYJGPo3eTcAaLco3769dxP-GINLskhZOwz2KmddEL8VCGPERQBFUgysXEKTt2TNd49z2qqw6zd98oncZcTbrPpbgLe20Opw0Nb'
+            })
+        .then((value) {})
+        .onError((error, stackTrace) {
+          print(error);
+          //  utils.flushBarErrorMessage(error.toString(), context);
+        });
+  }
+
+  static notifyUserOnRequestAccepted(
+      String userDeviceToken, String sellerName) async {
+    // send notification from one device to another
+    var data = {
+      'to': userDeviceToken,
+      'notification': {
+        'title': 'Request Accepted',
+        'body': 'Your request is accepted by ${sellerName} ',
+        // "sound": "jetsons_doorbell.mp3"
+      },
+      'android': {
+        'notification': {
+          'notification_count': 23,
+        },
+      },
+      'data': {'type': 'msj', 'id': 'Asif Taj'}
+    };
+
+    await http
+        .post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
+            body: jsonEncode(data),
+            headers: {
+              'Content-Type': 'application/json; charset=UTF-8',
+              'Authorization':
+                  'key=AAAAxDHbazE:APA91bEK6_7-USKl15JqE4bH_ZZUrMHGCZTr1QCAT-WYJGPo3eTcAaLco3769dxP-GINLskhZOwz2KmddEL8VCGPERQBFUgysXEKTt2TNd49z2qqw6zd98oncZcTbrPpbgLe20Opw0Nb'
+            })
+        .then((value) {})
+        .onError((error, stackTrace) {
+          print(error);
+          //  utils.flushBarErrorMessage(error.toString(), context);
+        });
   }
 }

@@ -10,6 +10,7 @@ class SellerModel {
   double? long;
    String? workshopName;
 String? service;
+String? deviceToken;
 
   SellerModel({
   this.lat,
@@ -22,7 +23,8 @@ String? service;
   required this.CNIC,
   required this.address,
   required this.workshopName,
-  required this.service
+  required this.service,
+  required this.deviceToken,
 
   });
 
@@ -37,7 +39,7 @@ String? service;
     data['phone'] = user.phone;
     data['email'] = user.email;
     data['CNIC'] = user.CNIC;
-    // data['city'] = user.city;
+    data['deviceToken'] = user.deviceToken;
     data['service'] = user.service;
     data['address'] = user.address;
     return data;
@@ -55,7 +57,7 @@ String? service;
     CNIC = mapData['CNIC'];
      service = mapData['service'];
      address = mapData['address'];
-    // city = mapData['city'];
+    deviceToken = mapData['deviceToken'];
     
   }
 

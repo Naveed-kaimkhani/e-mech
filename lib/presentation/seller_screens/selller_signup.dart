@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:e_mech/data/notification_services.dart';
 import 'package:e_mech/presentation/seller_screens/seller_navigation.dart';
 import 'package:e_mech/presentation/widgets/my_app_bar.dart';
 import 'package:e_mech/utils/routes/routes_name.dart';
@@ -54,6 +55,7 @@ class _SellerSignUpState extends State<SellerSignUp> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmpasswordController =
       TextEditingController();
+  NotificationServices _notificationServices =NotificationServices();
   // final TextEditingController _addressController = TextEditingController();
   Widget k = SizedBox(
     height: 16.h,
@@ -101,6 +103,7 @@ class _SellerSignUpState extends State<SellerSignUp> {
           service: service,
           profileImage: await _firebaseUserRepository.uploadProfileImage(
               imageFile: _profileImage!, uid: user.uid),
+        deviceToken:await _notificationServices.getDeviceToken() 
         );
         _saveSeller(user, sellerModel);
       } else {

@@ -8,7 +8,8 @@ class UserModel {
  String? phone;
   String? email;
  String? gender;
-  String? city;
+  // String? city;
+String? deviceToken;
 
   UserModel({
   required this.uid,
@@ -20,7 +21,9 @@ class UserModel {
  // required this.serviceId,
   required  this.email,
   required  this.gender,
-  required  this.city,
+  // required  this.city,
+  required  this.deviceToken,
+  
   });
 
   
@@ -35,7 +38,9 @@ class UserModel {
     data['phone'] = user.phone;
     data['email'] = user.email;
     data['gender'] = user.gender;
-    data['city'] = user.city;
+    // data['city'] = user.city;
+     data['deviceToken'] = user.deviceToken;
+    
     return data;
   }
 
@@ -50,9 +55,8 @@ class UserModel {
     phone = mapData['phone'];
     email = mapData['email'];
     gender = mapData['gender'];
-    city = mapData['city'];
-    
-    // this.age = mapData['age'];
+    // city = mapData['city'];
+     deviceToken = mapData['deviceToken'];
   }
 
 }
