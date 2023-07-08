@@ -1,18 +1,16 @@
 import 'dart:developer';
 import 'dart:io';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_mech/data/models/firebase_messaging_repo.dart';
+import 'package:e_mech/domain/entities/request_model.dart';
 import 'package:e_mech/presentation/widgets/message_card.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../data/models/message.dart';
-import '../domain/entities/request_model.dart';
 import '../main.dart';
 class ChatScreen extends StatefulWidget {
-  // final UserModel user;
   final RequestModel user;
-  
+
   const ChatScreen({super.key, required this.user});
 
   @override
@@ -48,10 +46,10 @@ class _ChatScreenState extends State<ChatScreen> {
           },
           child: Scaffold(
             //app bar
-            appBar: AppBar(
-              automaticallyImplyLeading: false,
-              flexibleSpace: _appBar(),
-            ),
+            // appBar: AppBar(
+            //   automaticallyImplyLeading: false,
+            //   flexibleSpace: _appBar(),
+            // ),
 
             backgroundColor: const Color.fromARGB(255, 234, 248, 255),
 
@@ -60,7 +58,8 @@ class _ChatScreenState extends State<ChatScreen> {
               children: [
                 Expanded(
                   child: StreamBuilder(
-                    stream: FirebaseMessagingRepo.getAllMessages(widget.user.senderUid!),
+                    stream: FirebaseMessagingRepo.getAllMessages(
+                        widget.user.senderUid!),
                     builder: (context, snapshot) {
                       switch (snapshot.connectionState) {
                         //if data is loading
@@ -110,22 +109,18 @@ class _ChatScreenState extends State<ChatScreen> {
                 _chatInput(),
 
                 //show emojis on keyboard emoji button click & vice versa
-       
-                // if (_showEmoji)
-                //   SizedBox(
-                //     height: mq.height * .35,
-                //  child: 
- 
-                //    EmojiPicker(
-                //       textEditingController: _textController,
-                //       config: Config(
-                //         bgColor: const Color.fromARGB(255, 234, 248, 255),
-                //         columns: 8,
-                //         emojiSizeMax: 32 * (Platform.isIOS ? 1.30 : 1.0),
-                //       ),
-                //     ),
-                //   )
-       
+                if (_showEmoji)
+                  SizedBox(
+                    height: mq.height * .35,
+                    child: EmojiPicker(
+                      textEditingController: _textController,
+                      config: Config(
+                        bgColor: const Color.fromARGB(255, 234, 248, 255),
+                        columns: 8,
+                        emojiSizeMax: 32 * (Platform.isIOS ? 1.30 : 1.0),
+                      ),
+                    ),
+                  )
               ],
             ),
           ),
@@ -134,136 +129,80 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  // app bar widget
-  Widget _appBar() {
-    return Row(
-                children: [
-                  //back button
-                  IconButton(
-                      onPressed: () => Navigator.pop(context),
-                      icon:
-                          const Icon(Icons.arrow_back, color: Colors.black54)),
+  // // app bar widget
+  // Widget _appBar() {
+  //   return InkWell(
+  //       onTap: () {
+  //         // Navigator.push(
+  //         //     context,
+  //         //     MaterialPageRoute(
+  //         //         builder: (_) => ViewProfileScreen(user: widget.user)));
+  //       },
+  //       child: StreamBuilder(
+  //           stream: FirebaseMessagingRepo.getUserInfo(widget.user),
+  //           builder: (context, snapshot) {
+  //             final data = snapshot.data?.docs;
+  //             final list =
+  //                 data?.map((e) => ChatUser.fromJson(e.data())).toList() ?? [];
 
-                  //user profile picture
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(mq.height * .03),
-                    child: CachedNetworkImage(
-                      width: mq.height * .05,
-                      height: mq.height * .05,
-                      imageUrl:
-                          widget.user.senderProfileImage!,
-                      errorWidget: (context, url, error) => const CircleAvatar(
-                          child: Icon(CupertinoIcons.person)),
-                    ),
-                  ),
+  //             return Row(
+  //               children: [
+  //                 //back button
+  //                 IconButton(
+  //                     onPressed: () => Navigator.pop(context),
+  //                     icon:
+  //                         const Icon(Icons.arrow_back, color: Colors.black54)),
 
-                  //for adding some space
-                  const SizedBox(width: 10),
+  //                 //user profile picture
+  //                 ClipRRect(
+  //                   borderRadius: BorderRadius.circular(mq.height * .03),
+  //                   child: CachedNetworkImage(
+  //                     width: mq.height * .05,
+  //                     height: mq.height * .05,
+  //                     imageUrl:
+  //                         list.isNotEmpty ? list[0].image : widget.user.image,
+  //                     errorWidget: (context, url, error) => const CircleAvatar(
+  //                         child: Icon(CupertinoIcons.person)),
+  //                   ),
+  //                 ),
 
-                  //user name & last seen time
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      //user name
-                      Text( widget.user.senderName!,
-                          style: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.black87,
-                              fontWeight: FontWeight.w500)),
+  //                 //for adding some space
+  //                 const SizedBox(width: 10),
 
-                      //for adding some space
-                      const SizedBox(height: 2),
+  //                 //user name & last seen time
+  //                 Column(
+  //                   mainAxisAlignment: MainAxisAlignment.center,
+  //                   crossAxisAlignment: CrossAxisAlignment.start,
+  //                   children: [
+  //                     //user name
+  //                     Text(list.isNotEmpty ? list[0].name : widget.user.name,
+  //                         style: const TextStyle(
+  //                             fontSize: 16,
+  //                             color: Colors.black87,
+  //                             fontWeight: FontWeight.w500)),
 
-                      //last seen time of user
-                      // Text(
-                      //     list.isNotEmpty
-                      //         ? list[0].isOnline
-                      //             ? 'Online'
-                      //             : MyDateUtils.getLastActiveTime(
-                      //                 context: context,
-                      //                 lastActive: list[0].lastActive)
-                      //         : MyDateUtils.getLastActiveTime(
-                      //             context: context,
-                      //             lastActive: widget.user.lastActive!),
-                      //     style: const TextStyle(
-                      //         fontSize: 13, color: Colors.black54)),
-                    ],
-                  )
-                ],
-              );
-    
-    // InkWell(
-    //     onTap: () {
-    //       // Navigator.push(
-    //       //     context,
-    //       //     MaterialPageRoute(
-    //       //         builder: (_) => ViewProfileScreen(user: widget.user)));
-    //     },
-    //     child: StreamBuilder(
-    //         stream: FirebaseMessagingRepo.getUserInfo(widget.user.senderUid!),
-    //         builder: (context, snapshot) {
-    //           final data = snapshot.data?.docs;
-    //           final list =
-    //               data?.map((e) => ChatUser.fromJson(e.data())).toList() ?? [];
-    //           return Row(
-    //             children: [
-    //               //back button
-    //               IconButton(
-    //                   onPressed: () => Navigator.pop(context),
-    //                   icon:
-    //                       const Icon(Icons.arrow_back, color: Colors.black54)),
+  //                     //for adding some space
+  //                     const SizedBox(height: 2),
 
-    //               //user profile picture
-    //               ClipRRect(
-    //                 borderRadius: BorderRadius.circular(mq.height * .03),
-    //                 child: CachedNetworkImage(
-    //                   width: mq.height * .05,
-    //                   height: mq.height * .05,
-    //                   imageUrl:
-    //                       list.isNotEmpty ? list[0].image : widget.user.profileImage!,
-    //                   errorWidget: (context, url, error) => const CircleAvatar(
-    //                       child: Icon(CupertinoIcons.person)),
-    //                 ),
-    //               ),
-
-    //               //for adding some space
-    //               const SizedBox(width: 10),
-
-    //               //user name & last seen time
-    //               Column(
-    //                 mainAxisAlignment: MainAxisAlignment.center,
-    //                 crossAxisAlignment: CrossAxisAlignment.start,
-    //                 children: [
-    //                   //user name
-    //                   Text(list.isNotEmpty ? list[0].name : widget.user.name!,
-    //                       style: const TextStyle(
-    //                           fontSize: 16,
-    //                           color: Colors.black87,
-    //                           fontWeight: FontWeight.w500)),
-
-    //                   //for adding some space
-    //                   const SizedBox(height: 2),
-
-    //                   //last seen time of user
-    //                   Text(
-    //                       list.isNotEmpty
-    //                           ? list[0].isOnline
-    //                               ? 'Online'
-    //                               : MyDateUtils.getLastActiveTime(
-    //                                   context: context,
-    //                                   lastActive: list[0].lastActive)
-    //                           : MyDateUtils.getLastActiveTime(
-    //                               context: context,
-    //                               lastActive: widget.user.lastActive!),
-    //                       style: const TextStyle(
-    //                           fontSize: 13, color: Colors.black54)),
-    //                 ],
-    //               )
-    //             ],
-    //           );
-    //         }));
-  }
+  //                     //last seen time of user
+  //                     Text(
+  //                         list.isNotEmpty
+  //                             ? list[0].isOnline
+  //                                 ? 'Online'
+  //                                 : MyDateUtil.getLastActiveTime(
+  //                                     context: context,
+  //                                     lastActive: list[0].lastActive)
+  //                             : MyDateUtil.getLastActiveTime(
+  //                                 context: context,
+  //                                 lastActive: widget.user.lastActive),
+  //                         style: const TextStyle(
+  //                             fontSize: 13, color: Colors.black54)),
+  //                   ],
+  //                 )
+  //               ],
+  //             );
+  //           }));
+  // }
 
   // bottom chat input field
   Widget _chatInput() {
@@ -315,7 +254,10 @@ class _ChatScreenState extends State<ChatScreen> {
                         for (var i in images) {
                           log('Image Path: ${i.path}');
                           setState(() => _isUploading = true);
-                          await FirebaseMessagingRepo.sendChatImage(widget.user.senderUid!,widget.user.senderDeviceToken!, File(i.path));
+                          await FirebaseMessagingRepo.sendChatImage(
+                              widget.user.senderUid!,
+                              widget.user.senderDeviceToken!,
+                              File(i.path));
                           setState(() => _isUploading = false);
                         }
                       },
@@ -335,7 +277,9 @@ class _ChatScreenState extends State<ChatScreen> {
                           setState(() => _isUploading = true);
 
                           await FirebaseMessagingRepo.sendChatImage(
-                              widget.user.senderUid!,widget.user.senderDeviceToken!, File(image.path));
+                              widget.user.senderUid!,
+                              widget.user.senderDeviceToken!,
+                              File(image.path));
                           setState(() => _isUploading = false);
                         }
                       },
@@ -356,11 +300,17 @@ class _ChatScreenState extends State<ChatScreen> {
                 if (_list.isEmpty) {
                   //on first message (add user to my_user collection of chat user)
                   FirebaseMessagingRepo.sendFirstMessage(
-                      widget.user.senderUid!,widget.user.senderDeviceToken!, _textController.text, Type.text);
+                      widget.user.senderUid!,
+                      widget.user.senderDeviceToken!,
+                      _textController.text,
+                      Type.text);
                 } else {
                   //simply send message
                   FirebaseMessagingRepo.sendMessage(
-                            widget.user.senderUid!,widget.user.senderDeviceToken!, _textController.text, Type.text);
+                      widget.user.senderUid!,
+                      widget.user.senderDeviceToken!,
+                      _textController.text,
+                      Type.text);
                 }
                 _textController.text = '';
               }

@@ -49,17 +49,11 @@ class _AcceptedRequestWidgetState extends State<AcceptedRequestWidget> {
                 children: [
                   Padding(
                     padding: EdgeInsets.only(left: 4.w, top: 4.h),
-                    child: Container(
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                        ),
-                        height: 40.h,
-                        width: 40.w,
-                        child: ProfilePic(
-                          height: 35.h,
-                          width: 35.w,
-                          url: widget.requestModel.senderProfileImage!,
-                        )),
+                    child: ProfilePic(
+                      height: 40.h,
+                      width: 46.w,
+                      url: widget.requestModel.senderProfileImage!,
+                    ),
                   ),
                   SizedBox(
                     width: 10.w,
