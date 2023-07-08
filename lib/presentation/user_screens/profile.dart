@@ -255,7 +255,7 @@ class _ProfileState extends State<Profile> {
     return image == null
         ? Stack(
             children: [
-              // ProfilePic(url: url, height: height, width: width)
+              // ProfilePic(url: url, height: height, width: width) 
               ProfilePic(url: user!.profileImage!, height: 80.h, width: 94.w),
 
               Positioned(

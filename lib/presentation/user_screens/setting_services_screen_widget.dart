@@ -1,4 +1,4 @@
-
+import 'package:e_mech/presentation/user_screens/password_option.dart';
 import 'package:flutter/material.dart';
 
 class SettingServicesScreenWidget extends StatelessWidget {
@@ -8,10 +8,9 @@ class SettingServicesScreenWidget extends StatelessWidget {
   String routeName;
   SettingServicesScreenWidget({
     this.imageURL,
-   this.icon,
+    this.icon,
     required this.routeName,
     required this.text,
-  
   });
 
   @override
@@ -21,11 +20,14 @@ class SettingServicesScreenWidget extends StatelessWidget {
       child: InkWell(
         child: ListTile(
           title: Text(text),
-          leading:imageURL!=null?Image.asset(imageURL!):Icon(icon),
+          leading: imageURL != null ? Image.asset(imageURL!) : Icon(icon),
           trailing: Icon(Icons.arrow_forward_ios),
         ),
         onTap: () {
-          Navigator.pushNamed(context, routeName);
+          // Navigator.pushNamed(context, PasswordOption());
+
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => PasswordOption()));
         },
       ),
     );

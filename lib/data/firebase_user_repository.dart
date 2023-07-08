@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,6 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
@@ -18,6 +20,8 @@ import '../domain/entities/user_model.dart';
 import '../domain/repositories/users_repository.dart';
 import '../providers/all_sellerdata_provider.dart';
 import '../providers/seller_provider.dart';
+import 'models/chat_user.dart';
+import 'models/message.dart';
 
 class FirebaseUserRepository implements UsersRepository {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -506,4 +510,6 @@ class FirebaseUserRepository implements UsersRepository {
           //  utils.flushBarErrorMessage(error.toString(), context);
         });
   }
+
+
 }

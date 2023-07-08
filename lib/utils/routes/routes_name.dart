@@ -8,5 +8,7 @@ class RoutesName{
  static const String contactUs = 'ContactUs';
 static const String generalMechanic = 'GeneralMechanic';
 static const String sellerNavigation = 'SellerNavigation';
+static const String navigation = 'NavigationPage';
+static const String chat_screen = 'ChatScreen';
 
 }

@@ -10,12 +10,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 // GetIt getIt = GetIt.instance;
+late Size mq;
+
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  print(message.notification!.title);
+  // print(message.notification!.title);
   await Firebase.initializeApp();
 }
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -40,6 +41,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+            mq = MediaQuery.of(context).size;
+
     return ScreenUtilInit(
       designSize: const Size(360, 690),
       builder: (context, child) {

@@ -29,7 +29,7 @@ class Setting extends StatelessWidget {
           SettingServicesScreenWidget(
             text: "Change Password",
             icon: Icons.password_outlined,
-            routeName: "",
+            routeName: "PasswordOption",
           ),
           k,
           SettingServicesScreenWidget(

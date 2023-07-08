@@ -79,6 +79,7 @@ class _UserLoginState extends State<UserLogin> {
               MaterialPageRoute(builder: (context) => NavigationPage()));
         }).catchError((error) {
           isLoading(false);
+
           utils.flushBarErrorMessage(error.message.toString(), context);
         });
       } else {

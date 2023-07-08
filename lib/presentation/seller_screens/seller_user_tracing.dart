@@ -3,9 +3,9 @@ import 'dart:ui' as ui;
 import 'package:custom_info_window/custom_info_window.dart';
 import 'package:e_mech/data/firebase_user_repository.dart';
 import 'package:e_mech/domain/entities/request_model.dart';
+import 'package:e_mech/presentation/chat_screen.dart';
 import 'package:e_mech/presentation/seller_screens/seller_navigation.dart';
 import 'package:e_mech/presentation/seller_screens/tracing_screen_bottonnavigation.dart';
-import 'package:e_mech/presentation/user_screens/logout_popup.dart';
 import 'package:e_mech/presentation/widgets/seller_screen_widget/ride_cancel_popup.dart';
 import 'package:e_mech/presentation/widgets/user_screen_widget/loading_map.dart';
 import 'package:e_mech/style/styling.dart';
@@ -141,7 +141,7 @@ class _SellerUserTracingState extends State<SellerUserTracing> {
   }
 
   void startRideTimer() {
-    Timer(Duration(seconds: 10), () async {
+    Timer(Duration(hours: 10), () async {
       // Timer expired, cancel the ride and assign to another rider
       int initialDistance = getDistancebtwRiderNSeller(
               sourceLocation!.latitude, sourceLocation!.longitude)
@@ -158,20 +158,21 @@ class _SellerUserTracingState extends State<SellerUserTracing> {
       }
     });
   }
-cancelAndReassignRequest()async{
-await FirebaseUserRepository.sentRequest(
-            _listOfSellers!, widget.requestModel, context);
-        // ignore: use_build_context_synchronously
-        await FirebaseUserRepository.deleteRequestDocument(
-            "AcceptedRequest", widget.requestModel.documentId!, context);
-        // ignore: use_build_context_synchronously
-        showRideCancelPopup("Ride has been canceled","You are not reaching to user",context);
-         // ignore: use_build_context_synchronously
-         Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const SellerNavigation()));
-}
+
+  cancelAndReassignRequest() async {
+    await FirebaseUserRepository.sentRequest(
+        _listOfSellers!, widget.requestModel, context);
+    // ignore: use_build_context_synchronously
+    await FirebaseUserRepository.deleteRequestDocument(
+        "AcceptedRequest", widget.requestModel.documentId!, context);
+    // ignore: use_build_context_synchronously
+    showRideCancelPopup(
+        "Ride has been canceled", "You are not reaching to user", context);
+    // ignore: use_build_context_synchronously
+    Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (context) => const SellerNavigation()));
+  }
+
   @override
   void initState() {
     super.initState();
@@ -209,6 +210,19 @@ await FirebaseUserRepository.sentRequest(
                 widget: widget,
                 firstLine: firstLine,
               ),
+              floatingActionButton: IconButton(
+                  onPressed: () {
+// Navigating to a new screen
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ChatScreen(
+                          user: widget.requestModel,
+                        ),
+                      ),
+                    );
+                  },
+                  icon: Icon(Icons.chat)),
               body: Stack(
                 children: [
                   GoogleMap(

@@ -10,7 +10,7 @@ class UserModel {
  String? gender;
   // String? city;
 String? deviceToken;
-
+ String? lastActive;
   UserModel({
   required this.uid,
  required   this.profileImage,
@@ -22,8 +22,8 @@ String? deviceToken;
   required  this.email,
   required  this.gender,
   // required  this.city,
-  required  this.deviceToken,
-  
+  required this.deviceToken,
+  required this.lastActive
   });
 
   
@@ -40,6 +40,7 @@ String? deviceToken;
     data['gender'] = user.gender;
     // data['city'] = user.city;
      data['deviceToken'] = user.deviceToken;
+     data['lastActive'] = user.lastActive;
     
     return data;
   }
@@ -57,6 +58,8 @@ String? deviceToken;
     gender = mapData['gender'];
     // city = mapData['city'];
      deviceToken = mapData['deviceToken'];
+     lastActive = mapData['lastActive'];
+  
   }
 
 }
