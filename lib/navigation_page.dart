@@ -1,3 +1,4 @@
+import 'package:e_mech/presentation/user_screens/chat_homepage.dart';
 import 'package:e_mech/presentation/user_screens/profile.dart';
 import 'package:e_mech/presentation/user_screens/services.dart';
 import 'package:e_mech/presentation/user_screens/setting.dart';
@@ -17,7 +18,8 @@ class _NavigationPageState extends State<NavigationPage> {
   List pages = [
     const UserHomePage(),
     Services(),
-    Profile(),
+    // Profile(),
+    ChatHomePage(),
     Setting(),
   ];
   int currentindex = 0;
@@ -53,8 +55,8 @@ class _NavigationPageState extends State<NavigationPage> {
               text: "Services",
             ),
             GButton(
-              icon: Icons.account_circle_outlined,
-              text: "Profile",
+              icon: Icons.chat,
+              text: "Chats",
             ),
             GButton(
               icon: Icons.settings_outlined,

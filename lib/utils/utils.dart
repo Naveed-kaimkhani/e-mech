@@ -19,6 +19,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'dart:ui' as ui;
 import '../presentation/widgets/circle_progress.dart';
 import '../presentation/widgets/user_screen_widget/request_sent_dialogue.dart';
+
 class utils {
   static toastMessage(String message) {
     Fluttertoast.showToast(msg: message);
@@ -36,6 +37,13 @@ class utils {
     var formatterTime = DateFormat('kk:mm');
     String actualTime = formatterTime.format(now);
     return actualTime;
+  }
+
+  static String capitalizeFirstLetter(String text) {
+    if (text.isEmpty) {
+      return text;
+    }
+    return text[0].toUpperCase() + text.substring(1);
   }
 
   static void flushBarErrorMessage(String message, BuildContext context) {
@@ -118,22 +126,24 @@ class utils {
       },
     );
   }
-static String getFriendlyErrorMessage(dynamic error) {
-  // Check for specific error conditions and return appropriate messages
-  if (error is FirebaseAuthException) {
-    switch (error.code) {
-      case 'wrong-password':
-        return 'Invalid password. Please check your password and try again.';
-      case 'user-not-found':
-        return 'User not found. Please check your email and try again.';
-      default:
-        return 'An error occurred. Please try again later.';
+
+  static String getFriendlyErrorMessage(dynamic error) {
+    // Check for specific error conditions and return appropriate messages
+    if (error is FirebaseAuthException) {
+      switch (error.code) {
+        case 'wrong-password':
+          return 'Invalid password. Please check your password and try again.';
+        case 'user-not-found':
+          return 'User not found. Please check your email and try again.';
+        default:
+          return 'An error occurred. Please try again later.';
+      }
     }
+
+    // Handle other types of errors or fallback to a generic message
+    return 'An error occurred. Please try again later.';
   }
 
-  // Handle other types of errors or fallback to a generic message
-  return 'An error occurred. Please try again later.';
-}
   static FirebaseFirestore getFireStoreInstance() {
     FirebaseFirestore db = FirebaseFirestore.instance;
     return db;
@@ -258,7 +268,8 @@ static String getFriendlyErrorMessage(dynamic error) {
     final date = DateTime.fromMillisecondsSinceEpoch(int.parse(time));
     return TimeOfDay.fromDateTime(date).format(context);
   }
- // for getting formatted time for sent & read
+
+  // for getting formatted time for sent & read
   static String getMessageTime(
       {required BuildContext context, required String time}) {
     final DateTime sent = DateTime.fromMillisecondsSinceEpoch(int.parse(time));
@@ -276,7 +287,6 @@ static String getFriendlyErrorMessage(dynamic error) {
         : '$formattedTime - ${sent.day} ${_getMonth(sent)} ${sent.year}';
   }
 
-  
   //get last message time (used in chat user card)
   static String getLastMessageTime(
       {required BuildContext context,
@@ -322,7 +332,6 @@ static String getFriendlyErrorMessage(dynamic error) {
 
     return 'Last seen on ${time.day} $month on $formattedTime';
   }
-
 
   // get month name from month no. or index
   static String _getMonth(DateTime date) {

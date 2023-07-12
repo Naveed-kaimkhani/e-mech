@@ -27,7 +27,6 @@ class RequestWidget extends StatefulWidget {
 class _RequestWidgetState extends State<RequestWidget> {
   @override
   Widget build(BuildContext context) {
-    
     SellerModel? seller =
         Provider.of<SellerProvider>(context, listen: false).seller;
 
@@ -57,17 +56,11 @@ class _RequestWidgetState extends State<RequestWidget> {
                 children: [
                   Padding(
                     padding: EdgeInsets.only(left: 4.w, top: 4.h),
-                    child: Container(
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                        ),
-                        height: 40.h,
-                        width: 40.w,
-                        child: ProfilePic(
-                          height: 35.h,
-                          width: 35.w,
-                          url: widget.requestModel.senderProfileImage!,
-                        )),
+                    child: ProfilePic(
+                      height: 40.h,
+                      width: 47.w,
+                      url: widget.requestModel.senderProfileImage!,
+                    ),
                   ),
                   SizedBox(
                     width: 10.w,
@@ -146,9 +139,10 @@ class _RequestWidgetState extends State<RequestWidget> {
                             // utils.showLoading(context);
                             await FirebaseUserRepository.acceptRequest(
                                 widget.requestModel, context);
-                             await FirebaseUserRepository.notifyUserOnRequestAccepted(
-                                widget.requestModel.senderDeviceToken!,seller!.name!);
-                                
+                            await FirebaseUserRepository
+                                .notifyUserOnRequestAccepted(
+                                    widget.requestModel.senderDeviceToken!,
+                                    seller!.name!);
 
                             // ignore: use_build_context_synchronously
                             // utils.toastMessage("Request Accepted");

@@ -3,7 +3,7 @@ import 'dart:ui' as ui;
 import 'package:custom_info_window/custom_info_window.dart';
 import 'package:e_mech/data/firebase_user_repository.dart';
 import 'package:e_mech/domain/entities/request_model.dart';
-import 'package:e_mech/presentation/chat_screen.dart';
+import 'package:e_mech/presentation/SellerSideChatScreen.dart';
 import 'package:e_mech/presentation/seller_screens/seller_navigation.dart';
 import 'package:e_mech/presentation/seller_screens/tracing_screen_bottonnavigation.dart';
 import 'package:e_mech/presentation/widgets/seller_screen_widget/ride_cancel_popup.dart';
@@ -13,6 +13,7 @@ import 'package:e_mech/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -211,18 +212,21 @@ class _SellerUserTracingState extends State<SellerUserTracing> {
                 firstLine: firstLine,
               ),
               floatingActionButton: IconButton(
-                  onPressed: () {
+                onPressed: () {
 // Navigating to a new screen
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ChatScreen(
-                          user: widget.requestModel,
-                        ),
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SellerSideChatScreen(
+                        user: widget.requestModel,
                       ),
-                    );
-                  },
-                  icon: Icon(Icons.chat)),
+                    ),
+                  );
+                },
+                icon: Icon(Icons.chat),
+                color: Styling.primaryColor,
+                iconSize: 40.h,
+              ),
               body: Stack(
                 children: [
                   GoogleMap(

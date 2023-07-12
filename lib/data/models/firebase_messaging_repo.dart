@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_mech/domain/entities/seller_model.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:http/http.dart';
 import 'chat_user.dart';
@@ -17,20 +18,37 @@ class FirebaseMessagingRepo {
 
   // ---------------------  chatting app methods ------------------------------------
 
-  // for getting all users from firestore database
-  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllUsers(
-      List<String> userIds) {
-    log('\nUserIds: $userIds');
-
+  // for getting id's of known users from firestore database
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getMyUsersId() {
     return firestore
         .collection('users')
-        .where('id',
-            whereIn: userIds.isEmpty
-                ? ['']
-                : userIds) //because empty list throws an error
-        // .where('id', isNotEqualTo: user.uid)
+        .doc(utils.currentUserUid)
+        .collection('my_users')
         .snapshots();
   }
+//   // for getting all users from firestore database
+//   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllUsers(
+//       List<String> userIds) {
+//     log('\nUserIds: $userIds');
+// print(userIds);
+// print(userIds.isEmpty);
+
+//     return firestore
+//         .collection('sellers')
+//         .where('id',
+//             whereIn: userIds.isEmpty
+//                 ? ['']
+//                 : userIds) //because empty list throws an error
+//         .where('id', isNotEqualTo: utils.currentUserUid)
+//         .snapshots();
+//   }
+static Stream<QuerySnapshot<Map<String, dynamic>>> getAllUsers(List<String> userIds) {
+  return firestore
+      .collection('sellers')
+      .where(FieldPath.documentId, whereIn: userIds)
+      .snapshots();
+}
+
 
   // useful for getting conversation id
   static String getConversationID(String id) =>
@@ -78,9 +96,9 @@ class FirebaseMessagingRepo {
 
   //get only last message of a specific chat
   static Stream<QuerySnapshot<Map<String, dynamic>>> getLastMessage(
-      ChatUser user) {
+      String secondPersonUid) {
     return firestore
-        .collection('chats/${getConversationID(user.id)}/messages/')
+        .collection('chats/${getConversationID(secondPersonUid)}/messages/')
         .orderBy('sent', descending: true)
         .limit(1)
         .snapshots();
@@ -184,14 +202,21 @@ class FirebaseMessagingRepo {
         .where('uid', isEqualTo: secondPersonUid)
         .snapshots();
   }
+static Stream<QuerySnapshot<Map<String, dynamic>>> getSellerInfo(
+      String secondPersonUid) {
+    return firestore
+        .collection('sellers')
+        .where('uid', isEqualTo: secondPersonUid)
+        .snapshots();
+  }
 
   // update online or last active status of user
   static Future<void> updateActiveStatus(bool isOnline) async {
-    // firestore.collection('users').doc(user.uid).update({
-    //   'is_online': isOnline,
-    //   'last_active': DateTime.now().millisecondsSinceEpoch.toString(),
-    //   'push_token': me.pushToken,
-    // });
+    firestore.collection('users').doc(utils.currentUserUid).update({
+      'isOnline': isOnline,
+      'lastActive': DateTime.now().millisecondsSinceEpoch.toString(),
+      // 'push_token': me.pushToken,
+    });
   }
   }
 

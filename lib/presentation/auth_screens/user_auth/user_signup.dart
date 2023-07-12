@@ -91,7 +91,7 @@ class _UserSignupState extends State<UserSignup> {
         UserModel userModel = UserModel(
             uid: user.uid,
             lastActive: '',
-            
+          isOnline: false,
             name: _nameController.text,
             phone: _numberController.text,
             email: _emailController.text,
