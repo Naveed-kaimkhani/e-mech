@@ -3,7 +3,7 @@ import 'package:e_mech/data/models/firebase_messaging_repo.dart';
 import 'package:e_mech/data/models/message.dart';
 import 'package:e_mech/domain/entities/seller_model.dart';
 import 'package:e_mech/presentation/widgets/profile_pic.dart';
-import 'package:e_mech/presentation/widgets/user_screen_widget/userside_chat_screen_.dart';
+import 'package:e_mech/presentation/user_screens/userside_chat_screen_.dart';
 import 'package:e_mech/style/custom_text_style.dart';
 import 'package:e_mech/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../main.dart';
 import '../../../utils/date_utils.dart';
-import '../../SellerSideChatScreen.dart';
+import '../../seller_screens/SellerSideChatScreen.dart';
 
 //card to represent a single user in home screen
 class ChatUserCard extends StatefulWidget {

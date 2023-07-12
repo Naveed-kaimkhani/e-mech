@@ -3,7 +3,7 @@ import 'dart:ui' as ui;
 import 'package:custom_info_window/custom_info_window.dart';
 import 'package:e_mech/data/firebase_user_repository.dart';
 import 'package:e_mech/domain/entities/request_model.dart';
-import 'package:e_mech/presentation/SellerSideChatScreen.dart';
+import 'package:e_mech/presentation/seller_screens/SellerSideChatScreen.dart';
 import 'package:e_mech/presentation/seller_screens/seller_navigation.dart';
 import 'package:e_mech/presentation/seller_screens/tracing_screen_bottonnavigation.dart';
 import 'package:e_mech/presentation/widgets/seller_screen_widget/ride_cancel_popup.dart';

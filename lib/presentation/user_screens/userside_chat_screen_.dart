@@ -1,28 +1,27 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:e_mech/data/models/firebase_messaging_repo.dart';
-import 'package:e_mech/domain/entities/request_model.dart';
-import 'package:e_mech/domain/entities/user_model.dart';
-import 'package:e_mech/presentation/user_screens/shimmer_effect_for_chathomepage.dart';
-import 'package:e_mech/presentation/widgets/profile_pic.dart';
+import 'package:e_mech/presentation/widgets/message_card.dart';
+import 'package:e_mech/style/styling.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
-import '../data/models/message.dart';
-import '../domain/entities/seller_model.dart';
-import '../main.dart';
-import '../utils/date_utils.dart';
+import '../../data/models/message.dart';
+import '../../domain/entities/seller_model.dart';
+import '../../main.dart';
+import '../widgets/profile_pic.dart';
 
-class SellerSideChatScreen extends StatefulWidget {
-  final RequestModel user;
+class UserSideChatScreen extends StatefulWidget {
+  final SellerModel user;
 
-  const SellerSideChatScreen({super.key, required this.user});
+  const UserSideChatScreen({super.key, required this.user});
 
   @override
-  State<SellerSideChatScreen> createState() => _SellerSideChatScreenState();
+  State<UserSideChatScreen> createState() => _UserSideChatScreenState();
 }
 
-class _SellerSideChatScreenState extends State<SellerSideChatScreen> {
+class _UserSideChatScreenState extends State<UserSideChatScreen> {
   //for storing all messages
   List<Message> _list = [];
 
@@ -52,6 +51,7 @@ class _SellerSideChatScreenState extends State<SellerSideChatScreen> {
           child: Scaffold(
             //app bar
             appBar: AppBar(
+              backgroundColor: Styling.primaryColor,
               automaticallyImplyLeading: false,
               flexibleSpace: _appBar(),
             ),
@@ -63,13 +63,12 @@ class _SellerSideChatScreenState extends State<SellerSideChatScreen> {
               children: [
                 Expanded(
                   child: StreamBuilder(
-                    stream: FirebaseMessagingRepo.getAllMessages(
-                        widget.user.senderUid!),
+                    stream:
+                        FirebaseMessagingRepo.getAllMessages(widget.user.uid!),
                     builder: (context, snapshot) {
                       switch (snapshot.connectionState) {
                         //if data is loading
                         case ConnectionState.waiting:
-                          return ShimmerEffectForChatHomePage();
                         case ConnectionState.none:
                           return const SizedBox();
 
@@ -89,8 +88,7 @@ class _SellerSideChatScreenState extends State<SellerSideChatScreen> {
                                 padding: EdgeInsets.only(top: mq.height * .01),
                                 physics: const BouncingScrollPhysics(),
                                 itemBuilder: (context, index) {
-                                  return ShimmerEffectForChatHomePage();
-                                  //MessageCard(message: _list[index]);
+                                  return MessageCard(message: _list[index]);
                                 });
                           } else {
                             return const Center(
@@ -146,11 +144,11 @@ class _SellerSideChatScreenState extends State<SellerSideChatScreen> {
           //         builder: (_) => ViewProfileScreen(user: widget.user)));
         },
         child: StreamBuilder(
-            stream: FirebaseMessagingRepo.getUserInfo(widget.user.senderUid!),
+            stream: FirebaseMessagingRepo.getSellerInfo(widget.user.uid!),
             builder: (context, snapshot) {
               final data = snapshot.data?.docs;
               final list =
-                  data?.map((e) => UserModel.fromMap(e.data())).toList() ??
+                  data?.map((e) => SellerModel.fromMap(e.data())).toList() ??
                       [];
 
               return Row(
@@ -158,8 +156,7 @@ class _SellerSideChatScreenState extends State<SellerSideChatScreen> {
                   //back button
                   IconButton(
                       onPressed: () => Navigator.pop(context),
-                      icon:
-                          const Icon(Icons.arrow_back, color: Colors.black54)),
+                      icon: const Icon(Icons.arrow_back, color: Colors.white)),
 
                   //user profile picture
                   ClipRRect(
@@ -167,9 +164,9 @@ class _SellerSideChatScreenState extends State<SellerSideChatScreen> {
                       child: ProfilePic(
                           url: list.isNotEmpty
                               ? list[0].profileImage
-                              : widget.user.senderProfileImage,
-                          height: mq.height * .05,
-                          width: mq.height * .05)),
+                              : widget.user.profileImage,
+                          height: mq.height * .06,
+                          width: mq.height * .06)),
 
                   //for adding some space
                   const SizedBox(width: 10),
@@ -180,10 +177,10 @@ class _SellerSideChatScreenState extends State<SellerSideChatScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       //user name
-                      Text(widget.user.senderName!,
-                          style: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.black87,
+                      Text(widget.user.name!,
+                          style: TextStyle(
+                              fontSize: 22.sp,
+                              color: Colors.white,
                               fontWeight: FontWeight.w500)),
 
                       //for adding some space
@@ -209,6 +206,19 @@ class _SellerSideChatScreenState extends State<SellerSideChatScreen> {
             }));
   }
 
+//last seen time of user
+  // Text(
+  //     list.isNotEmpty
+  //         ? list[0].isOnline
+  //             ? 'Online'
+  //             : MyDateUtil.getLastActiveTime(
+  //                 context: context,
+  //                 lastActive: list[0].lastActive)
+  //         : MyDateUtil.getLastActiveTime(
+  //             context: context,
+  //             lastActive: widget.user.lastActive),
+  //     style: const TextStyle(
+  //         fontSize: 13, color: Colors.black54)),
   // bottom chat input field
   Widget _chatInput() {
     return Padding(
@@ -260,8 +270,8 @@ class _SellerSideChatScreenState extends State<SellerSideChatScreen> {
                           log('Image Path: ${i.path}');
                           setState(() => _isUploading = true);
                           await FirebaseMessagingRepo.sendChatImage(
-                              widget.user.senderUid!,
-                              widget.user.senderDeviceToken!,
+                              widget.user.uid!,
+                              widget.user.deviceToken!,
                               File(i.path));
                           setState(() => _isUploading = false);
                         }
@@ -278,11 +288,12 @@ class _SellerSideChatScreenState extends State<SellerSideChatScreen> {
                         final XFile? image = await picker.pickImage(
                             source: ImageSource.camera, imageQuality: 70);
                         if (image != null) {
+                          log('Image Path: ${image.path}');
                           setState(() => _isUploading = true);
 
                           await FirebaseMessagingRepo.sendChatImage(
-                              widget.user.senderUid!,
-                              widget.user.senderDeviceToken!,
+                              widget.user.uid!,
+                              widget.user.deviceToken!,
                               File(image.path));
                           setState(() => _isUploading = false);
                         }
@@ -304,15 +315,15 @@ class _SellerSideChatScreenState extends State<SellerSideChatScreen> {
                 if (_list.isEmpty) {
                   //on first message (add user to my_user collection of chat user)
                   FirebaseMessagingRepo.sendFirstMessage(
-                      widget.user.senderUid!,
-                      widget.user.senderDeviceToken!,
+                      widget.user.uid!,
+                      widget.user.deviceToken!,
                       _textController.text,
                       Type.text);
                 } else {
                   //simply send message
                   FirebaseMessagingRepo.sendMessage(
-                      widget.user.senderUid!,
-                      widget.user.senderDeviceToken!,
+                      widget.user.uid!,
+                      widget.user.deviceToken!,
                       _textController.text,
                       Type.text);
                 }
