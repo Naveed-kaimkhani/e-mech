@@ -21,11 +21,14 @@ class Services extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
-          ServicesNSettingHeader(text: 'Services Available',icon: Icons.grid_view_rounded,),
+          ServicesNSettingHeader(
+            text: 'Services Available',
+            icon: Icons.grid_view_rounded,
+          ),
           SizedBox(
             height: 10.h,
           ),
-         SettingServicesScreenWidget(
+          SettingServicesScreenWidget(
             text: "Petrol",
             imageURL: Images.petrol,
             routeName: RoutesName.petrolProviders,
@@ -37,10 +40,10 @@ class Services extends StatelessWidget {
             routeName: RoutesName.punctureMaker,
           ),
           k,
-         SettingServicesScreenWidget(
+          SettingServicesScreenWidget(
             text: "General Mechanic",
             imageURL: Images.mechanic_pic,
-            routeName:RoutesName.generalMechanic,
+            routeName: RoutesName.generalMechanic,
           ),
           k,
         ],

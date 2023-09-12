@@ -65,7 +65,7 @@ class _SellerLoginState extends State<SellerLogin> {
         _getSellerDetails();
       } else {
         isLoading(false);
-        //utils.flushBarErrorMessage("Failed to login", context);
+        utils.flushBarErrorMessage("Failed to login", context);
       }
     });
   }

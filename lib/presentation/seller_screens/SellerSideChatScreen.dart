@@ -3,16 +3,13 @@ import 'dart:io';
 import 'package:e_mech/data/models/firebase_messaging_repo.dart';
 import 'package:e_mech/domain/entities/request_model.dart';
 import 'package:e_mech/domain/entities/user_model.dart';
-import 'package:e_mech/presentation/user_screens/shimmer_effect_for_chathomepage.dart';
 import 'package:e_mech/presentation/widgets/circle_progress.dart';
 import 'package:e_mech/presentation/widgets/profile_pic.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../data/models/message.dart';
-import '../../domain/entities/seller_model.dart';
 import '../../main.dart';
-import '../../utils/date_utils.dart';
 import '../widgets/message_card.dart';
 
 class SellerSideChatScreen extends StatefulWidget {

@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_mech/data/firebase_user_repository.dart';
-import 'package:e_mech/presentation/seller_screens/seller_homepage.dart';
 import 'package:e_mech/presentation/seller_screens/seller_navigation.dart';
 import 'package:e_mech/presentation/widgets/auth_button.dart';
 import 'package:e_mech/presentation/widgets/circle_progress.dart';
@@ -14,7 +13,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import '../../domain/entities/seller_model.dart';
 import '../../domain/entities/user_model.dart';
-import '../../navigation_page.dart';
 import '../../providers/seller_provider.dart';
 import '../../style/custom_text_style.dart';
 import '../../utils/storage_services.dart';

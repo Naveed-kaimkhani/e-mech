@@ -1,6 +1,5 @@
 
 import 'package:flutter/material.dart';
-
 import '../widgets/seller_screen_widget/shimmer_effect.dart';
 
 class ShimmerScreen extends StatelessWidget {

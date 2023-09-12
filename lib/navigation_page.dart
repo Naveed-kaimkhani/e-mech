@@ -18,7 +18,6 @@ class _NavigationPageState extends State<NavigationPage> {
   List pages = [
     const UserHomePage(),
     Services(),
-    // Profile(),
     ChatHomePage(),
     Setting(),
   ];

@@ -1,4 +1,4 @@
-import 'package:e_mech/presentation/homie.dart';
+import 'package:e_mech/presentation/seller_screens/selller_signup.dart';
 import 'package:e_mech/providers/all_sellerdata_provider.dart';
 import 'package:e_mech/providers/seller_provider.dart';
 import 'package:e_mech/providers/user_provider.dart';
@@ -58,12 +58,13 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(
               primarySwatch: Colors.blue,
             ),
-            home: const SplashScreen(),
+            home:SplashScreen(),
             onGenerateRoute: Routes.onGenerateRoute,
           ),
         );
       },
       // child:
+
     );
   }
 }

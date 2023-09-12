@@ -57,6 +57,7 @@ class InputField extends StatelessWidget {
             borderSide: const BorderSide(color: Colors.black, width: 1.0),
           ),
           border: InputBorder.none,
+          
           hintText: hint_text,
           hintStyle: TextStyle(
             color: const Color.fromARGB(255, 112, 102, 102),

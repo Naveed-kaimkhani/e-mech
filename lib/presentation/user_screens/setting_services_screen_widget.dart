@@ -24,10 +24,10 @@ class SettingServicesScreenWidget extends StatelessWidget {
           trailing: Icon(Icons.arrow_forward_ios),
         ),
         onTap: () {
-          // Navigator.pushNamed(context, PasswordOption());
+          Navigator.pushNamed(context, routeName);
 
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => PasswordOption()));
+          // Navigator.push(context,
+          //     MaterialPageRoute(builder: (context) => PasswordOption()));
         },
       ),
     );

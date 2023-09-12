@@ -31,9 +31,7 @@ class _SellerSignUpState extends State<SellerSignUp> {
   final FirebaseUserRepository _firebaseUserRepository =
       FirebaseUserRepository();
   final _formKey = GlobalKey<FormState>();
-
   String? service = "fuel";
-
   bool? obsecureText = true;
   bool isLoadingNow = false;
   bool _obsecureText = true;

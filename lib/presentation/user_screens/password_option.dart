@@ -1,4 +1,3 @@
-import 'package:e_mech/presentation/seller_screens/seller_navigation.dart';
 import 'package:e_mech/presentation/widgets/circle_progress.dart';
 import 'package:e_mech/style/styling.dart';
 import 'package:e_mech/utils/utils.dart';

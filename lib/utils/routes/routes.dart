@@ -13,24 +13,20 @@ class Routes {
     switch (settings.name) {
       case RoutesName.sellerLogin:
         return _buildRoute(const SellerLogin(), settings);
-
+      case RoutesName.userLogin:
+        return _buildRoute(const UserLogin(), settings);
       case RoutesName.userSingup:
         return _buildRoute(const UserSignup(), settings);
-
       case RoutesName.sellerSignup:
         return _buildRoute(const SellerSignUp(), settings);
 
-      case RoutesName.userLogin:
-        return _buildRoute(const UserLogin(), settings);
-
+      case RoutesName.punctureMaker:
+        return _buildRoute(const PunctureMaker(), settings);
       case RoutesName.petrolProviders:
         return _buildRoute(const PetrolProviders(), settings);
-
       case RoutesName.generalMechanic:
         return _buildRoute(const GeneralMechanic(), settings);
 
-      case RoutesName.punctureMaker:
-        return _buildRoute(const PunctureMaker(), settings);
       default:
         return _buildRoute(
             const Scaffold(

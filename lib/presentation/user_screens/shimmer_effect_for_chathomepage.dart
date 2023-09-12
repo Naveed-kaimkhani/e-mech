@@ -1,8 +1,5 @@
-
 import 'package:flutter/material.dart';
-
 import '../widgets/seller_screen_widget/shimmer_effect.dart';
-
 class ShimmerEffectForChatHomePage extends StatelessWidget {
   const ShimmerEffectForChatHomePage({
     super.key,
@@ -10,13 +7,12 @@ class ShimmerEffectForChatHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return   SizedBox(
       height: MediaQuery.of(context).size.height,
-      child: ListView.separated(
+       child: ListView.separated(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           separatorBuilder: (context, index) => const Divider(
-                // height: 10.h,
                 color: Colors.white,
                 thickness: 10,
                 indent: 20,

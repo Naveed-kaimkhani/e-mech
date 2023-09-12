@@ -91,7 +91,7 @@ class _UserSignupState extends State<UserSignup> {
         UserModel userModel = UserModel(
             uid: user.uid,
             lastActive: '',
-          isOnline: false,
+            isOnline: false,
             name: _nameController.text,
             phone: _numberController.text,
             email: _emailController.text,
@@ -174,7 +174,7 @@ class _UserSignupState extends State<UserSignup> {
                         children: [
                           Text.rich(TextSpan(
                               text: 'Sign-Up',
-                              style: CustomTextStyle.font_30,
+                              style: CustomTextStyle.font_20,
                               children: <InlineSpan>[
                                 TextSpan(
                                   text: '\nAs a User',

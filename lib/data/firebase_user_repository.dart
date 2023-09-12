@@ -1,7 +1,5 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_mech/data/notification_services.dart';
 import 'package:e_mech/providers/user_provider.dart';
@@ -10,18 +8,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
-
 import '../domain/entities/request_model.dart';
 import '../domain/entities/seller_model.dart';
 import '../domain/entities/user_model.dart';
 import '../domain/repositories/users_repository.dart';
 import '../providers/all_sellerdata_provider.dart';
 import '../providers/seller_provider.dart';
-import 'models/chat_user.dart';
-import 'models/message.dart';
 
 class FirebaseUserRepository implements UsersRepository {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -32,7 +26,6 @@ class FirebaseUserRepository implements UsersRepository {
       firestore.collection('sellers');
   final Reference _storageReference = FirebaseStorage.instance.ref();
   NotificationServices _notificationServices = NotificationServices();
-  @override
   Future<User?> login(String email, String password, context) async {
     try {
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
@@ -510,6 +503,4 @@ class FirebaseUserRepository implements UsersRepository {
           //  utils.flushBarErrorMessage(error.toString(), context);
         });
   }
-
-
 }

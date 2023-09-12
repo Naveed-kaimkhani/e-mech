@@ -18,6 +18,7 @@ class RequestWidget extends StatefulWidget {
     Key? key,
     required this.requestModel,
   }) : super(key: key);
+
   // bool? isAccepted = false;
   // String text = "Accepted";
   @override
@@ -139,10 +140,10 @@ class _RequestWidgetState extends State<RequestWidget> {
                             // utils.showLoading(context);
                             await FirebaseUserRepository.acceptRequest(
                                 widget.requestModel, context);
-                            await FirebaseUserRepository
-                                .notifyUserOnRequestAccepted(
-                                    widget.requestModel.senderDeviceToken!,
-                                    seller!.name!);
+                            // await FirebaseUserRepository
+                            //     .notifyUserOnRequestAccepted(
+                            //         widget.requestModel.senderDeviceToken!,
+                            //         seller!.name!);
 
                             // ignore: use_build_context_synchronously
                             // utils.toastMessage("Request Accepted");

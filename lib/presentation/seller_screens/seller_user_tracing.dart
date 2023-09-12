@@ -17,7 +17,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
-
 import '../../domain/entities/seller_model.dart';
 import '../../providers/all_sellerdata_provider.dart';
 import '../../providers/seller_provider.dart';
@@ -142,7 +141,7 @@ class _SellerUserTracingState extends State<SellerUserTracing> {
   }
 
   void startRideTimer() {
-    Timer(Duration(hours: 10), () async {
+    Timer(Duration(minutes: 5), () async {
       // Timer expired, cancel the ride and assign to another rider
       int initialDistance = getDistancebtwRiderNSeller(
               sourceLocation!.latitude, sourceLocation!.longitude)

@@ -3,11 +3,9 @@ import 'package:e_mech/data/models/firebase_messaging_repo.dart';
 import 'package:e_mech/presentation/widgets/seller_screen_widget/no_data_found_screen.dart';
 import 'package:e_mech/presentation/widgets/user_screen_widget/chat_user_card.dart';
 import 'package:e_mech/style/styling.dart';
-import 'package:e_mech/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:shimmer/shimmer.dart';
 import '../../domain/entities/seller_model.dart';
 import '../../main.dart';
 

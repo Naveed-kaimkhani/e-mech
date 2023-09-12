@@ -1,6 +1,5 @@
 import 'package:e_mech/presentation/user_screens/logout_popup.dart';
 import 'package:e_mech/presentation/user_screens/setting_services_screen_widget.dart';
-import 'package:e_mech/presentation/widgets/seller_screen_widget/ride_cancel_popup.dart';
 import 'package:e_mech/presentation/widgets/user_screen_widget/services_n_setting_header.dart';
 import 'package:e_mech/style/custom_text_style.dart';
 import 'package:e_mech/style/styling.dart';

@@ -1,10 +1,7 @@
 import 'package:e_mech/presentation/seller_screens/shimmer_screen.dart';
-import 'package:e_mech/presentation/widgets/circle_progress.dart';
 import 'package:e_mech/presentation/widgets/seller_screen_widget/request_widget.dart';
-import 'package:e_mech/presentation/widgets/seller_screen_widget/shimmer_effect.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import '../../data/firebase_user_repository.dart';
 import '../../domain/entities/request_model.dart';
