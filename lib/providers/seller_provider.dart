@@ -16,7 +16,6 @@ class SellerProvider with ChangeNotifier {
     _sellerDetails = await StorageService.readSeller();
     notifyListeners();
   }
-
   Future getSellerFromServer(context) async {
     print("getSellerFromServer");
     final FirebaseUserRepository firebaseRepository = FirebaseUserRepository();

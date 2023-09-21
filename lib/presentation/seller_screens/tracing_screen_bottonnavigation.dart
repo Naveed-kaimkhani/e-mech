@@ -1,4 +1,3 @@
-
 import 'package:e_mech/presentation/seller_screens/seller_user_tracing.dart';
 import 'package:e_mech/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -6,20 +5,23 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../style/styling.dart';
 
 class TracingScreenBottomNavigation extends StatelessWidget {
-  const TracingScreenBottomNavigation({
+  TracingScreenBottomNavigation({
     super.key,
     required this.distance,
     required this.halfLength,
-    required this.widget,
+    this.senderAddress,
+    this.senderPhone,
     required this.firstLine,
     // required this.widget,
   });
 
   final double? distance;
   final double halfLength;
-  final SellerUserTracing widget;
+  //  SellerUserTracing? widget;
+  final String? senderAddress;
+  final String? senderPhone;
   final double firstLine;
-  
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -28,8 +30,7 @@ class TracingScreenBottomNavigation extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(40.r),
-            topRight: Radius.circular(40.r)),
+            topLeft: Radius.circular(40.r), topRight: Radius.circular(40.r)),
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.5),
@@ -51,6 +52,8 @@ class TracingScreenBottomNavigation extends StatelessWidget {
             child: Center(
               child: Text(
                 "${(distance! / 1000).toString().substring(0, halfLength.toInt())} km",
+
+                // distance.toString(),
                 style: TextStyle(
                     color: Colors.white,
                     fontSize: 16.sp,
@@ -61,19 +64,12 @@ class TracingScreenBottomNavigation extends StatelessWidget {
           SizedBox(
             height: 7.h,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(
-                Icons.location_on_outlined,
-                color: Styling.primaryColor,
-              ),
-              SizedBox(
-                width: 5.w,
-              ),
-              Text(widget.requestModel.senderAddress!
-                  .substring(0, firstLine.toInt())),
-            ],
+          const Icon(
+            Icons.location_on_outlined,
+            color: Styling.primaryColor,
+          ),
+          SizedBox(
+            width: 5.w,
           ),
           SizedBox(
             height: 4.h,
@@ -94,7 +90,7 @@ class TracingScreenBottomNavigation extends StatelessWidget {
                     color: Colors.white,
                   ),
                   Text(
-                    "Call User",
+                    "Call Mechanic",
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 18,
@@ -104,9 +100,7 @@ class TracingScreenBottomNavigation extends StatelessWidget {
               ),
             ),
             onTap: () {
-              
-              utils.launchphone(
-                  widget.requestModel.senderPhone!, context);
+              utils.launchphone(senderPhone ?? "", context);
             },
           ),
           SizedBox(

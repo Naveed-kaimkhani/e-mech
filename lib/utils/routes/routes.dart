@@ -1,10 +1,15 @@
+import 'dart:developer';
+
 import 'package:e_mech/presentation/auth_screens/seller_auth/seller_login.dart';
 import 'package:e_mech/presentation/auth_screens/user_auth/user_login.dart';
 import 'package:e_mech/presentation/auth_screens/user_auth/user_signup.dart';
 import 'package:e_mech/presentation/seller_screens/selller_signup.dart';
 import 'package:e_mech/presentation/user_screens/GeneralMechanic.dart';
+import 'package:e_mech/presentation/user_screens/contact_us.dart';
+import 'package:e_mech/presentation/user_screens/password_option.dart';
 import 'package:e_mech/presentation/user_screens/petrol_providers.dart';
 import 'package:e_mech/presentation/user_screens/punture_maker.dart';
+import 'package:e_mech/presentation/user_screens/services.dart';
 import 'package:e_mech/utils/routes/routes_name.dart';
 import 'package:flutter/material.dart';
 
@@ -19,13 +24,18 @@ class Routes {
         return _buildRoute(const UserSignup(), settings);
       case RoutesName.sellerSignup:
         return _buildRoute(const SellerSignUp(), settings);
-
+      case RoutesName.passwordOption:
+        return _buildRoute(const PasswordOption(), settings);
+      case RoutesName.services:
+        return _buildRoute(Services(), settings);
       case RoutesName.punctureMaker:
         return _buildRoute(const PunctureMaker(), settings);
       case RoutesName.petrolProviders:
         return _buildRoute(const PetrolProviders(), settings);
       case RoutesName.generalMechanic:
         return _buildRoute(const GeneralMechanic(), settings);
+      case RoutesName.contactUs:
+        return _buildRoute(ContactUs(), settings);
 
       default:
         return _buildRoute(

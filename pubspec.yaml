@@ -63,6 +63,7 @@ dependencies:
   app_settings: ^4.2.0
   emoji_picker_flutter: ^1.6.1
   http: ^0.13.6
+  flutter_svg: ^2.0.7
 dev_dependencies:
   flutter_test:
     sdk: flutter

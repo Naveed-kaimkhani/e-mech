@@ -61,8 +61,10 @@ class SendRequestBttnForSpecificSeller extends StatelessWidget {
                 senderAddress: user.address,
                 senderName: user.name,
                 senderPhone: user.phone,
+                
                 senderDeviceToken: user.deviceToken,
                 senderUid: user.uid,
+                receiverUid: seller.uid,
                 senderProfileImage: user.profileImage,
               );
               await FirebaseUserRepository.sendRequestForSpecificService(

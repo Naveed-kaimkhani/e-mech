@@ -10,5 +10,7 @@ static const String generalMechanic = 'GeneralMechanic';
 static const String sellerNavigation = 'SellerNavigation';
 static const String navigation = 'NavigationPage';
 static const String chat_screen = 'ChatScreen';
+static const String passwordOption = 'PasswordOption';
+static const String services= 'Services';
 
 }

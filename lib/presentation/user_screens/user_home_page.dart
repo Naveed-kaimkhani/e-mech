@@ -104,7 +104,7 @@ class _UserHomePageState extends State<UserHomePage> {
         icon: BitmapDescriptor.fromBytes(icon),
         onTap: () {
           _windowinfoController.addInfoWindow!(
-            SellerInfoWindow(seller: seller),
+            SellerInfoWindow(seller: seller,userLat:user!.lat! ,userLong: user!.long!,),
             LatLng(seller.lat!, seller.long!),
           );
         },

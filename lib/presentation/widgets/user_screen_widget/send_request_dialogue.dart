@@ -206,6 +206,7 @@ class _SendRequestDialogueState extends State<SendRequestDialogue> {
         senderPhone: user.phone,
         senderLat: user.lat,
         senderLong: user.long,
+        // receiverUid: ,
         senderAddress: user.address,
         senderDeviceToken: user.deviceToken,
         sentDate: utils.getCurrentDate(),

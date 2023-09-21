@@ -25,7 +25,7 @@ class SettingServicesScreenWidget extends StatelessWidget {
         ),
         onTap: () {
           Navigator.pushNamed(context, routeName);
-
+         
           // Navigator.push(context,
           //     MaterialPageRoute(builder: (context) => PasswordOption()));
         },

@@ -12,4 +12,6 @@ class Images {
   static const String mechanic_pic = 'assets/mechanic_pic.png';
   static const String petrol = 'assets/petrol.png';
   static const String wheel = 'assets/wheel.png';
+  static const String contactUs = 'assets/contact_us.svg';
+  static const String aboutUs = 'assets/about_us.svg';
 }

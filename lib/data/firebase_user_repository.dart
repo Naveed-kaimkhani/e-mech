@@ -202,10 +202,26 @@ class FirebaseUserRepository implements UsersRepository {
   ) async {
     try {
       for (SellerModel seller in sellers) {
+        RequestModel request = RequestModel(
+        documentId:'',
+        serviceId: utils.getRandomid(),
+        senderUid: utils.currentUserUid,
+        serviceRequired: requestModel.serviceRequired,
+        senderName: requestModel.senderName,
+        senderPhone: requestModel.senderPhone,
+        senderLat: requestModel.senderLat,
+        senderLong: requestModel.senderLong,
+        receiverUid: seller.uid,    //this uid will change on every looop.
+        senderAddress: requestModel.senderAddress,
+        senderDeviceToken: requestModel.senderDeviceToken,
+        sentDate: utils.getCurrentDate(),
+        sentTime: utils.getCurrentTime(),
+        senderProfileImage: requestModel.senderProfileImage);
+    
         final DocumentReference requestRef = await _sellerCollection
             .doc(seller.uid)
             .collection('Request')
-            .add(requestModel.toMap(requestModel));
+            .add(request.toMap(request));
 
         final String documentId = requestRef.id;
 
@@ -374,6 +390,37 @@ class FirebaseUserRepository implements UsersRepository {
     }
   }
 
+  static Stream<List<RequestModel>> getAcceptedRequestsForSenderId(
+      String senderId, context) async* {
+    try {
+      final QuerySnapshot sellersSnapshot =
+          await FirebaseFirestore.instance.collection("sellers").get();
+
+      final List<RequestModel> acceptedRequests = [];
+
+      for (QueryDocumentSnapshot sellerDoc in sellersSnapshot.docs) {
+        final CollectionReference requestCollection =
+            sellerDoc.reference.collection('AcceptedRequest');
+
+        final QuerySnapshot requestSnapshot = await requestCollection
+            .where('senderUid', isEqualTo: senderId)
+            .get();
+
+        final List<RequestModel> models = requestSnapshot.docs
+            .map((docsSnap) => RequestModel.fromMap(docsSnap.data() as dynamic))
+            .toList();
+
+        acceptedRequests.addAll(models);
+      }
+
+      yield acceptedRequests;
+    } catch (e) {
+      // Handle any potential errors here
+      utils.flushBarErrorMessage('Error fetching requests: $e', context);
+      yield []; // Yield an empty list in case of an error
+    }
+  }
+
   static Future<void> deleteRequestFromEverySeller(
       String serviceId, context) async {
     try {
@@ -503,4 +550,13 @@ class FirebaseUserRepository implements UsersRepository {
           //  utils.flushBarErrorMessage(error.toString(), context);
         });
   }
+  
+// Update rider's location in Firestore
+static Future<void> updateRiderLocation(double latitude, double longitude, String rider_id) async{
+  FirebaseFirestore.instance.collection('sellers').doc(rider_id).update({
+    'lat': latitude,
+    'long': longitude,
+    // Add any additional rider information you need to update
+  });
+}
 }

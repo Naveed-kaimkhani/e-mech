@@ -198,8 +198,10 @@ class _SellerLoginState extends State<SellerLogin> {
                         }
                       },
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20.0, top: 40),
+                    SizedBox(
+                      height: 40.h,
+                    ),
+                    Center(
                       child: isLoadingNow
                           ? const CircleProgress()
                           : AuthButton(

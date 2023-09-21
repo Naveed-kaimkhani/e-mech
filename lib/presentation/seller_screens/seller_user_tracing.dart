@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:ui' as ui;
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:custom_info_window/custom_info_window.dart';
 import 'package:e_mech/data/firebase_user_repository.dart';
 import 'package:e_mech/domain/entities/request_model.dart';
@@ -63,7 +64,7 @@ class _SellerUserTracingState extends State<SellerUserTracing> {
       positionStreamSubscription = Geolocator.getPositionStream().listen(
         (Position position) async {
           GoogleMapController controller = await _controller.future;
-
+await    FirebaseUserRepository.updateRiderLocation(position.latitude, position.longitude, utils.currentUserUid);
           setState(() {
             currentLocation = position;
 
@@ -172,7 +173,6 @@ class _SellerUserTracingState extends State<SellerUserTracing> {
     Navigator.pushReplacement(context,
         MaterialPageRoute(builder: (context) => const SellerNavigation()));
   }
-
   @override
   void initState() {
     super.initState();
@@ -207,7 +207,8 @@ class _SellerUserTracingState extends State<SellerUserTracing> {
               bottomNavigationBar: TracingScreenBottomNavigation(
                 distance: distance,
                 halfLength: halfLength,
-                widget: widget,
+                senderAddress: widget.requestModel.senderAddress!,
+                senderPhone: widget.requestModel.senderPhone!,
                 firstLine: firstLine,
               ),
               floatingActionButton: IconButton(

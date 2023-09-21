@@ -23,8 +23,14 @@ class Setting extends StatelessWidget {
           ),
           //  ServicesNSettingHeade(text: 'Setting Available'),
           SizedBox(
-            height: 10.h,
+            height: 20.h,
           ),
+          SettingServicesScreenWidget(
+            text: "Our Services",
+            icon: Icons.work,
+            routeName: "Services",
+          ),
+          k,
           SettingServicesScreenWidget(
             text: "Change Password",
             icon: Icons.password_outlined,
@@ -53,7 +59,7 @@ class Setting extends StatelessWidget {
           ),
           k,
           SizedBox(
-            height: 20.h,
+            height: 30.h,
           ),
           GestureDetector(
             child: Row(

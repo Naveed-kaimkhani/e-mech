@@ -62,7 +62,7 @@ class _UserLoginState extends State<UserLogin> {
         _getUserDetails(user.uid);
       } else {
         isLoading(false);
-        utils.flushBarErrorMessage("Failed to login", context);
+        utils.flushBarErrorMessage("User is null", context);
       }
     });
   }
@@ -188,8 +188,10 @@ class _UserLoginState extends State<UserLogin> {
                         }
                       },
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20.0, top: 40),
+                    SizedBox(
+                      height: 50.h,
+                    ),
+                    Center(
                       child: isLoadingNow
                           ? const CircleProgress()
                           : AuthButton(

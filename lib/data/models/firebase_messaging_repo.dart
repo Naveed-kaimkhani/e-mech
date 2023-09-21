@@ -48,6 +48,12 @@ static Stream<QuerySnapshot<Map<String, dynamic>>> getAllUsers(List<String> user
       .snapshots();
 }
 
+static Stream<QuerySnapshot<Map<String, dynamic>>> getAllSellers(List<String> userIds) {
+  return firestore
+      .collection('sellers')
+      .where(FieldPath.documentId, whereIn: userIds)
+      .snapshots();
+}
 
   // useful for getting conversation id
   static String getConversationID(String id) =>

@@ -1,8 +1,11 @@
 import 'package:e_mech/presentation/widgets/user_screen_widget/call_widget.dart';
 import 'package:e_mech/presentation/widgets/user_screen_widget/send_request_to_specific_seller.dart';
 import 'package:e_mech/style/styling.dart';
+import 'package:e_mech/utils/utils.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:geolocator/geolocator.dart';
 
 import '../../../domain/entities/seller_model.dart';
 import '../../../style/custom_text_style.dart';
@@ -10,8 +13,13 @@ import '../profile_pic.dart';
 
 class SellerInfoWindow extends StatefulWidget {
   SellerModel seller;
-
-  SellerInfoWindow({super.key, required this.seller});
+  double userLat;
+  double userLong;
+  SellerInfoWindow(
+      {super.key,
+      required this.seller,
+      required this.userLat,
+      required this.userLong});
 
   @override
   State<SellerInfoWindow> createState() => _SellerInfoWindowState();
@@ -20,17 +28,28 @@ class SellerInfoWindow extends StatefulWidget {
 class _SellerInfoWindowState extends State<SellerInfoWindow> {
   bool isRequestSend = false;
 
+  double getDistancebtwRiderNSeller(
+    double riderLat,
+    double riderLong,
+  ) {
+    return Geolocator.distanceBetween(
+        riderLat, riderLong, widget.seller.lat!, widget.seller.long!);
+  }
+
+  // "${(distance! / 1000).toString().substring(0, halfLength.toInt())} km"
   @override
   Widget build(BuildContext context) {
+    double distance =
+        getDistancebtwRiderNSeller(widget.userLat, widget.userLong);
+
     int midIndex =
         widget.seller.address!.length ~/ 2; // Calculate the middle index
-
     String address = widget.seller.address!.substring(0, midIndex);
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: EdgeInsets.all(8.w),
       child: Container(
         padding:
-            const EdgeInsets.only(left: 10, top: 10, bottom: 10, right: 10),
+            EdgeInsets.only(left: 10.w, top: 10.h, bottom: 10.h, right: 10.w),
         // padding: EdgeInsets.all(20),
         height: 150.h,
         width: 300.w,
@@ -74,13 +93,37 @@ class _SellerInfoWindowState extends State<SellerInfoWindow> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          // widget.requestModel!.senderName!,
-                          widget.seller.name ?? "No Sender Name",
-                          style: CustomTextStyle.font_20,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          // crossAxisAlignment: CrossAxisAlignment.,
+                          children: [
+                            Text(
+                              // widget.requestModel!.senderName!,
+                              widget.seller.name ?? "No Sender Name",
+                              style: CustomTextStyle.font_20,
+                            ),
+                            SizedBox(
+                              width: 50.w,
+                            ),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.mode_of_travel_rounded,
+                                  color: Styling.primaryColor,
+                                ),
+                                SizedBox(
+                                  width: 5.w,
+                                ),
+                                Text(
+                                  "${(distance / 1000).toString().substring(0, distance.toString().length ~/ 3)} km",
+                                  style: TextStyle(),
+                                ),
+                              ],
+                            )
+                          ],
                         ),
-                        const SizedBox(
-                          height: 5,
+                        SizedBox(
+                          height: 5.h,
                         ),
                         Row(
                           children: [
@@ -124,9 +167,9 @@ class _SellerInfoWindowState extends State<SellerInfoWindow> {
                         ),
                         Row(
                           children: [
-                            const CircleAvatar(
+                            CircleAvatar(
                               backgroundColor: Styling.primaryColor,
-                              radius: 5,
+                              radius: 5.r,
                             ),
                             SizedBox(
                               width: 5.w,

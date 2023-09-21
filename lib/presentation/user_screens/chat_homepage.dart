@@ -84,52 +84,57 @@ class _ChatHomePageState extends State<ChatHomePage> {
                 //if some or all data is loaded then show it
                 case ConnectionState.active:
                 case ConnectionState.done:
-                  return StreamBuilder(
-                    stream: FirebaseMessagingRepo.getAllUsers(
-                        snapshot.data?.docs.map((e) => e.id).toList() ?? []),
+                  return snapshot.data!.docs.isNotEmpty
+                      ? StreamBuilder(
+                          stream: FirebaseMessagingRepo.getAllUsers(
+                              snapshot.data?.docs.map((e) => e.id).toList() ??
+                                  []),
 
-                    //get only those user, who's ids are provided
-                    builder: (context, snapshot) {
-                      print("users");
-                      print(snapshot.data);
-                      switch (snapshot.connectionState) {
-                        //if data is loading
-                        case ConnectionState.waiting:
-                        case ConnectionState.none:
-                        // return const Center(
-                        //     child: CircularProgressIndicator());
+                          //get only those user, who's ids are provided
+                          builder: (context, snapshot) {
+                            print("users");
+                            print(snapshot.data);
+                            switch (snapshot.connectionState) {
+                              //if data is loading
+                              case ConnectionState.waiting:
+                              case ConnectionState.none:
+                              // return const Center(
+                              //     child: CircularProgressIndicator());
 
-                        //if some or all data is loaded then show it
-                        case ConnectionState.active:
-                        case ConnectionState.done:
-                          final data = snapshot.data?.docs;
-                          _list = data
-                                  ?.map((e) => SellerModel.fromMap(e.data()))
-                                  .toList() ??
-                              [];
+                              //if some or all data is loaded then show it
+                              case ConnectionState.active:
+                              case ConnectionState.done:
+                                final data = snapshot.data?.docs;
+                                _list = data
+                                        ?.map((e) =>
+                                            SellerModel.fromMap(e.data()))
+                                        .toList() ??
+                                    [];
 
-                          if (_list.isNotEmpty) {
-                            return ListView.builder(
-                                itemCount: _isSearching
-                                    ? _searchList.length
-                                    : _list.length,
-                                padding: EdgeInsets.only(top: mq.height * .01),
-                                physics: const BouncingScrollPhysics(),
-                                itemBuilder: (context, index) {
-                                  return ChatUserCard(
-                                      user: _isSearching
-                                          ? _searchList[index]
-                                          : _list[index]);
-                                });
-                          } else {
-                            return Center(
-                              child:
-                                  NoDataFoundScreen(text: "No Messages Found"),
-                            );
-                          }
-                      }
-                    },
-                  );
+                                if (_list.isNotEmpty) {
+                                  return ListView.builder(
+                                      itemCount: _isSearching
+                                          ? _searchList.length
+                                          : _list.length,
+                                      padding:
+                                          EdgeInsets.only(top: mq.height * .01),
+                                      physics: const BouncingScrollPhysics(),
+                                      itemBuilder: (context, index) {
+                                        return ChatUserCard(
+                                            user: _isSearching
+                                                ? _searchList[index]
+                                                : _list[index]);
+                                      });
+                                } else {
+                                  return Center(
+                                    child: NoDataFoundScreen(
+                                        text: "No Messages Found"),
+                                  );
+                                }
+                            }
+                          },
+                        )
+                      : Center(child: NoDataFoundScreen(text: "No User Found"));
               }
             },
           ),

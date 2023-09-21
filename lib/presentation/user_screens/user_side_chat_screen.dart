@@ -88,7 +88,7 @@ class _SellerSideChatScreenState extends State<SellerSideChatScreen> {
                                 padding: EdgeInsets.only(top: mq.height * .01),
                                 physics: const BouncingScrollPhysics(),
                                 itemBuilder: (context, index) {
-                                  return MessageCard(message: _list[index]);
+                                 return   MessageCard(message: _list[index]);
                                 });
                           } else {
                             return const Center(
@@ -148,7 +148,8 @@ class _SellerSideChatScreenState extends State<SellerSideChatScreen> {
             builder: (context, snapshot) {
               final data = snapshot.data?.docs;
               final list =
-                  data?.map((e) => UserModel.fromMap(e.data())).toList() ?? [];
+                  data?.map((e) => UserModel.fromMap(e.data())).toList() ??
+                      [];
               return Row(
                 children: [
                   //back button
@@ -256,8 +257,8 @@ class _SellerSideChatScreenState extends State<SellerSideChatScreen> {
                           log('Image Path: ${i.path}');
                           setState(() => _isUploading = true);
                           await FirebaseMessagingRepo.sendChatImage(
-                              widget.user.senderUid!,
-                              widget.user.senderDeviceToken!,
+                              widget.user.receiverUid!,
+                              widget.user.receiverUid!,
                               File(i.path));
                           setState(() => _isUploading = false);
                         }
@@ -277,7 +278,7 @@ class _SellerSideChatScreenState extends State<SellerSideChatScreen> {
                           setState(() => _isUploading = true);
 
                           await FirebaseMessagingRepo.sendChatImage(
-                              widget.user.senderUid!,
+                              widget.user.receiverUid!,
                               widget.user.senderDeviceToken!,
                               File(image.path));
                           setState(() => _isUploading = false);
@@ -300,14 +301,14 @@ class _SellerSideChatScreenState extends State<SellerSideChatScreen> {
                 if (_list.isEmpty) {
                   //on first message (add user to my_user collection of chat user)
                   FirebaseMessagingRepo.sendFirstMessage(
-                      widget.user.senderUid!,
+                      widget.user.receiverUid!,
                       widget.user.senderDeviceToken!,
                       _textController.text,
                       Type.text);
                 } else {
                   //simply send message
                   FirebaseMessagingRepo.sendMessage(
-                      widget.user.senderUid!,
+                      widget.user.receiverUid!,
                       widget.user.senderDeviceToken!,
                       _textController.text,
                       Type.text);

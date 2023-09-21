@@ -1,5 +1,6 @@
 import 'package:e_mech/presentation/user_screens/chat_homepage.dart';
 import 'package:e_mech/presentation/user_screens/profile.dart';
+import 'package:e_mech/presentation/user_screens/rider_tracking.dart';
 import 'package:e_mech/presentation/user_screens/services.dart';
 import 'package:e_mech/presentation/user_screens/setting.dart';
 import 'package:e_mech/presentation/user_screens/user_home_page.dart';
@@ -17,7 +18,7 @@ class NavigationPage extends StatefulWidget {
 class _NavigationPageState extends State<NavigationPage> {
   List pages = [
     const UserHomePage(),
-    Services(),
+      RiderTracking(),
     ChatHomePage(),
     Setting(),
   ];

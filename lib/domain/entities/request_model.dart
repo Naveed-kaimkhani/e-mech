@@ -1,6 +1,7 @@
 class RequestModel {
   // String? receiverUid;
   String? senderUid;
+  String? receiverUid;
   String? documentId;
   String? senderName;
   String? senderPhone;
@@ -23,6 +24,7 @@ class RequestModel {
     this.senderAddress,
     this.senderDeviceToken,
     this.senderUid,
+    this.receiverUid,
     this.serviceRequired,
     this.senderName,
     this.sentDate,
@@ -36,6 +38,7 @@ class RequestModel {
     // data['receiverUid'] = request.receiverUid;
     data['documentId'] = request.documentId;
     data['senderUid'] = request.senderUid;
+    data['receiverUid'] = request.receiverUid;
     data['serviceRequired'] = request.serviceRequired;
     data['senderLat'] = request.senderLat;
     data['senderLong'] = request.senderLong;
@@ -57,6 +60,7 @@ class RequestModel {
     serviceRequired = mapData['serviceRequired'];
     senderName = mapData['senderName'];
     senderUid = mapData['senderUid'];
+    receiverUid = mapData['receiverUid'];
     senderLat = mapData['senderLat'];
     senderLong = mapData['senderLong'];
     senderPhone = mapData['senderPhone'];
