@@ -1,5 +1,6 @@
 import 'package:e_mech/presentation/seller_screens/seller_user_tracing.dart';
 import 'package:e_mech/presentation/widgets/profile_pic.dart';
+import 'package:e_mech/presentation/widgets/seller_screen_widget/invoice.dart';
 import 'package:e_mech/presentation/widgets/user_screen_widget/call_widget.dart';
 import 'package:e_mech/style/custom_text_style.dart';
 import 'package:e_mech/style/styling.dart';
@@ -62,6 +63,24 @@ class _AcceptedRequestWidgetState extends State<AcceptedRequestWidget> {
                     // widget.requestModel!.senderName!,
                     widget.requestModel.senderName ?? "No Sender Name",
                     style: CustomTextStyle.font_20,
+                  ),
+                ],
+              ),
+              SizedBox(
+                width: 20.w,
+              ),
+              Row(
+                children: [
+                  Icon(
+                    Icons.mode_of_travel_rounded,
+                    color: Styling.primaryColor,
+                  ),
+                  SizedBox(
+                    width: 3.w,
+                  ),
+                  Text(
+                    "${(widget.requestModel.distance ?? 0 / 1000).toString().substring(0, widget.requestModel.distance.toString().length ~/ 3)} km",
+                    style: TextStyle(),
                   ),
                 ],
               ),
@@ -154,8 +173,15 @@ class MarkCompleted extends StatelessWidget {
         color: Styling.primaryColor,
       ),
       onTap: () async {
-        await FirebaseUserRepository.deleteRequestDocument(
-            "AcceptedRequest", widget.requestModel.documentId!, context);
+        // await FirebaseUserRepository.deleteRequestDocument(
+        //     "AcceptedRequest", widget.requestModel.documentId!, context);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => InvoiceScreen(
+                    requestModel: widget.requestModel,
+                  )),
+        );
       },
     );
   }

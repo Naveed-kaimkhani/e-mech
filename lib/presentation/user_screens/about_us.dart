@@ -1,3 +1,4 @@
+import 'package:e_mech/style/custom_text_style.dart';
 import 'package:e_mech/style/images.dart';
 import 'package:e_mech/style/styling.dart';
 import 'package:flutter/material.dart';
@@ -6,8 +7,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../widgets/user_screen_widget/services_n_setting_header.dart';
 
-class ContactUs extends StatelessWidget {
-  ContactUs({Key? key}) : super(key: key);
+class AboutUs extends StatelessWidget {
+  AboutUs({Key? key}) : super(key: key);
   SizedBox k = SizedBox(
     height: 20.h,
   );
@@ -17,9 +18,9 @@ class ContactUs extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       appBar: AppBar(
+      appBar: AppBar(
         backgroundColor: Styling.primaryColor,
-        title: Text('Contact Us'),
+        title: Text('About Us'),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -27,41 +28,21 @@ class ContactUs extends StatelessWidget {
         children: [
           // BackButton(),
           SvgPicture.asset(
-            Images.aboutUs,
+            Images.contactUs,
             // color: Colors.white,
             height: 186.h,
             width: 268.w,
           ),
-          k,
-          Icon(
-            Icons.location_on_outlined,
-            color: Styling.primaryColor,
-          ),
           l,
+
           Text(
-            "Our Office Located near the Mehran University of Engineering and Technology,\n and Society, Jamshoro ",
+            "Our Mission",
+            style: CustomTextStyle.font_20_red,
             textAlign: TextAlign.center,
           ),
-          k,
-          Icon(
-            Icons.phone,
-            color: Styling.primaryColor,
-          ),
-          l,
-          Center(
-            child: Text(
-              "03361832730",
-              textAlign: TextAlign.center,
-            ),
-          ),
-          k,
-          Icon(
-            Icons.mail,
-            color: Styling.primaryColor,
-          ),
           l,
           Text(
-            "EMECH.CUSTOMERCARE@GMAIL.COM",
+            "At E-Mech, our mission is to ensure the timely help of our customer with proper safety. We want to let people allow travel without any hassle. Our service providers will be there for you at any emergency breakdown of yoir vehicle.",
             textAlign: TextAlign.center,
           ),
         ],

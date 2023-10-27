@@ -13,8 +13,8 @@ class RequestModel {
   double? senderLat;
   double? senderLong;
   String? senderProfileImage;
-  
   String? senderAddress;
+  String? distance;
   RequestModel({
     // this.receiverUid,
     this.documentId,
@@ -31,6 +31,7 @@ class RequestModel {
     this.sentTime,
     this.senderProfileImage,
     this.senderPhone,
+    this.distance,
   });
 
   Map<String, dynamic> toMap(RequestModel request) {
@@ -49,6 +50,7 @@ class RequestModel {
     data['senderProfileImage'] = request.senderProfileImage;
     data['sentDate'] = request.sentDate;
     data['sentTime'] = request.sentTime;
+    data['distance'] = request.distance;
     data['senderDeviceToken'] = request.senderDeviceToken;
 
     return data;
@@ -69,6 +71,7 @@ class RequestModel {
     senderProfileImage = mapData['senderProfileImage'];
     sentDate = mapData['sentDate'];
     sentTime = mapData['sentTime'];
+    distance = mapData['distance'];
     senderDeviceToken = mapData['senderDeviceToken'];
   }
 

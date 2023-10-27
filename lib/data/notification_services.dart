@@ -1,16 +1,9 @@
-
-
 import 'dart:io';
-import 'dart:math';
-
-
 import 'package:e_mech/utils/routes/routes_name.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:path_provider/path_provider.dart';
 
 
 class NotificationServices {
@@ -53,10 +46,10 @@ class NotificationServices {
       AndroidNotification? android = message.notification!.android ;
 
       if (kDebugMode) {
-        print("notifications title:${notification!.title}");
-        print("notifications body:${notification.body}");
-        print('count:${android!.count}');
-        print('data:${message.data.toString()}');
+        // print("notifications title:${notification!.title}");
+        // print("notifications body:${notification.body}");
+        // print('count:${android!.count}');
+        // print('data:${message.data.toString()}');
       }
 
       if(Platform.isIOS){
@@ -157,6 +150,7 @@ class NotificationServices {
     String? refreshedToken;
     messaging.onTokenRefresh.listen((token) {
       refreshedToken = token;
+          
           });
       return refreshedToken ?? null;
   }

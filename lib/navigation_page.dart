@@ -1,7 +1,5 @@
 import 'package:e_mech/presentation/user_screens/chat_homepage.dart';
-import 'package:e_mech/presentation/user_screens/profile.dart';
 import 'package:e_mech/presentation/user_screens/rider_tracking.dart';
-import 'package:e_mech/presentation/user_screens/services.dart';
 import 'package:e_mech/presentation/user_screens/setting.dart';
 import 'package:e_mech/presentation/user_screens/user_home_page.dart';
 import 'package:e_mech/style/styling.dart';

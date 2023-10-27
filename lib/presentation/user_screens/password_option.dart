@@ -75,8 +75,9 @@ class _PasswordOptionState extends State<PasswordOption> {
         isLoadingg(false);
         // String errorMessage = utils.getFriendlyErrorMessage(
         //     error); // Get a user-friendly error message
-          
-        utils.flushBarErrorMessage(error.toString(), context); // Handle the erro
+
+        utils.flushBarErrorMessage(
+            error.toString(), context); // Handle the erro
       });
     } catch (e) {
       isLoadingg(false);
@@ -97,6 +98,10 @@ class _PasswordOptionState extends State<PasswordOption> {
     UserModel? user = Provider.of<UserProvider>(context, listen: false).user;
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Styling.primaryColor,
+          title: Text('Change Password'),
+        ),
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
           child: Padding(

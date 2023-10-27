@@ -1,4 +1,5 @@
 import 'package:e_mech/presentation/seller_screens/selller_signup.dart';
+import 'package:e_mech/presentation/widgets/seller_screen_widget/invoice.dart';
 import 'package:e_mech/providers/all_sellerdata_provider.dart';
 import 'package:e_mech/providers/seller_provider.dart';
 import 'package:e_mech/providers/user_provider.dart';
@@ -59,6 +60,7 @@ class MyApp extends StatelessWidget {
               primarySwatch: Colors.blue,
             ),
             home:SplashScreen(),
+            
             onGenerateRoute: Routes.onGenerateRoute,
           ),
         );

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_mech/data/models/transaction.dart';
 import 'package:e_mech/data/notification_services.dart';
 import 'package:e_mech/providers/user_provider.dart';
 import 'package:e_mech/utils/utils.dart';
@@ -22,6 +23,8 @@ class FirebaseUserRepository implements UsersRepository {
   static final FirebaseFirestore firestore = FirebaseFirestore.instance;
   static final CollectionReference _userCollection =
       firestore.collection('users');
+  static final CollectionReference _transactionCollection =
+      firestore.collection('transactions');
   static final CollectionReference _sellerCollection =
       firestore.collection('sellers');
   final Reference _storageReference = FirebaseStorage.instance.ref();
@@ -122,22 +125,15 @@ class FirebaseUserRepository implements UsersRepository {
       return seller;
     }
     return null;
+  }
 
-    // else {
-    //   // utils.flushBarErrorMessage("User not found", context)
-    //   utils.toastMessage("No user found");
-    //   Navigator.push
-    // }
+  static Future<void> saveTransactionDataToFirestore(
+      TransactionModel transaction) async {
+    await _transactionCollection.add(transaction.toMap(transaction));
   }
 
   static Future<void> acceptRequest(RequestModel requestModel, context) async {
     try {
-      // Add the request to the "AcceptedRequest" subcollection of the current seller
-      // await _sellerCollection
-      //     .doc(utils.currentUserUid)
-      //     .collection('AcceptedRequest')
-      //     .add(requestModel.toMap(requestModel));
-
       final DocumentReference requestRef = await _sellerCollection
           .doc(utils.currentUserUid)
           .collection('AcceptedRequest')
@@ -203,21 +199,21 @@ class FirebaseUserRepository implements UsersRepository {
     try {
       for (SellerModel seller in sellers) {
         RequestModel request = RequestModel(
-        documentId:'',
-        serviceId: utils.getRandomid(),
-        senderUid: utils.currentUserUid,
-        serviceRequired: requestModel.serviceRequired,
-        senderName: requestModel.senderName,
-        senderPhone: requestModel.senderPhone,
-        senderLat: requestModel.senderLat,
-        senderLong: requestModel.senderLong,
-        receiverUid: seller.uid,    //this uid will change on every looop.
-        senderAddress: requestModel.senderAddress,
-        senderDeviceToken: requestModel.senderDeviceToken,
-        sentDate: utils.getCurrentDate(),
-        sentTime: utils.getCurrentTime(),
-        senderProfileImage: requestModel.senderProfileImage);
-    
+            documentId: '',
+            serviceId: utils.getRandomid(),
+            senderUid: utils.currentUserUid,
+            serviceRequired: requestModel.serviceRequired,
+            senderName: requestModel.senderName,
+            senderPhone: requestModel.senderPhone,
+            senderLat: requestModel.senderLat,
+            senderLong: requestModel.senderLong,
+            receiverUid: seller.uid, //this uid will change on every looop.
+            senderAddress: requestModel.senderAddress,
+            senderDeviceToken: requestModel.senderDeviceToken,
+            sentDate: utils.getCurrentDate(),
+            sentTime: utils.getCurrentTime(),
+            senderProfileImage: requestModel.senderProfileImage);
+
         final DocumentReference requestRef = await _sellerCollection
             .doc(seller.uid)
             .collection('Request')
@@ -271,11 +267,27 @@ class FirebaseUserRepository implements UsersRepository {
     }
   }
 
+  static Future<void> updateUserDeviceToken(String token, String doc) async {
+    NotificationServices noti = NotificationServices();
+    String to = await noti.getDeviceToken();
+    if (to != token) {
+      await FirebaseFirestore.instance
+          .collection(doc)
+          .doc(utils.currentUserUid)
+          .update({
+        'deviceToken': to,
+      });
+    }
+  }
+
   Future<void> loadDataOnAppInit(context) async {
     try {
       final value = await getUserCurrentLocation(context);
       String address =
           await utils.getAddressFromLatLng(value!.latitude, value.longitude);
+
+      UserModel? seller =
+          Provider.of<UserProvider>(context, listen: false).user;
       String? refreshedToken = await _notificationServices.isTokenRefresh();
       await addlatLongToFirebaseDocument(
         value.latitude,
@@ -291,6 +303,8 @@ class FirebaseUserRepository implements UsersRepository {
       await Provider.of<AllSellerDataProvider>(context, listen: false)
           .getSellersDataFromServer(context);
 
+      await FirebaseUserRepository.updateUserDeviceToken(
+          seller!.deviceToken!, 'users');
       // Navigate to the home screen after loading the data
     } catch (error) {
       utils.flushBarErrorMessage(error.toString(), context);
@@ -304,6 +318,7 @@ class FirebaseUserRepository implements UsersRepository {
       String address =
           await utils.getAddressFromLatLng(value!.latitude, value.longitude);
       String? refreshedToken = await _notificationServices.isTokenRefresh();
+
       await addlatLongToFirebaseDocument(
         value.latitude,
         value.longitude,
@@ -317,6 +332,10 @@ class FirebaseUserRepository implements UsersRepository {
 
       await Provider.of<AllSellerDataProvider>(context, listen: false)
           .getSellersDataFromServer(context);
+      SellerModel? user =
+          Provider.of<SellerProvider>(context, listen: false).seller;
+      await FirebaseUserRepository.updateUserDeviceToken(
+          user!.deviceToken!, 'sellers');
 
       // Navigate to the home screen after loading the data
     } catch (error) {
@@ -417,6 +436,32 @@ class FirebaseUserRepository implements UsersRepository {
     } catch (e) {
       // Handle any potential errors here
       utils.flushBarErrorMessage('Error fetching requests: $e', context);
+      yield []; // Yield an empty list in case of an error
+    }
+  }
+
+  static Stream<List<TransactionModel>> getTransactionByReceiverId(
+      context) async* {
+    try {
+      final QuerySnapshot transactionsSnapshot = await FirebaseFirestore
+          .instance
+          .collection("transactions")
+          .where('userId',
+              isEqualTo: utils.currentUserUid) // Filter by receiverId
+          .get();
+
+      final List<TransactionModel> transactions = [];
+
+      for (QueryDocumentSnapshot transactionDoc in transactionsSnapshot.docs) {
+        final TransactionModel transaction =
+            TransactionModel.fromMap(transactionDoc.data() as dynamic);
+        transactions.add(transaction);
+      }
+
+      yield transactions;
+    } catch (e) {
+      // Handle any potential errors here
+      utils.flushBarErrorMessage('Error fetching transactions: $e', context);
       yield []; // Yield an empty list in case of an error
     }
   }
@@ -550,13 +595,14 @@ class FirebaseUserRepository implements UsersRepository {
           //  utils.flushBarErrorMessage(error.toString(), context);
         });
   }
-  
+
 // Update rider's location in Firestore
-static Future<void> updateRiderLocation(double latitude, double longitude, String rider_id) async{
-  FirebaseFirestore.instance.collection('sellers').doc(rider_id).update({
-    'lat': latitude,
-    'long': longitude,
-    // Add any additional rider information you need to update
-  });
-}
+  static Future<void> updateRiderLocation(
+      double latitude, double longitude, String rider_id) async {
+    FirebaseFirestore.instance.collection('sellers').doc(rider_id).update({
+      'lat': latitude,
+      'long': longitude,
+      // Add any additional rider information you need to update
+    });
+  }
 }

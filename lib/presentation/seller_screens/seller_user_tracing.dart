@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:ui' as ui;
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:custom_info_window/custom_info_window.dart';
 import 'package:e_mech/data/firebase_user_repository.dart';
 import 'package:e_mech/domain/entities/request_model.dart';
@@ -267,7 +266,7 @@ await    FirebaseUserRepository.updateRiderLocation(position.latitude, position.
                       ),
                     },
                     onMapCreated: (GoogleMapController controller) {
-                      _controller.complete(controller);
+                      _controller.complete(controller); 
                       _windowinfoController.googleMapController = controller;
                     },
                     onTap: (position) {

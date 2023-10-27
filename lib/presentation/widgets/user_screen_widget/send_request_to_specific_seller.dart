@@ -17,12 +17,14 @@ class SendRequestBttnForSpecificSeller extends StatelessWidget {
     required this.height,
     required this.widht,
     required this.textSize,
+    required this.distance,
   });
 
   final SellerModel seller;
   double height;
   double widht;
   double textSize;
+  String distance;
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +63,7 @@ class SendRequestBttnForSpecificSeller extends StatelessWidget {
                 senderAddress: user.address,
                 senderName: user.name,
                 senderPhone: user.phone,
-                
+                distance: distance,
                 senderDeviceToken: user.deviceToken,
                 senderUid: user.uid,
                 receiverUid: seller.uid,

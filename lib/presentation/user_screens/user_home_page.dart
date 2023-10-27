@@ -63,8 +63,11 @@ class _UserHomePageState extends State<UserHomePage> {
         );
         animateCamera();
       });
-    } catch (error) {
-      utils.flushBarErrorMessage(error.toString(), context);
+    } catch (error)
+     {
+      print("erorrrrrrrrrrrrrrrrrrrrrr");
+      print(error);
+      // utils.flushBarErrorMessage(error.toString(), context);
     }
   }
 

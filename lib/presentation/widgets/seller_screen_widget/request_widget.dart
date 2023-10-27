@@ -73,6 +73,24 @@ class _RequestWidgetState extends State<RequestWidget> {
                   ),
                 ],
               ),
+              SizedBox(
+                width: 20.w,
+              ),
+              Row(
+                children: [
+                  Icon(
+                    Icons.mode_of_travel_rounded,
+                    color: Styling.primaryColor,
+                  ),
+                  SizedBox(
+                    width: 3.w,
+                  ),
+                  Text(
+                    "${(widget.requestModel.distance ?? 0 / 1000).toString().substring(0, widget.requestModel.distance.toString().length ~/ 3)} km",
+                    style: TextStyle(),
+                  ),
+                ],
+              ),
               CallWidget(
                 num: widget.requestModel.senderPhone!,
                 context: context,
@@ -140,13 +158,6 @@ class _RequestWidgetState extends State<RequestWidget> {
                             // utils.showLoading(context);
                             await FirebaseUserRepository.acceptRequest(
                                 widget.requestModel, context);
-                            // await FirebaseUserRepository
-                            //     .notifyUserOnRequestAccepted(
-                            //         widget.requestModel.senderDeviceToken!,
-                            //         seller!.name!);
-
-                            // ignore: use_build_context_synchronously
-                            // utils.toastMessage("Request Accepted");
                           },
                         )
                       ],

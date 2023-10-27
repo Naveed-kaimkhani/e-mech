@@ -37,11 +37,17 @@ class Setting extends StatelessWidget {
             routeName: "PasswordOption",
           ),
           k,
+           SettingServicesScreenWidget(
+            text: "Transaction",
+            icon: Icons.history,
+            routeName:RoutesName.transaction,
+          ),
+          k,
           SettingServicesScreenWidget(
             text: "Privacy Policy",
             // imageURL: Images.wheel,
             icon: Icons.privacy_tip_outlined,
-            routeName: " ",
+            routeName: "PrivacyPolicyScreen",
           ),
           k,
           SettingServicesScreenWidget(
@@ -55,7 +61,7 @@ class Setting extends StatelessWidget {
             text: "About Us",
             // imageURL: Images.mechanic_pic,
             icon: Icons.admin_panel_settings,
-            routeName: RoutesName.contactUs,
+            routeName: RoutesName.aboutUs,
           ),
           k,
           SizedBox(

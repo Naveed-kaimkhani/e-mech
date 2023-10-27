@@ -1,12 +1,9 @@
 import 'package:e_mech/presentation/widgets/user_screen_widget/call_widget.dart';
 import 'package:e_mech/presentation/widgets/user_screen_widget/send_request_to_specific_seller.dart';
 import 'package:e_mech/style/styling.dart';
-import 'package:e_mech/utils/utils.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
-
 import '../../../domain/entities/seller_model.dart';
 import '../../../style/custom_text_style.dart';
 import '../profile_pic.dart';
@@ -187,6 +184,7 @@ class _SellerInfoWindowState extends State<SellerInfoWindow> {
                       height: 30.h,
                       widht: 95.w,
                       textSize: 13.sp,
+                      distance: (distance / 1000).toString().substring(0, distance.toString().length ~/ 3),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 8.0),

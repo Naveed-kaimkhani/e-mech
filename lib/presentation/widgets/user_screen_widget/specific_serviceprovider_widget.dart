@@ -156,6 +156,7 @@ class _SpecificServiceProviderWidgetState
                       height: 30.h,
                       widht: 145.w,
                       textSize: 15.sp,
+                      distance: '10',
                     )
                   ]),
             )

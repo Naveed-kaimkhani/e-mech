@@ -28,10 +28,9 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     _notificationServices.requestNotificationPermission();
     _notificationServices.firebaseInit(context);
-    _notificationServices.isTokenRefresh();
     _notificationServices.setupInteractMessage(context);
-    _notificationServices.getDeviceToken().then((value) {
-    });
+    // _notificationServices.getDeviceToken().then((value) {
+    // });
     utils.checkConnectivity(context);
     
     Timer(const Duration(seconds: 2), () {

@@ -3,13 +3,16 @@ import 'dart:developer';
 import 'package:e_mech/presentation/auth_screens/seller_auth/seller_login.dart';
 import 'package:e_mech/presentation/auth_screens/user_auth/user_login.dart';
 import 'package:e_mech/presentation/auth_screens/user_auth/user_signup.dart';
+import 'package:e_mech/presentation/privacy_policy.dart';
 import 'package:e_mech/presentation/seller_screens/selller_signup.dart';
 import 'package:e_mech/presentation/user_screens/GeneralMechanic.dart';
+import 'package:e_mech/presentation/user_screens/about_us.dart';
 import 'package:e_mech/presentation/user_screens/contact_us.dart';
 import 'package:e_mech/presentation/user_screens/password_option.dart';
 import 'package:e_mech/presentation/user_screens/petrol_providers.dart';
 import 'package:e_mech/presentation/user_screens/punture_maker.dart';
 import 'package:e_mech/presentation/user_screens/services.dart';
+import 'package:e_mech/presentation/widgets/user_screen_widget/transaction_screen.dart';
 import 'package:e_mech/utils/routes/routes_name.dart';
 import 'package:flutter/material.dart';
 
@@ -36,6 +39,12 @@ class Routes {
         return _buildRoute(const GeneralMechanic(), settings);
       case RoutesName.contactUs:
         return _buildRoute(ContactUs(), settings);
+      case RoutesName.privacyPolicy:
+        return _buildRoute(PrivacyPolicyScreen(), settings);
+      case RoutesName.aboutUs:
+        return _buildRoute(AboutUs(), settings);
+     case RoutesName.transaction:
+        return _buildRoute(TransactionScreen(), settings);
 
       default:
         return _buildRoute(
