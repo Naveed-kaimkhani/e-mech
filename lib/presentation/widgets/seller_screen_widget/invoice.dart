@@ -34,18 +34,50 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
     }
   }
 
+  // void send() async {
+  //   FocusManager.instance.primaryFocus?.unfocus();
+  //   utils.toastMessage("please wait....");
+  //   TransactionModel transaction = TransactionModel(
+  //       services: services,
+  //       total: totalAmount,
+  //       mechanicId: utils.currentUserUid,
+  //       userId: widget.requestModel.senderUid,
+  //       date: utils.getCurrentDate(),
+  //       time: utils.getCurrentTime());
+  //   await FirebaseUserRepository.saveTransactionDataToFirestore(transaction);
+  //   utils.toastMessage("invoice sent");
+  // }
   void send() async {
-    FocusManager.instance.primaryFocus?.unfocus();
-    utils.toastMessage("please wait....");
-    TransactionModel transaction = TransactionModel(
-        services: services,
-        total: totalAmount,
-        mechanicId: utils.currentUserUid,
-        userId: widget.requestModel.senderUid,
-        date: utils.getCurrentDate(),
-        time: utils.getCurrentTime());
-    await FirebaseUserRepository.saveTransactionDataToFirestore(transaction);
-    utils.toastMessage("invoice sent");
+    if (mounted) {
+      FocusManager.instance.primaryFocus?.unfocus();
+      utils.toastMessage("please wait....");
+      TransactionModel transaction = TransactionModel(
+          services: services,
+          total: totalAmount,
+          mechanicId: utils.currentUserUid,
+          userId: widget.requestModel.senderUid,
+          date: utils.getCurrentDate(),
+          time: utils.getCurrentTime());
+      await FirebaseUserRepository.saveTransactionDataToFirestore(transaction);
+      if (mounted) {
+        utils.toastMessage("invoice sent");
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (double.parse(widget.requestModel.distance!) < 5) {
+      services.add(
+          'Travel Charges : ${double.parse(widget.requestModel.distance!) * 50}');
+    } else if (double.parse(widget.requestModel.distance!) > 5 &&
+        double.parse(widget.requestModel.distance!) < 15) {
+      services.add('Travel Charges : ${500}');
+    } else if (double.parse(widget.requestModel.distance!) > 15 &&
+        double.parse(widget.requestModel.distance!) < 30) {
+      services.add('Travel Charges : ${1000}');
+    }
   }
 
   @override
@@ -63,15 +95,15 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              'Travel Charges:',
+              'Distance Traveled:  ${widget.requestModel.distance} km',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            Card(
-              child: ListTile(
-                title: Text('Distance'),
-                trailing: Text('\ ${widget.requestModel.distance} km'),
-              ),
-            ),
+            // Card(
+            //   child: ListTile(
+            //     title: Text('Distance'),
+            //     trailing: Text('\ ${widget.requestModel.distance} km'),
+            //   ),
+            // ),
             SizedBox(
               height: 20,
             ),

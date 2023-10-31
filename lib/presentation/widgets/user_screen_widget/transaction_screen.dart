@@ -1,9 +1,7 @@
 import 'package:e_mech/data/models/transaction.dart';
 import 'package:e_mech/style/styling.dart';
 import 'package:flutter/material.dart';
-
 import '../../../data/firebase_user_repository.dart';
-import '../../../domain/entities/request_model.dart';
 import '../../seller_screens/shimmer_screen.dart';
 import '../seller_screen_widget/no_data_found_screen.dart';
 
