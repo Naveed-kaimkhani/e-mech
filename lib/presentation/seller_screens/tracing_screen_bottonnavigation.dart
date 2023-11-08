@@ -12,6 +12,7 @@ class TracingScreenBottomNavigation extends StatelessWidget {
     this.senderAddress,
     this.senderPhone,
     required this.firstLine,
+    required this.text,
     // required this.widget,
   });
 
@@ -21,6 +22,7 @@ class TracingScreenBottomNavigation extends StatelessWidget {
   final String? senderAddress;
   final String? senderPhone;
   final double firstLine;
+  final String? text;
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +84,7 @@ class TracingScreenBottomNavigation extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10.r),
                 color: Styling.primaryColor,
               ),
-              child: const Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Icon(
@@ -90,7 +92,7 @@ class TracingScreenBottomNavigation extends StatelessWidget {
                     color: Colors.white,
                   ),
                   Text(
-                    "Call Mechanic",
+                  text??"",
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 18,

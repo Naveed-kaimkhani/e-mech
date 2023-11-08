@@ -198,6 +198,13 @@ class FirebaseUserRepository implements UsersRepository {
   ) async {
     try {
       for (SellerModel seller in sellers) {
+        String distance = utils
+            .getDistancebtwRiderNSeller(
+                riderLat: seller.lat!,
+                riderLong: seller.long!,
+                userLat: requestModel.senderLat!,
+                userLong: requestModel.senderLong!)
+            .toString();
         RequestModel request = RequestModel(
             documentId: '',
             serviceId: utils.getRandomid(),
@@ -212,6 +219,7 @@ class FirebaseUserRepository implements UsersRepository {
             senderDeviceToken: requestModel.senderDeviceToken,
             sentDate: utils.getCurrentDate(),
             sentTime: utils.getCurrentTime(),
+            distance: distance,
             senderProfileImage: requestModel.senderProfileImage);
 
         final DocumentReference requestRef = await _sellerCollection
@@ -222,6 +230,10 @@ class FirebaseUserRepository implements UsersRepository {
         final String documentId = requestRef.id;
 
         await requestRef.update({'documentId': documentId});
+        await FirebaseUserRepository.notifySelleronComingRequest(
+          seller.deviceToken!,
+          requestModel.senderName!,
+        );
       }
 
       // utils.toastMessage("Request Sent");
@@ -538,6 +550,38 @@ class FirebaseUserRepository implements UsersRepository {
       'notification': {
         'title': 'New Request',
         'body': '${userName} want your service',
+        // "sound": "jetsons_doorbell.mp3"
+      },
+      'android': {
+        'notification': {
+          'notification_count': 23,
+        },
+      },
+      'data': {'type': 'msj', 'id': 'Asif Taj'}
+    };
+
+    await http
+        .post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
+            body: jsonEncode(data),
+            headers: {
+              'Content-Type': 'application/json; charset=UTF-8',
+              'Authorization':
+                  'key=AAAAxDHbazE:APA91bEK6_7-USKl15JqE4bH_ZZUrMHGCZTr1QCAT-WYJGPo3eTcAaLco3769dxP-GINLskhZOwz2KmddEL8VCGPERQBFUgysXEKTt2TNd49z2qqw6zd98oncZcTbrPpbgLe20Opw0Nb'
+            })
+        .then((value) {})
+        .onError((error, stackTrace) {
+          print(error);
+          //  utils.flushBarErrorMessage(error.toString(), context);
+        });
+  }
+
+  static notifyUseronInvoice(String userDeviceToken, String sellerName) async {
+    // send notification from one device to another
+    var data = {
+      'to': userDeviceToken,
+      'notification': {
+        'title': 'New Invoice',
+        'body': '${sellerName} sent you invoice',
         // "sound": "jetsons_doorbell.mp3"
       },
       'android': {

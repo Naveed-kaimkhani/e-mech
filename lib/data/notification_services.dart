@@ -14,8 +14,6 @@ class NotificationServices {
   //initialising firebase message plugin
   final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin  = FlutterLocalNotificationsPlugin();
 
-
-
   //function to initialise flutter local notification plugin to show notifications for android when app is active
   void initLocalNotifications(BuildContext context, RemoteMessage message)async{
     var androidInitializationSettings = const AndroidInitializationSettings('@mipmap/ic_launcher');

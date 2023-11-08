@@ -15,5 +15,6 @@ class RoutesName {
   static const String privacyPolicy = 'PrivacyPolicyScreen';
   static const String aboutUs = 'AboutUs';
 static const String transaction = 'TransactionScreen';
+static const String ForgetPasswordScreen='ForgetPasswordScreen';
 
 }

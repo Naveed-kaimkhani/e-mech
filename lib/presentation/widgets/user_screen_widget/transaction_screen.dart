@@ -1,4 +1,5 @@
 import 'package:e_mech/data/models/transaction.dart';
+import 'package:e_mech/style/custom_text_style.dart';
 import 'package:e_mech/style/styling.dart';
 import 'package:flutter/material.dart';
 import '../../../data/firebase_user_repository.dart';
@@ -25,44 +26,54 @@ class TransactionScreen extends StatelessWidget {
           } else if (snapshot.hasError) {
             return Text(snapshot.error.toString());
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const NoDataFoundScreen(
-              text: "No History",
+            return Center(
+              child: const NoDataFoundScreen(
+                text: "No History",
+              ),
             );
           } else {
-            return SizedBox(
-              height: MediaQuery.of(context).size.height,
-              child: ListView.builder(
-                itemCount: snapshot.data!.length,
-                itemBuilder: (context, index) {
-                  TransactionModel model = snapshot.data![index];
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Card(
-                      color: Color.fromARGB(255, 245, 246, 249),
-                      child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text('${model.date}\n ${model.time}'),
-                              ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: model.services!.length,
-                                  itemBuilder: (context, index) {
-                                    return ListTile(
-                                      leading: Text(model.services![index]
-                                          .toString()
-                                          .split(':')[0]),
-                                      trailing: Text(model.services![index]
-                                          .toString()
-                                          .split(":")[1]),
-                                    );
-                                  }),
-                            ],
-                          )),
-                    ),
-                  );
-                },
+            return SingleChildScrollView(
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height,
+                child: ListView.builder(
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, index) {
+                    TransactionModel model = snapshot.data![index];
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Card(
+                        color: Color.fromARGB(255, 245, 246, 249),
+                        child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text('${model.time}\n${model.date}'),
+                                ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: model.services!.length,
+                                    itemBuilder: (context, index) {
+                                      return ListTile(
+                                        leading: Text(model.services![index]
+                                            .toString()
+                                            .split(':')[0]),
+                                        trailing: Text(model.services![index]
+                                            .toString()
+                                            .split(":")[1]
+                                            .toString()
+                                            .split(".")[0]),
+                                      );
+                                    }),
+                                Text(
+                                  'Total ${model.total.toString().split('.')[0]} pkr',
+                                  style: CustomTextStyle.font_20_red,
+                                ),
+                              ],
+                            )),
+                      ),
+                    );
+                  },
+                ),
               ),
             );
           }

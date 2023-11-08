@@ -130,7 +130,11 @@ class _SellerLoginState extends State<SellerLogin> {
             key: _formKey,
             child: SingleChildScrollView(
               child: Padding(
-                padding: EdgeInsets.only(left: 24.w, top: 8.h),
+                padding: EdgeInsets.only(
+                  left: 24.w,
+                  top: 8.h,
+                  right: 24.w,
+                ),
                 child: Column(
                   // mainAxisSize: MainAxisSize.min,
                   // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -197,6 +201,20 @@ class _SellerLoginState extends State<SellerLogin> {
                           return "password must be of 6 characters";
                         }
                       },
+                    ),
+
+                    Padding(
+                      padding: EdgeInsets.only(top: 12.h, left: 200.w),
+                      child: InkWell(
+                        child: Text(
+                          "Forgot Password",
+                          style: CustomTextStyle.font_14_red,
+                        ),
+                        onTap: () {
+                          Navigator.pushNamed(
+                              context, RoutesName.ForgetPasswordScreen);
+                        },
+                      ),
                     ),
                     SizedBox(
                       height: 40.h,

@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -30,6 +31,16 @@ class utils {
     var formatterDate = DateFormat('dd/MM/yy');
     String actualDate = formatterDate.format(now);
     return actualDate;
+  }
+static double getDistancebtwRiderNSeller(
+ {required   double riderLat,
+   required double riderLong,
+required    double userLat,
+  required  double userLong,}
+
+  ) {
+    return Geolocator.distanceBetween(
+        riderLat, riderLong, userLat, userLong);
   }
 
   static String getCurrentTime() {

@@ -58,7 +58,6 @@ class _UserLoginState extends State<UserLogin> {
         .login(_emailController.text, _passwordController.text, context)
         .then((User? user) async {
       if (user != null) {
-        //  final   currentLocation = await Geolocator.getCurrentPosition();
         _getUserDetails(user.uid);
       } else {
         isLoading(false);
@@ -128,7 +127,7 @@ class _UserLoginState extends State<UserLogin> {
             key: _formKey,
             child: SingleChildScrollView(
               child: Padding(
-                padding: EdgeInsets.only(left: 24.w, top: 8.h),
+                padding: EdgeInsets.only(left: 24.w, top: 8.h, right: 24.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -187,6 +186,19 @@ class _UserLoginState extends State<UserLogin> {
                           return "password must be of 6 characters";
                         }
                       },
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 12.h, left: 200.w),
+                      child: InkWell(
+                        child: Text(
+                          "Forgot Password",
+                          style: CustomTextStyle.font_14_red,
+                        ),
+                        onTap: () {
+                          Navigator.pushNamed(
+                              context, RoutesName.ForgetPasswordScreen);
+                        },
+                      ),
                     ),
                     SizedBox(
                       height: 50.h,

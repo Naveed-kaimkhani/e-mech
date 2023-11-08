@@ -158,6 +158,10 @@ class _RequestWidgetState extends State<RequestWidget> {
                             // utils.showLoading(context);
                             await FirebaseUserRepository.acceptRequest(
                                 widget.requestModel, context);
+                            await FirebaseUserRepository
+                                .notifyUserOnRequestAccepted(
+                                    widget.requestModel.senderDeviceToken!,
+                                    seller!.name!);
                           },
                         )
                       ],

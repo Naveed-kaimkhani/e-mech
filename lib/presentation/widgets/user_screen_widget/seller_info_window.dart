@@ -134,7 +134,8 @@ class _SellerInfoWindowState extends State<SellerInfoWindow> {
                             ),
                             Text(
                               // widget.seller.workshopName!,
-                              address,
+                              address.substring(
+                                  0, (address.length / 2).round()),
                               style: CustomTextStyle.font_15_black,
                             ),
                           ],
@@ -150,52 +151,58 @@ class _SellerInfoWindowState extends State<SellerInfoWindow> {
               height: 2.h,
             ),
             Padding(
-              padding: EdgeInsets.only(left: 40.w),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              padding: EdgeInsets.only(left: 10.w),
+              child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    Text(
+                      "Service",
+                      style: CustomTextStyle.font_15_black,
+                    ),
+                    Row(
                       children: [
-                        Text(
-                          "Service",
-                          style: CustomTextStyle.font_15_black,
+                        CircleAvatar(
+                          backgroundColor: Styling.primaryColor,
+                          radius: 5.r,
                         ),
-                        Row(
-                          children: [
-                            CircleAvatar(
-                              backgroundColor: Styling.primaryColor,
-                              radius: 5.r,
-                            ),
-                            SizedBox(
-                              width: 5.w,
-                            ),
-                            Text(
-                              widget.seller.service ?? "Service Null",
-                              style: CustomTextStyle.font_14_red,
-                            ),
-                          ],
+                        SizedBox(
+                          width: 2.w,
+                        ),
+                        Text(
+                          widget.seller.service ?? "Service Null",
+                          style: CustomTextStyle.font_14_red,
                         ),
                       ],
                     ),
-                    SendRequestBttnForSpecificSeller(
-                      seller: widget.seller,
-                      height: 30.h,
-                      widht: 95.w,
-                      textSize: 13.sp,
-                      distance: (distance / 1000).toString().substring(0, distance.toString().length ~/ 3),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: CallWidget(
-                        num: widget.seller.phone!,
-                        context: context,
-                        radius: 20.r,
-                        iconSize: 16.h,
-                      ),
-                    ),
-                  ]),
+                  ],
+                ),
+                SizedBox(
+                  width: 10.w,
+                ),
+                SendRequestBttnForSpecificSeller(
+                  seller: widget.seller,
+                  height: 30.h,
+                  widht: 95.w,
+                  textSize: 13.sp,
+                  distance: (distance / 1000)
+                      .toString()
+                      .substring(0, distance.toString().length ~/ 3),
+                ),
+                SizedBox(
+                  width: 10.w,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: CallWidget(
+                    num: widget.seller.phone!,
+                    context: context,
+                    radius: 20.r,
+                    iconSize: 16.h,
+                  ),
+                ),
+              ]),
             )
           ],
         ),

@@ -156,21 +156,18 @@ class _SendRequestDialogueState extends State<SendRequestDialogue> {
               onTap: () async {
                 List<SellerModel> neededSellers =
                     filterSellersByService(allSellers!, _selectedService);
-       
+
                 if (neededSellers.isNotEmpty) {
                   await sendRequest(neededSellers, user!);
-                Navigator.pop(context);
-                utils.openRequestSentDialogue(context);
-              
-              
+                  Navigator.pop(context);
+                  utils.openRequestSentDialogue(context);
+                } else {
+                  isLoading(false);
+                  Navigator.pop(context);
+                  utils.flushBarErrorMessage(
+                      "No required Mechanic Available", context);
                 }
-               else{
-               isLoading(false); 
-                 Navigator.pop(context);
-              utils.flushBarErrorMessage("No required Mechanic Available", context);
-               
-               }
-                },
+              },
             ),
             TextButton(
                 onPressed: () {
@@ -187,7 +184,6 @@ class _SendRequestDialogueState extends State<SendRequestDialogue> {
     );
   }
 
-
   filterSellersByService(List<SellerModel> sellers, String selectedService) {
     isLoading(true);
     return sellers
@@ -196,9 +192,15 @@ class _SendRequestDialogueState extends State<SendRequestDialogue> {
   }
 
   sendRequest(List<SellerModel> sellers, UserModel user) async {
-    
+    String distance = utils
+        .getDistancebtwRiderNSeller(
+            riderLat: sellers[0].lat!,
+            riderLong: sellers[0].long!,
+            userLat: user.lat!,
+            userLong: user.long!)
+        .toString();
     RequestModel request = RequestModel(
-        documentId:'',
+        documentId: '',
         serviceId: utils.getRandomid(),
         senderUid: utils.currentUserUid,
         serviceRequired: _selectedService,

@@ -173,8 +173,6 @@ class MarkCompleted extends StatelessWidget {
         color: Styling.primaryColor,
       ),
       onTap: () async {
-        // await FirebaseUserRepository.deleteRequestDocument(
-        //     "AcceptedRequest", widget.requestModel.documentId!, context);
         Navigator.push(
           context,
           MaterialPageRoute(

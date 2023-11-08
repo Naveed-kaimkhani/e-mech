@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:e_mech/forget_password.dart';
 import 'package:e_mech/presentation/auth_screens/seller_auth/seller_login.dart';
 import 'package:e_mech/presentation/auth_screens/user_auth/user_login.dart';
 import 'package:e_mech/presentation/auth_screens/user_auth/user_signup.dart';
@@ -45,6 +46,8 @@ class Routes {
         return _buildRoute(AboutUs(), settings);
      case RoutesName.transaction:
         return _buildRoute(TransactionScreen(), settings);
+     case RoutesName.ForgetPasswordScreen:
+        return _buildRoute(ForgetPasswordScreen(), settings);
 
       default:
         return _buildRoute(

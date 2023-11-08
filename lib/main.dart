@@ -23,17 +23,7 @@ void main() async {
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-  // getIt.registerLazySingleton<UsersRepository>(() => FirebaseUserRepository());
   runApp(
-      // // MultiProvider(
-      // //   providers: [
-      // //     ChangeNotifierProvider(
-      // //       create: (_) =>
-      // //           UserProvider(usersRepository: getIt())..getUser(),
-      // //     ),
-      // //   ],
-      //   child: const MyApp(),
-      // ),
       const MyApp());
 }
 
