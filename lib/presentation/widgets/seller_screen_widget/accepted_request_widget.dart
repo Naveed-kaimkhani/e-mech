@@ -1,9 +1,11 @@
 import 'package:e_mech/presentation/seller_screens/seller_user_tracing.dart';
 import 'package:e_mech/presentation/widgets/profile_pic.dart';
+import 'package:e_mech/presentation/widgets/request_widget_button.dart';
 import 'package:e_mech/presentation/widgets/seller_screen_widget/invoice.dart';
 import 'package:e_mech/presentation/widgets/user_screen_widget/call_widget.dart';
 import 'package:e_mech/style/custom_text_style.dart';
 import 'package:e_mech/style/styling.dart';
+import 'package:e_mech/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../data/firebase_user_repository.dart';
@@ -60,7 +62,6 @@ class _AcceptedRequestWidgetState extends State<AcceptedRequestWidget> {
                     width: 10.w,
                   ),
                   Text(
-                    // widget.requestModel!.senderName!,
                     widget.requestModel.senderName ?? "No Sender Name",
                     style: CustomTextStyle.font_20,
                   ),
@@ -78,10 +79,12 @@ class _AcceptedRequestWidgetState extends State<AcceptedRequestWidget> {
                   SizedBox(
                     width: 3.w,
                   ),
-                  Text(
-                    "${(widget.requestModel.distance ?? 0 / 1000).toString().substring(0, widget.requestModel.distance.toString().length ~/ 3)} km",
-                    style: TextStyle(),
-                  ),
+                  widget.requestModel.distance!.length == 1
+                      ? Text("${widget.requestModel.distance!} km")
+                      : Text(
+                          "${(widget.requestModel.distance ?? 0 / 1000).toString().substring(0, widget.requestModel.distance.toString().length ~/ 3)} km",
+                          style: TextStyle(),
+                        ),
                 ],
               ),
               CallWidget(
@@ -119,11 +122,46 @@ class _AcceptedRequestWidgetState extends State<AcceptedRequestWidget> {
                           style: CustomTextStyle.font_10_black),
                     ],
                   ),
-                  MarkCompleted(widget: widget),
-                  GotoLocationbttn(widget: widget),
+                  widget.requestModel.status == "accepted"
+                      ? Row(
+                          children: [
+                            MarkCompleted(widget: widget),
+                            SizedBox(
+                              width: 5.w,
+                            ),
+                            GotoLocationbttn(widget: widget),
+                          ],
+                        )
+                      : letuseraccept()
                 ]),
           )
         ],
+      ),
+    );
+  }
+}
+
+class letuseraccept extends StatelessWidget {
+  const letuseraccept({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 28.h,
+      width: 110.w,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(6.r), color: Colors.black),
+      child: Center(
+        child: Text(
+          "Let User Confirm",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 13.sp,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
       ),
     );
   }
@@ -173,13 +211,17 @@ class MarkCompleted extends StatelessWidget {
         color: Styling.primaryColor,
       ),
       onTap: () async {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => InvoiceScreen(
-                    requestModel: widget.requestModel,
-                  )),
-        );
+        if (widget.requestModel.completed == "completed") {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => InvoiceScreen(
+                      requestModel: widget.requestModel,
+                    )),
+          );
+        } else {
+          utils.toastMessage("Let User Confirm First");
+        }
       },
     );
   }

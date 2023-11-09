@@ -96,11 +96,12 @@ class _SellerInfoWindowState extends State<SellerInfoWindow> {
                           children: [
                             Text(
                               // widget.requestModel!.senderName!,
-                              widget.seller.name ?? "No Sender Name",
+                              widget.seller.name!.split(' ')[0] ??
+                                  "No Sender Name",
                               style: CustomTextStyle.font_20,
                             ),
                             SizedBox(
-                              width: 50.w,
+                              width: 20.w,
                             ),
                             Row(
                               children: [
@@ -109,7 +110,7 @@ class _SellerInfoWindowState extends State<SellerInfoWindow> {
                                   color: Styling.primaryColor,
                                 ),
                                 SizedBox(
-                                  width: 5.w,
+                                  width: 2.w,
                                 ),
                                 Text(
                                   "${(distance / 1000).toString().substring(0, distance.toString().length ~/ 3)} km",

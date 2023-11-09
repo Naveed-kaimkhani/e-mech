@@ -9,12 +9,16 @@ class RequestModel {
   String? sentTime;
   String? serviceRequired;
   String? serviceId;
+   String? timeRequired;
   String? senderDeviceToken;
   double? senderLat;
   double? senderLong;
   String? senderProfileImage;
   String? senderAddress;
   String? distance;
+  String? completed;
+  String? status;
+  
   RequestModel({
     // this.receiverUid,
     this.documentId,
@@ -27,10 +31,14 @@ class RequestModel {
     this.receiverUid,
     this.serviceRequired,
     this.senderName,
+    this.timeRequired,
     this.sentDate,
     this.sentTime,
+    this.status,
     this.senderProfileImage,
     this.senderPhone,
+
+    this.completed,
     this.distance,
   });
 
@@ -44,6 +52,8 @@ class RequestModel {
     data['senderLat'] = request.senderLat;
     data['senderLong'] = request.senderLong;
     data['senderPhone'] = request.senderPhone;
+    data['status'] = request.status;
+    data['timeRequired'] = request.timeRequired;
     data['senderAddress'] = request.senderAddress;
     data['serviceId'] = request.serviceId;
     data['senderName'] = request.senderName;
@@ -51,6 +61,7 @@ class RequestModel {
     data['sentDate'] = request.sentDate;
     data['sentTime'] = request.sentTime;
     data['distance'] = request.distance;
+    data['completed'] = request.completed;
     data['senderDeviceToken'] = request.senderDeviceToken;
 
     return data;
@@ -62,17 +73,22 @@ class RequestModel {
     serviceRequired = mapData['serviceRequired'];
     senderName = mapData['senderName'];
     senderUid = mapData['senderUid'];
+    completed = mapData['completed'];
     receiverUid = mapData['receiverUid'];
     senderLat = mapData['senderLat'];
     senderLong = mapData['senderLong'];
     senderPhone = mapData['senderPhone'];
     senderAddress = mapData['senderAddress'];
     serviceId = mapData['serviceId'];
+    timeRequired=mapData['timeRequired'];
+
     senderProfileImage = mapData['senderProfileImage'];
     sentDate = mapData['sentDate'];
     sentTime = mapData['sentTime'];
     distance = mapData['distance'];
     senderDeviceToken = mapData['senderDeviceToken'];
+  status = mapData['status'];
+    
   }
 
   // bool equals(RequestModel user) => user.uid == this.uid;

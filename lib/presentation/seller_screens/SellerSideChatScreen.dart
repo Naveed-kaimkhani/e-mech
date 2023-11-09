@@ -5,6 +5,7 @@ import 'package:e_mech/domain/entities/request_model.dart';
 import 'package:e_mech/domain/entities/user_model.dart';
 import 'package:e_mech/presentation/widgets/circle_progress.dart';
 import 'package:e_mech/presentation/widgets/profile_pic.dart';
+import 'package:e_mech/style/styling.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -51,9 +52,13 @@ class _SellerSideChatScreenState extends State<SellerSideChatScreen> {
           child: Scaffold(
             //app bar
             appBar: AppBar(
-              automaticallyImplyLeading: false,
-              flexibleSpace: _appBar(),
-            ),
+                automaticallyImplyLeading: false,
+                flexibleSpace: _appBar(),
+                backgroundColor: Styling.primaryColor,
+                leading: BackButton(
+                  color: Colors.white,
+                  onPressed: () => Navigator.pop(context),
+                )),
 
             backgroundColor: const Color.fromARGB(255, 234, 248, 255),
 
@@ -179,7 +184,7 @@ class _SellerSideChatScreenState extends State<SellerSideChatScreen> {
                       Text(widget.user.senderName!,
                           style: const TextStyle(
                               fontSize: 16,
-                              color: Colors.black87,
+                              color: Colors.white,
                               fontWeight: FontWeight.w500)),
 
                       //for adding some space
@@ -226,7 +231,7 @@ class _SellerSideChatScreenState extends State<SellerSideChatScreen> {
                         setState(() => _showEmoji = !_showEmoji);
                       },
                       icon: const Icon(Icons.emoji_emotions,
-                          color: Colors.blueAccent, size: 25)),
+                          color: Styling.primaryColor, size: 25)),
 
                   Expanded(
                       child: TextField(
@@ -238,7 +243,7 @@ class _SellerSideChatScreenState extends State<SellerSideChatScreen> {
                     },
                     decoration: const InputDecoration(
                         hintText: 'Type Something...',
-                        hintStyle: TextStyle(color: Colors.blueAccent),
+                        hintStyle: TextStyle(color: Styling.primaryColor),
                         border: InputBorder.none),
                   )),
 
@@ -263,7 +268,7 @@ class _SellerSideChatScreenState extends State<SellerSideChatScreen> {
                         }
                       },
                       icon: const Icon(Icons.image,
-                          color: Colors.blueAccent, size: 26)),
+                          color: Styling.primaryColor, size: 26)),
 
                   //take image from camera button
                   IconButton(
@@ -284,7 +289,7 @@ class _SellerSideChatScreenState extends State<SellerSideChatScreen> {
                         }
                       },
                       icon: const Icon(Icons.camera_alt_rounded,
-                          color: Colors.blueAccent, size: 26)),
+                          color: Styling.primaryColor, size: 26)),
 
                   //adding some space
                   SizedBox(width: mq.width * .02),
@@ -319,7 +324,7 @@ class _SellerSideChatScreenState extends State<SellerSideChatScreen> {
             padding:
                 const EdgeInsets.only(top: 10, bottom: 10, right: 5, left: 10),
             shape: const CircleBorder(),
-            color: Colors.green,
+            color: Styling.primaryColor,
             child: const Icon(Icons.send, color: Colors.white, size: 28),
           )
         ],

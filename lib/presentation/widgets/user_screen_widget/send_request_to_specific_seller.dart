@@ -52,7 +52,6 @@ class SendRequestBttnForSpecificSeller extends StatelessWidget {
               ),
             ),
             onTap: () async {
-              utils.toastMessage("Sending Request...");
               RequestModel request = RequestModel(
                 serviceId: utils.getRandomid(),
                 sentDate: utils.getCurrentDate(),
@@ -67,16 +66,24 @@ class SendRequestBttnForSpecificSeller extends StatelessWidget {
                 senderDeviceToken: user.deviceToken,
                 senderUid: user.uid,
                 receiverUid: seller.uid,
+                status: "pending",
+                completed: "pending",
+                timeRequired: '0',
                 senderProfileImage: user.profileImage,
               );
-              await FirebaseUserRepository.sendRequestForSpecificService(
-                  seller.uid!, request, context);
-              await FirebaseUserRepository.notifySelleronComingRequest(
-                seller.deviceToken!,
-                user.name!,
-              );
+              if (double.parse(distance.split(' ')[0]) <= 5) {
+                utils.toastMessage("Sending Request...");
+                await FirebaseUserRepository.sendRequestForSpecificService(
+                    seller.uid!, request, context);
+                await FirebaseUserRepository.notifySelleronComingRequest(
+                  seller.deviceToken!,
+                  user.name!,
+                );
 
-              utils.openRequestSentDialogue(context);
+                utils.openRequestSentDialogue(context);
+              } else {
+                utils.flushBarErrorMessage("Mechanic out of Radius", context);
+              }
             }));
   }
 }

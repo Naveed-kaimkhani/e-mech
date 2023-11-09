@@ -118,11 +118,11 @@ class _SellerProfileState extends State<SellerProfile> {
   }
 
   Future<void> _getUserDetails(String uid) async {
-    _FirebaseUserRepository.getUser().then((UserModel? userModel) {
+    _FirebaseUserRepository.getSeller().then((SellerModel? userModel) {
       if (userModel != null) {
-        StorageService.saveUser(userModel).then((value) async {
-          await Provider.of<UserProvider>(context, listen: false)
-              .getUserFromServer(context);
+        StorageService.saveSeller(userModel).then((value) async {
+          await Provider.of<SellerProvider>(context, listen: false)
+              .getSellerFromServer(context);
           Navigator.push(context, MaterialPageRoute(builder: (context) {
             return const SellerNavigation();
           }));

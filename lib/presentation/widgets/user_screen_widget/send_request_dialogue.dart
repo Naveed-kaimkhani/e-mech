@@ -192,13 +192,6 @@ class _SendRequestDialogueState extends State<SendRequestDialogue> {
   }
 
   sendRequest(List<SellerModel> sellers, UserModel user) async {
-    String distance = utils
-        .getDistancebtwRiderNSeller(
-            riderLat: sellers[0].lat!,
-            riderLong: sellers[0].long!,
-            userLat: user.lat!,
-            userLong: user.long!)
-        .toString();
     RequestModel request = RequestModel(
         documentId: '',
         serviceId: utils.getRandomid(),
@@ -209,12 +202,15 @@ class _SendRequestDialogueState extends State<SendRequestDialogue> {
         senderLat: user.lat,
         senderLong: user.long,
         // receiverUid: ,
+        timeRequired: '0',
+        status: "pending",
+        completed: "pending",
         senderAddress: user.address,
         senderDeviceToken: user.deviceToken,
         sentDate: utils.getCurrentDate(),
         sentTime: utils.getCurrentTime(),
         senderProfileImage: user.profileImage);
     await FirebaseUserRepository.sentRequest(sellers, request, context);
-    isLoading(false);
+      isLoading(false);
   }
 }

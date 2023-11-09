@@ -39,6 +39,12 @@ class CustomTextStyle {
     fontSize: 10.sp,
     fontWeight: FontWeight.w700,
   );
+
+  static final font_12_white = TextStyle(
+    color: Colors.white,
+    fontSize: 12.sp,
+    fontWeight: FontWeight.w700,
+  );
   static final font_30 = TextStyle(
     color: Styling.primaryColor,
     fontSize: 30.sp,

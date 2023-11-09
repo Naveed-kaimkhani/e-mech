@@ -1,5 +1,4 @@
 import 'package:e_mech/presentation/widgets/profile_pic.dart';
-import 'package:e_mech/presentation/widgets/request_widget_button.dart';
 import 'package:e_mech/presentation/widgets/seller_screen_widget/ride_cancel_popup.dart';
 import 'package:e_mech/presentation/widgets/user_screen_widget/call_widget.dart';
 import 'package:e_mech/style/custom_text_style.dart';
@@ -11,10 +10,16 @@ import '../../../data/firebase_user_repository.dart';
 import '../../../domain/entities/request_model.dart';
 import '../../../domain/entities/seller_model.dart';
 import '../../../providers/seller_provider.dart';
+import '../../seller_screens/SellerSideChatScreen.dart';
+import '../request_widget_button.dart';
+
+String timeSelected = '';
+bool isTimeSelected = false;
 
 class RequestWidget extends StatefulWidget {
   final RequestModel requestModel;
-  const RequestWidget({
+
+  RequestWidget({
     Key? key,
     required this.requestModel,
   }) : super(key: key);
@@ -68,13 +73,14 @@ class _RequestWidgetState extends State<RequestWidget> {
                   ),
                   Text(
                     // widget.requestModel!.senderName!,
-                    widget.requestModel.senderName ?? "No Sender Name",
+                    widget.requestModel.senderName!.split(' ')[0] ??
+                        "No Sender Name",
                     style: CustomTextStyle.font_20,
                   ),
                 ],
               ),
               SizedBox(
-                width: 20.w,
+                width: 16.w,
               ),
               Row(
                 children: [
@@ -85,17 +91,42 @@ class _RequestWidgetState extends State<RequestWidget> {
                   SizedBox(
                     width: 3.w,
                   ),
-                  Text(
-                    "${(widget.requestModel.distance ?? 0 / 1000).toString().substring(0, widget.requestModel.distance.toString().length ~/ 3)} km",
-                    style: TextStyle(),
-                  ),
+                  widget.requestModel.distance!.length == 1
+                      ? Text("${widget.requestModel.distance!} km")
+                      : Text(
+                          "${(widget.requestModel.distance ?? 0 / 1000).toString().substring(0, widget.requestModel.distance.toString().length ~/ 3)} km",
+                          style: TextStyle(),
+                        ),
                 ],
               ),
-              CallWidget(
-                num: widget.requestModel.senderPhone!,
-                context: context,
-                radius: 24.r,
-                iconSize: 18.h,
+              SizedBox(
+                width: 3.w,
+              ),
+              Row(
+                children: [
+                  IconButton(
+                    onPressed: () {
+// Navigating to a new screen
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SellerSideChatScreen(
+                            user: widget.requestModel,
+                          ),
+                        ),
+                      );
+                    },
+                    icon: Icon(Icons.chat),
+                    color: Styling.primaryColor,
+                    iconSize: 30.h,
+                  ),
+                  CallWidget(
+                    num: widget.requestModel.senderPhone!,
+                    context: context,
+                    radius: 20.r,
+                    iconSize: 16.h,
+                  ),
+                ],
               )
             ],
           ),
@@ -132,43 +163,126 @@ class _RequestWidgetState extends State<RequestWidget> {
                       // ),
                     ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 12.0),
-                    child: Row(
-                      children: [
-                        InkWell(
-                          child: RequestWidgetButton(
-                              text: "Delete", color: Styling.primaryColor),
-                          onTap: () async {
-                            await FirebaseUserRepository.deleteRequestDocument(
-                                "Request",
-                                widget.requestModel.documentId!,
-                                context);
-                          },
-                        ),
-                        SizedBox(
-                          width: 8.w,
-                        ),
-                        InkWell(
-                          child: RequestWidgetButton(
-                              text: "Accept", color: Colors.black),
-                          onTap: () async {
-                            showRideCancelPopup("Request Accepted",
-                                "Go to Accepted Request", context);
-                            // utils.showLoading(context);
-                            await FirebaseUserRepository.acceptRequest(
-                                widget.requestModel, context);
-                            await FirebaseUserRepository
-                                .notifyUserOnRequestAccepted(
-                                    widget.requestModel.senderDeviceToken!,
-                                    seller!.name!);
-                          },
+                  isTimeSelected
+                      ? Padding(
+                          padding: const EdgeInsets.only(top: 12.0),
+                          child: Row(
+                            children: [
+                              InkWell(
+                                child: RequestWidgetButton(
+                                    text: "Delete",
+                                    color: Styling.primaryColor),
+                                onTap: () async {
+                                  await FirebaseUserRepository
+                                      .deleteRequestDocument(
+                                          "Request",
+                                          widget.requestModel.documentId!,
+                                          context);
+                                },
+                              ),
+                              SizedBox(
+                                width: 8.w,
+                              ),
+                              InkWell(
+                                child: RequestWidgetButton(
+                                    text: "Accept", color: Colors.black),
+                                onTap: () async {
+                                  showRideCancelPopup("Request Accepted",
+                                      "Go to Accepted Request", context);
+                                  // utils.showLoading(context);
+                                  await FirebaseUserRepository.acceptRequest(
+                                      widget.requestModel,
+                                      timeSelected,
+                                      context);
+                                  await FirebaseUserRepository
+                                      .notifyUserOnRequestAccepted(
+                                          widget
+                                              .requestModel.senderDeviceToken!,
+                                          seller!.name!);
+                                },
+                              )
+                            ],
+                          ),
                         )
-                      ],
-                    ),
-                  ),
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            // timebutton(
+                            //   time: "15 mint",
+                            // ),
+                            InkWell(
+                              child: Container(
+                                height: 40.w,
+                                width: 50.w,
+                                decoration: BoxDecoration(
+                                  color: Styling.primaryColor,
+                                  borderRadius: BorderRadius.circular(10.r),
+                                ),
+                                child: Center(
+                                    child: Text("15 mint",
+                                        style: CustomTextStyle.font_12_white)),
+                              ),
+                              onTap: () {
+                                setState(() {
+                                  timeSelected = '15 mint';
+                                  isTimeSelected = true;
+                                });
+
+                                // setState(() {});
+                              },
+                            ),
+                            SizedBox(
+                              width: 5.w,
+                            ),
+                            InkWell(
+                              child: Container(
+                                height: 40.w,
+                                width: 50.w,
+                                decoration: BoxDecoration(
+                                  color: Styling.primaryColor,
+                                  borderRadius: BorderRadius.circular(10.r),
+                                ),
+                                child: Center(
+                                    child: Text("30 mint",
+                                        style: CustomTextStyle.font_12_white)),
+                              ),
+                              onTap: () {
+                                setState(() {
+                                  timeSelected = '30 mint';
+                                  isTimeSelected = true;
+                                });
+
+                                // setState(() {});
+                              },
+                            ),
+                            SizedBox(
+                              width: 5.w,
+                            ),
+                            InkWell(
+                              child: Container(
+                                height: 40.w,
+                                width: 50.w,
+                                decoration: BoxDecoration(
+                                  color: Styling.primaryColor,
+                                  borderRadius: BorderRadius.circular(10.r),
+                                ),
+                                child: Center(
+                                    child: Text("45 mint",
+                                        style: CustomTextStyle.font_12_white)),
+                              ),
+                              onTap: () {
+                                setState(() {
+                                  timeSelected = '45 mint';
+                                  isTimeSelected = true;
+                                });
+
+                                // setState(() {});
+                              },
+                            ),
+                          ],
+                        ),
                 ]),
-          )
+          ),
         ],
       ),
     );

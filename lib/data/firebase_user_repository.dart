@@ -132,7 +132,8 @@ class FirebaseUserRepository implements UsersRepository {
     await _transactionCollection.add(transaction.toMap(transaction));
   }
 
-  static Future<void> acceptRequest(RequestModel requestModel, context) async {
+  static Future<void> acceptRequest(
+      RequestModel requestModel, String timeRequired, context) async {
     try {
       final DocumentReference requestRef = await _sellerCollection
           .doc(utils.currentUserUid)
@@ -140,11 +141,68 @@ class FirebaseUserRepository implements UsersRepository {
           .add(requestModel.toMap(requestModel));
 
       final String documentId = requestRef.id;
-      await requestRef.update({'documentId': documentId});
-      await deleteRequestFromEverySeller(requestModel.serviceId!, context);
+      await requestRef
+          .update({'documentId': documentId, 'timeRequired': timeRequired});
+      // await deleteRequestFromEverySeller(requestModel.serviceId!, context);
 
+      deleteRequestDocument("Request", requestModel.documentId!, context);
       // Show success message or perform other operations
       // utils.toastMessage("Request Accepted");
+    } catch (e) {
+      utils.flushBarErrorMessage(e.toString(), context);
+      // Handle error
+    }
+  }
+
+  static Future<void> updateRequestStatus(
+      RequestModel requestModel, context) async {
+    try {
+      final DocumentReference requestRef = await _sellerCollection
+          .doc(requestModel.receiverUid)
+          .collection('AcceptedRequest')
+          .doc(requestModel.documentId);
+
+      final String documentId = requestRef.id;
+      await requestRef.update({
+        'status': 'accepted',
+      });
+      // await deleteRequestFromEverySeller(requestModel.serviceId!, context);
+      utils.toastMessage("Request Accepted.");
+    } catch (e) {
+      utils.flushBarErrorMessage(e.toString(), context);
+      // Handle error
+    }
+  }
+
+  static Future<void> markRequestCompletedFromUserSide(
+      RequestModel requestModel, context) async {
+    try {
+      final DocumentReference requestRef = await _sellerCollection
+          .doc(requestModel.receiverUid)
+          .collection('AcceptedRequest')
+          .doc(requestModel.documentId);
+
+      final String documentId = requestRef.id;
+      await requestRef.update({
+        'completed': 'completed',
+      });
+      // await deleteRequestFromEverySeller(requestModel.serviceId!, context);
+      utils.toastMessage("Service Completed.");
+    } catch (e) {
+      utils.flushBarErrorMessage(e.toString(), context);
+      // Handle error
+    }
+  }
+
+  static Future<void> deleteRequest(RequestModel requestModel, context) async {
+    try {
+      // final DocumentReference requestRef =
+      await _sellerCollection
+          .doc(requestModel.receiverUid)
+          .collection('AcceptedRequest')
+          .doc(requestModel.documentId)
+          .delete();
+      utils.toastMessage("Request Deleted.");
     } catch (e) {
       utils.flushBarErrorMessage(e.toString(), context);
       // Handle error
@@ -197,7 +255,10 @@ class FirebaseUserRepository implements UsersRepository {
     context,
   ) async {
     try {
+      int i = 0;
+      int total = 0;
       for (SellerModel seller in sellers) {
+        total++;
         String distance = utils
             .getDistancebtwRiderNSeller(
                 riderLat: seller.lat!,
@@ -205,37 +266,47 @@ class FirebaseUserRepository implements UsersRepository {
                 userLat: requestModel.senderLat!,
                 userLong: requestModel.senderLong!)
             .toString();
-        RequestModel request = RequestModel(
-            documentId: '',
-            serviceId: utils.getRandomid(),
-            senderUid: utils.currentUserUid,
-            serviceRequired: requestModel.serviceRequired,
-            senderName: requestModel.senderName,
-            senderPhone: requestModel.senderPhone,
-            senderLat: requestModel.senderLat,
-            senderLong: requestModel.senderLong,
-            receiverUid: seller.uid, //this uid will change on every looop.
-            senderAddress: requestModel.senderAddress,
-            senderDeviceToken: requestModel.senderDeviceToken,
-            sentDate: utils.getCurrentDate(),
-            sentTime: utils.getCurrentTime(),
-            distance: distance,
-            senderProfileImage: requestModel.senderProfileImage);
+        String distanceInKM = (double.parse(distance) / 1000)
+            .toString()
+            .substring(0, distance.toString().length ~/ 3);
+        if (double.parse(distanceInKM.split(' ')[0]) <= 5) {
+          i++;
+          RequestModel request = RequestModel(
+              documentId: '',
+              serviceId: utils.getRandomid(),
+              senderUid: utils.currentUserUid,
+              serviceRequired: requestModel.serviceRequired,
+              senderName: requestModel.senderName,
+              senderPhone: requestModel.senderPhone,
+              senderLat: requestModel.senderLat,
+              senderLong: requestModel.senderLong,
+              timeRequired: '0',
+              status: 'pending',
+              receiverUid: seller.uid, //this uid will change on every looop.
+              senderAddress: requestModel.senderAddress,
+              senderDeviceToken: requestModel.senderDeviceToken,
+              sentDate: utils.getCurrentDate(),
+              sentTime: utils.getCurrentTime(),
+              distance: distance,
+              senderProfileImage: requestModel.senderProfileImage);
 
-        final DocumentReference requestRef = await _sellerCollection
-            .doc(seller.uid)
-            .collection('Request')
-            .add(request.toMap(request));
+          final DocumentReference requestRef = await _sellerCollection
+              .doc(seller.uid)
+              .collection('Request')
+              .add(request.toMap(request));
 
-        final String documentId = requestRef.id;
+          final String documentId = requestRef.id;
 
-        await requestRef.update({'documentId': documentId});
-        await FirebaseUserRepository.notifySelleronComingRequest(
-          seller.deviceToken!,
-          requestModel.senderName!,
-        );
+          await requestRef.update({'documentId': documentId});
+          await FirebaseUserRepository.notifySelleronComingRequest(
+            seller.deviceToken!,
+            requestModel.senderName!,
+          );
+        }
       }
 
+      int count = total - i;
+      utils.toastMessage("$count mechanic are out of range.");
       // utils.toastMessage("Request Sent");
     } catch (error) {
       // Handle the error appropriately

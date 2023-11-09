@@ -11,6 +11,7 @@ import '../../../domain/entities/request_model.dart';
 
 class UserAcceptedRequestWidget extends StatefulWidget {
   final RequestModel requestModel;
+
   UserAcceptedRequestWidget({
     Key? key,
     required this.requestModel,
@@ -22,7 +23,7 @@ class UserAcceptedRequestWidget extends StatefulWidget {
 
 class _UserAcceptedRequestWidgetState extends State<UserAcceptedRequestWidget> {
   // final FirebaseUserRepository _firebaseRepository = FirebaseUserRepository();
-
+  bool isAccpeted = false;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -67,11 +68,27 @@ class _UserAcceptedRequestWidgetState extends State<UserAcceptedRequestWidget> {
                   ),
                 ],
               ),
-              CallWidget(
-                  iconSize: 22.h,
-                  radius: 24.r,
-                  num: widget.requestModel.senderPhone!,
-                  context: context),
+              // CallWidget(
+              //     iconSize: 22.h,
+              //     radius: 24.r,
+              //     num: widget.requestModel.senderPhone!,
+              //     context: context),
+              Row(
+                children: [
+                  request_widget_button(
+                    text: "${widget.requestModel.distance!} km",
+                    color: Colors.black,
+                  ),
+                  SizedBox(
+                    width: 5.w,
+                  ),
+                  request_widget_button(
+                    text: "${widget.requestModel.timeRequired!}",
+                    color: Colors.black,
+                  ),
+                ],
+              ),
+              // Text(widget.requestModel.timeRequired!)
             ],
           ),
           SizedBox(
@@ -103,7 +120,58 @@ class _UserAcceptedRequestWidgetState extends State<UserAcceptedRequestWidget> {
                     ],
                   ),
                   // MarkCompleted(widget: widget),
-                  GotoLocationbttn(widget: widget),
+                  SizedBox(
+                    height: 3.h,
+                  ),
+                  isAccpeted || widget.requestModel.status == "accepted"
+                      ? Row(
+                          children: [
+                            InkWell(
+                              child: request_widget_button(
+                                text: "Completed",
+                                color: Styling.primaryColor,
+                              ),
+                              onTap: ()async{
+                                
+                                await FirebaseUserRepository
+                                    .markRequestCompletedFromUserSide(
+                                        widget.requestModel, context);
+
+                              },
+                            ),
+                            SizedBox(
+                              width: 5.w,
+                            ),
+                            GotoLocationbttn(widget: widget),
+                          ],
+                        )
+                      : Row(
+                          children: [
+                            InkWell(
+                              child: request_widget_button(
+                                  text: "Yes", color: Styling.primaryColor),
+                              onTap: () async {
+                                await FirebaseUserRepository
+                                    .updateRequestStatus(
+                                        widget.requestModel, context);
+                                setState(() {
+                                  isAccpeted = true;
+                                });
+                              },
+                            ),
+                            SizedBox(
+                              width: 8.w,
+                            ),
+                            InkWell(
+                              child: request_widget_button(
+                                  text: "No", color: Styling.primaryColor),
+                              onTap: () async {
+                                await FirebaseUserRepository.deleteRequest(
+                                    widget.requestModel, context);
+                              },
+                            ),
+                          ],
+                        )
                 ]),
           )
         ],
@@ -153,7 +221,7 @@ class request_widget_button extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 30.h,
-      width: 90.w,
+      width: 85.w,
       decoration:
           BoxDecoration(borderRadius: BorderRadius.circular(6.r), color: color),
       child: Center(
