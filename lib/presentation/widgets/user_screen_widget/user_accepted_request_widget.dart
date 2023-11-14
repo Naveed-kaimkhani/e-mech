@@ -150,7 +150,7 @@ class _UserAcceptedRequestWidgetState extends State<UserAcceptedRequestWidget> {
                     color: Colors.black,
                   ),
                   SizedBox(
-                    width: 5.w,
+                    width: 2.w,
                   ),
                   request_widget_button(
                     text: "${widget.requestModel.timeRequired!}",

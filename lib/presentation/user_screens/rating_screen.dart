@@ -1,13 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_mech/data/firebase_user_repository.dart';
-import 'package:e_mech/data/models/transaction.dart';
 import 'package:e_mech/domain/entities/request_model.dart';
 import 'package:e_mech/domain/entities/seller_model.dart';
 import 'package:e_mech/navigation_page.dart';
 import 'package:e_mech/style/styling.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:lottie/lottie.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 // class Slide {
