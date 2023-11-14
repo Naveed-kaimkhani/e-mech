@@ -65,7 +65,6 @@ class _UserHomePageState extends State<UserHomePage> {
       });
     } catch (error)
      {
-      print("erorrrrrrrrrrrrrrrrrrrrrr");
       print(error);
       // utils.flushBarErrorMessage(error.toString(), context);
     }
@@ -81,7 +80,9 @@ class _UserHomePageState extends State<UserHomePage> {
 
   Future<void> animateCamera() async {
     GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(_cameraPosition));
+ setState(() {
+      controller.animateCamera(CameraUpdate.newCameraPosition(_cameraPosition));
+ });
   }
 
   Future<Uint8List> getByteFromAssets(String path, int width) async {

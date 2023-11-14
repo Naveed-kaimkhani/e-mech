@@ -66,6 +66,8 @@ class SendRequestBttnForSpecificSeller extends StatelessWidget {
                 senderDeviceToken: user.deviceToken,
                 senderUid: user.uid,
                 receiverUid: seller.uid,
+                mechanicName: seller.name,
+                mechanicProfile: seller.profileImage,
                 status: "pending",
                 completed: "pending",
                 timeRequired: '0',

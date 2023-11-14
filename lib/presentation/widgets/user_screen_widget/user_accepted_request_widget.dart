@@ -55,7 +55,7 @@ class _UserAcceptedRequestWidgetState extends State<UserAcceptedRequestWidget> {
                     child: ProfilePic(
                       height: 40.h,
                       width: 46.w,
-                      url: widget.requestModel.senderProfileImage!,
+                      url: widget.requestModel.mechanicProfile,
                     ),
                   ),
                   SizedBox(
@@ -63,7 +63,7 @@ class _UserAcceptedRequestWidgetState extends State<UserAcceptedRequestWidget> {
                   ),
                   Text(
                     // widget.requestModel!.senderName!,
-                    widget.requestModel.senderName ?? "No Sender Name",
+                    widget.requestModel.mechanicName ?? "No Sender Name",
                     style: CustomTextStyle.font_20,
                   ),
                 ],
@@ -76,7 +76,8 @@ class _UserAcceptedRequestWidgetState extends State<UserAcceptedRequestWidget> {
               Row(
                 children: [
                   request_widget_button(
-                    text: "${widget.requestModel.distance!} km",
+                    text:
+                        "${(double.parse(widget.requestModel.distance!) / 1000).toString().substring(0, widget.requestModel.distance.toString().length ~/ 3)} km",
                     color: Colors.black,
                   ),
                   SizedBox(
@@ -131,12 +132,10 @@ class _UserAcceptedRequestWidgetState extends State<UserAcceptedRequestWidget> {
                                 text: "Completed",
                                 color: Styling.primaryColor,
                               ),
-                              onTap: ()async{
-                                
+                              onTap: () async {
                                 await FirebaseUserRepository
                                     .markRequestCompletedFromUserSide(
                                         widget.requestModel, context);
-
                               },
                             ),
                             SizedBox(

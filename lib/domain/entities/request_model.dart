@@ -9,7 +9,7 @@ class RequestModel {
   String? sentTime;
   String? serviceRequired;
   String? serviceId;
-   String? timeRequired;
+  String? timeRequired;
   String? senderDeviceToken;
   double? senderLat;
   double? senderLong;
@@ -18,26 +18,31 @@ class RequestModel {
   String? distance;
   String? completed;
   String? status;
-  
+  String? mechanicProfile;
+  String? mechanicName;
+  String? vehicle;
+
   RequestModel({
     // this.receiverUid,
     this.documentId,
     this.serviceId,
     this.senderLat,
     this.senderLong,
+    this.mechanicName,
+    this.mechanicProfile,
     this.senderAddress,
     this.senderDeviceToken,
     this.senderUid,
     this.receiverUid,
     this.serviceRequired,
     this.senderName,
+    this.vehicle,
     this.timeRequired,
     this.sentDate,
     this.sentTime,
     this.status,
     this.senderProfileImage,
     this.senderPhone,
-
     this.completed,
     this.distance,
   });
@@ -53,8 +58,11 @@ class RequestModel {
     data['senderLong'] = request.senderLong;
     data['senderPhone'] = request.senderPhone;
     data['status'] = request.status;
+    data['vehicle'] = request.vehicle;
     data['timeRequired'] = request.timeRequired;
     data['senderAddress'] = request.senderAddress;
+    data['mechanicName'] = request.mechanicName;
+    data['mechanicProfile'] = request.mechanicProfile;
     data['serviceId'] = request.serviceId;
     data['senderName'] = request.senderName;
     data['senderProfileImage'] = request.senderProfileImage;
@@ -74,22 +82,22 @@ class RequestModel {
     senderName = mapData['senderName'];
     senderUid = mapData['senderUid'];
     completed = mapData['completed'];
+
+    vehicle = mapData['vehicle'];
     receiverUid = mapData['receiverUid'];
     senderLat = mapData['senderLat'];
     senderLong = mapData['senderLong'];
     senderPhone = mapData['senderPhone'];
     senderAddress = mapData['senderAddress'];
     serviceId = mapData['serviceId'];
-    timeRequired=mapData['timeRequired'];
-
+    timeRequired = mapData['timeRequired'];
+    mechanicName = mapData['mechanicName'];
+    mechanicProfile = mapData['mechanicProfile'];
     senderProfileImage = mapData['senderProfileImage'];
     sentDate = mapData['sentDate'];
     sentTime = mapData['sentTime'];
     distance = mapData['distance'];
     senderDeviceToken = mapData['senderDeviceToken'];
-  status = mapData['status'];
-    
+    status = mapData['status'];
   }
-
-  // bool equals(RequestModel user) => user.uid == this.uid;
 }
