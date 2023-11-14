@@ -115,7 +115,7 @@ class _AcceptedRequestWidgetState extends State<AcceptedRequestWidget> {
                         style: CustomTextStyle.font_14_red,
                       ),
                       SizedBox(
-                        height: 10.h,
+                        height: 4.h,
                       ),
                       Text(
                           "${widget.requestModel.sentDate}  ${widget.requestModel.sentTime} ",

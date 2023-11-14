@@ -158,7 +158,7 @@ class _SendRequestDialogueState extends State<SendRequestDialogue> {
                     filterSellersByService(allSellers!, _selectedService);
 
                 if (neededSellers.isNotEmpty) {
-                  await sendRequest(neededSellers, user!);
+                  await sendRequest(neededSellers, user!,_selectedVehicleType);
                   Navigator.pop(context);
                   utils.openRequestSentDialogue(context);
                 } else {
@@ -191,7 +191,7 @@ class _SendRequestDialogueState extends State<SendRequestDialogue> {
         .toList();
   }
 
-  sendRequest(List<SellerModel> sellers, UserModel user) async {
+  sendRequest(List<SellerModel> sellers, UserModel user, String vehicleType) async {
     RequestModel request = RequestModel(
         documentId: '',
         serviceId: utils.getRandomid(),
@@ -204,6 +204,7 @@ class _SendRequestDialogueState extends State<SendRequestDialogue> {
         // receiverUid: ,
         timeRequired: '0',
         status: "pending",
+  vehicle: vehicleType,
         completed: "pending",
         senderAddress: user.address,
         senderDeviceToken: user.deviceToken,

@@ -71,7 +71,7 @@ class _UserAcceptedRequestWidgetState extends State<UserAcceptedRequestWidget> {
                     child: ProfilePic(
                       height: 40.h,
                       width: 46.w,
-                      url: widget.requestModel.senderProfileImage!,
+                      url: widget.requestModel.mechanicProfile,
                     ),
                   ),
                   SizedBox(

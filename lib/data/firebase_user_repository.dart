@@ -287,14 +287,12 @@ class FirebaseUserRepository implements UsersRepository {
       int total = 0;
       for (SellerModel seller in sellers) {
         total++;
-        String distance = utils
-            .getDistancebtwRiderNSeller(
-                riderLat: seller.lat!,
-                riderLong: seller.long!,
-                userLat: requestModel.senderLat!,
-                userLong: requestModel.senderLong!)
-            .toString();
-        String distanceInKM = (double.parse(distance) / 1000)
+        double distance = utils.getDistancebtwRiderNSeller(
+            riderLat: seller.lat!,
+            riderLong: seller.long!,
+            userLat: requestModel.senderLat!,
+            userLong: requestModel.senderLong!);
+        String distanceInKM = (distance / 1000)
             .toString()
             .substring(0, distance.toString().length ~/ 3);
         if (double.parse(distanceInKM.split(' ')[0]) <= 5) {
@@ -310,12 +308,15 @@ class FirebaseUserRepository implements UsersRepository {
               senderLong: requestModel.senderLong,
               timeRequired: '0',
               status: 'pending',
+              mechanicName: seller.name,
+              mechanicProfile: seller.profileImage,
               receiverUid: seller.uid, //this uid will change on every looop.
               senderAddress: requestModel.senderAddress,
+              vehicle: requestModel.vehicle,
               senderDeviceToken: requestModel.senderDeviceToken,
               sentDate: utils.getCurrentDate(),
               sentTime: utils.getCurrentTime(),
-              distance: distance,
+              distance: distanceInKM.toString(),
               senderProfileImage: requestModel.senderProfileImage);
 
           final DocumentReference requestRef = await _sellerCollection

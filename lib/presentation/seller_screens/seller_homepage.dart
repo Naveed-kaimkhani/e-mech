@@ -54,19 +54,18 @@ class _SellerHomepageState extends State<SellerHomepage> {
                       text: "No pending request",
                     );
                   } else {
-                    return SizedBox(
-                      height: MediaQuery.of(context).size.height,
-                      child: ListView.builder(
-                        itemCount: snapshot.data!.length,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: RequestWidget(
-                              requestModel: snapshot.data![index],
-                            ),
-                          );
-                        },
-                      ),
+                    return ListView.builder(
+                      itemCount: snapshot.data!.length,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: RequestWidget(
+                            requestModel: snapshot.data![index],
+                          ),
+                        );
+                      },
                     );
                   }
                 },

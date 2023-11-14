@@ -12,11 +12,9 @@ import '../widgets/user_homepage_header.dart';
 
 class AcceptedRequest extends StatefulWidget {
   const AcceptedRequest({super.key});
-
   @override
   State<AcceptedRequest> createState() => _AcceptedRequestState();
 }
-
 class _AcceptedRequestState extends State<AcceptedRequest> {
   @override
   void initState() {
@@ -46,7 +44,6 @@ class _AcceptedRequestState extends State<AcceptedRequest> {
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const ShimmerScreen();
-                    
                   } else if (snapshot.hasError) {
                     return const CircularProgressIndicator();
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {

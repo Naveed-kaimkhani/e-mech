@@ -38,7 +38,7 @@ class _RequestWidgetState extends State<RequestWidget> {
 
     return Container(
       padding: const EdgeInsets.only(left: 10, top: 10, bottom: 10, right: 10),
-      height: 119.h,
+      height: 129.h,
       width: 355.w,
       decoration: BoxDecoration(
         color: Colors.white,
@@ -149,7 +149,12 @@ class _RequestWidgetState extends State<RequestWidget> {
                       ),
                       Text(
                         widget.requestModel.serviceRequired ?? "Service Null",
-                        style: CustomTextStyle.font_14_red,
+                        style: CustomTextStyle.font_12_red,
+                      ),
+
+                      Text(
+                        widget.requestModel.vehicle ?? "",
+                        style: CustomTextStyle.font_12_red,
                       ),
                       SizedBox(
                         height: 6.h,
