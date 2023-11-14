@@ -9,6 +9,7 @@ import 'package:e_mech/style/styling.dart';
 import 'package:e_mech/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import '../../domain/entities/seller_model.dart';
@@ -144,6 +145,7 @@ class _SellerProfileState extends State<SellerProfile> {
   Widget build(BuildContext context) {
     user = Provider.of<SellerProvider>(context, listen: false).seller;
     return SafeArea(
+      top: false,
       child: Scaffold(
           backgroundColor: Colors.white,
           body: SingleChildScrollView(
@@ -156,13 +158,48 @@ class _SellerProfileState extends State<SellerProfile> {
                 SizedBox(
                   height: 21.h,
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 120.0),
+                Center(
                   child: UploadProfile(_profileImage),
                 ),
                 SizedBox(
-                  height: 23.h,
+                  height: 16.h,
                 ),
+                Center(
+                  child: AbsorbPointer(
+                    child: SizedBox(
+                      height: 25,
+                      child: FittedBox(
+                        child: RatingBar(
+                          ratingWidget: RatingWidget(
+                            full: Icon(
+                              Icons.star_rate_rounded,
+                              color: Colors.amber.shade600,
+                              size: 8,
+                            ),
+                            half: Icon(
+                              Icons.star_half_rounded,
+                              color: Colors.amber.shade600,
+                              size: 8,
+                            ),
+                            empty: Icon(
+                              Icons.star_border_rounded,
+                              color: Colors.grey,
+                              size: 8,
+                            ),
+                          ),
+                          initialRating: user != null ? user!.rating ?? 0 : 0,
+                          onRatingUpdate: (v) {},
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 4,
+                ),
+                Center(
+                    child: Text(
+                        "(" + (user!.numberOfRatings ?? 0).toString() + ")")),
                 Padding(
                   padding: const EdgeInsets.only(left: 8.0),
                   child: Text(

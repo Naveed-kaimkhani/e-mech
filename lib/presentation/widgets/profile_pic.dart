@@ -16,12 +16,11 @@ class ProfilePic extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CachedNetworkImage(
-      imageBuilder: (context, imageProvider) => 
-      Container(
+      imageBuilder: (context, imageProvider) => Container(
         height: height,
         width: width,
         decoration: BoxDecoration(
-          borderRadius:BorderRadius.all(Radius.circular(45.r)),
+          borderRadius: BorderRadius.all(Radius.circular(45.r)),
           image: DecorationImage(
             image: imageProvider,
             fit: BoxFit.cover,
@@ -33,7 +32,8 @@ class ProfilePic extends StatelessWidget {
           value: progress.progress,
         ),
       ),
-      imageUrl: url!,
+      imageUrl: url ??
+          'https://media.istockphoto.com/id/1268548918/vector/white-create-account-screen-icon-isolated-with-long-shadow-red-circle-button-vector.jpg?s=612x612&w=0&k=20&c=tyaWWtW2_yQyvK4hBnVXEt3tfSNr0jVC_6P7XbOBrbk=',
     );
   }
 }
