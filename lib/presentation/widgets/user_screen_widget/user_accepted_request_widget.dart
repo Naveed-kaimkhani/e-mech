@@ -1,10 +1,13 @@
+import 'package:e_mech/domain/entities/seller_model.dart';
 import 'package:e_mech/presentation/seller_screens/seller_user_tracing.dart';
+import 'package:e_mech/presentation/user_screens/rating_screen.dart';
 import 'package:e_mech/presentation/widgets/profile_pic.dart';
 import 'package:e_mech/presentation/widgets/user_screen_widget/call_widget.dart';
 import 'package:e_mech/presentation/widgets/user_screen_widget/mechanic_tracking_at_user_side.dart';
 import 'package:e_mech/style/custom_text_style.dart';
 import 'package:e_mech/style/styling.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../data/firebase_user_repository.dart';
 import '../../../domain/entities/request_model.dart';
@@ -23,6 +26,19 @@ class UserAcceptedRequestWidget extends StatefulWidget {
 
 class _UserAcceptedRequestWidgetState extends State<UserAcceptedRequestWidget> {
   // final FirebaseUserRepository _firebaseRepository = FirebaseUserRepository();
+  SellerModel? sellerData;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    FirebaseUserRepository()
+        .getSellerDetailsUsingID(widget.requestModel.receiverUid!)
+        .then((seller) {
+      sellerData = seller;
+      setState(() {});
+    });
+  }
+
   bool isAccpeted = false;
   @override
   Widget build(BuildContext context) {
@@ -61,10 +77,63 @@ class _UserAcceptedRequestWidgetState extends State<UserAcceptedRequestWidget> {
                   SizedBox(
                     width: 10.w,
                   ),
-                  Text(
-                    // widget.requestModel!.senderName!,
-                    widget.requestModel.senderName ?? "No Sender Name",
-                    style: CustomTextStyle.font_20,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        // widget.requestModel!.senderName!,
+                        widget.requestModel.senderName ?? "No Sender Name",
+                        style: CustomTextStyle.font_20,
+                      ),
+                      SizedBox(
+                        height: 4,
+                      ),
+                      Row(
+                        children: [
+                          AbsorbPointer(
+                            child: SizedBox(
+                              height: 14,
+                              child: FittedBox(
+                                child: RatingBar(
+                                  ratingWidget: RatingWidget(
+                                    full: Icon(
+                                      Icons.star_rate_rounded,
+                                      color: Colors.amber.shade600,
+                                      size: 8,
+                                    ),
+                                    half: Icon(
+                                      Icons.star_half_rounded,
+                                      color: Colors.amber.shade600,
+                                      size: 8,
+                                    ),
+                                    empty: Icon(
+                                      Icons.star_border_rounded,
+                                      color: Colors.grey,
+                                      size: 8,
+                                    ),
+                                  ),
+                                  initialRating: sellerData != null
+                                      ? sellerData!.rating ?? 0
+                                      : 0,
+                                  onRatingUpdate: (v) {},
+                                ),
+                              ),
+                            ),
+                          ),
+                          Text(
+                            " (" +
+                                (sellerData != null
+                                        ? sellerData!.numberOfRatings ?? 0
+                                        : 0)
+                                    .toString()
+                                    .split('.')
+                                    .first +
+                                ")",
+                            style: TextStyle(fontSize: 12),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -76,7 +145,8 @@ class _UserAcceptedRequestWidgetState extends State<UserAcceptedRequestWidget> {
               Row(
                 children: [
                   request_widget_button(
-                    text: "${widget.requestModel.distance!} km",
+                    text:
+                        "${(double.parse(widget.requestModel.distance!) / 1000).toStringAsFixed(2)} km",
                     color: Colors.black,
                   ),
                   SizedBox(
@@ -131,12 +201,16 @@ class _UserAcceptedRequestWidgetState extends State<UserAcceptedRequestWidget> {
                                 text: "Completed",
                                 color: Styling.primaryColor,
                               ),
-                              onTap: ()async{
-                                
+                              onTap: () async {
                                 await FirebaseUserRepository
-                                    .markRequestCompletedFromUserSide(
-                                        widget.requestModel, context);
-
+                                        .markRequestCompletedFromUserSide(
+                                            widget.requestModel, context)
+                                    .then((value) => Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => RatingScreen(
+                                                request:
+                                                    widget.requestModel))));
                               },
                             ),
                             SizedBox(
@@ -222,15 +296,18 @@ class request_widget_button extends StatelessWidget {
     return Container(
       height: 30.h,
       width: 85.w,
+      padding: EdgeInsets.all(8),
       decoration:
           BoxDecoration(borderRadius: BorderRadius.circular(6.r), color: color),
       child: Center(
-        child: Text(
-          text,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w500,
+        child: FittedBox(
+          child: Text(
+            text,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
       ),

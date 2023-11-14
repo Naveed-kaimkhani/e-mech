@@ -92,7 +92,8 @@ class _RequestWidgetState extends State<RequestWidget> {
                     width: 3.w,
                   ),
                   widget.requestModel.distance!.length == 1
-                      ? Text("${widget.requestModel.distance!} km")
+                      ? Text(
+                          "${double.parse(widget.requestModel.distance!) / 1000} km")
                       : Text(
                           "${(widget.requestModel.distance ?? 0 / 1000).toString().substring(0, widget.requestModel.distance.toString().length ~/ 3)} km",
                           style: TextStyle(),
@@ -219,12 +220,12 @@ class _RequestWidgetState extends State<RequestWidget> {
                                   borderRadius: BorderRadius.circular(10.r),
                                 ),
                                 child: Center(
-                                    child: Text("15 mint",
+                                    child: Text("15 min",
                                         style: CustomTextStyle.font_12_white)),
                               ),
                               onTap: () {
                                 setState(() {
-                                  timeSelected = '15 mint';
+                                  timeSelected = '15 min';
                                   isTimeSelected = true;
                                 });
 

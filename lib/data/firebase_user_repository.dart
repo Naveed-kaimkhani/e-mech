@@ -127,6 +127,17 @@ class FirebaseUserRepository implements UsersRepository {
     return null;
   }
 
+  @override
+  Future<SellerModel?> getSellerDetailsUsingID(String uid) async {
+    DocumentSnapshot documentSnapshot = await _sellerCollection.doc(uid).get();
+    if (documentSnapshot.data() != null) {
+      SellerModel seller =
+          SellerModel.fromMap(documentSnapshot.data() as Map<String, dynamic>);
+      return seller;
+    }
+    return null;
+  }
+
   static Future<void> saveTransactionDataToFirestore(
       TransactionModel transaction) async {
     await _transactionCollection.add(transaction.toMap(transaction));
@@ -188,6 +199,23 @@ class FirebaseUserRepository implements UsersRepository {
       });
       // await deleteRequestFromEverySeller(requestModel.serviceId!, context);
       utils.toastMessage("Service Completed.");
+    } catch (e) {
+      utils.flushBarErrorMessage(e.toString(), context);
+      // Handle error
+    }
+  }
+
+  static Future<void> addRatingToMechanicProfile(
+      RequestModel requestModel, double rating, context) async {
+    try {
+      final DocumentReference sellerDocRef =
+          await _sellerCollection.doc(requestModel.receiverUid);
+
+      await sellerDocRef
+          .update({'rating': rating, 'nor': FieldValue.increment(1)});
+
+      // await deleteRequestFromEverySeller(requestModel.serviceId!, context);
+      utils.toastMessage("Rating added.");
     } catch (e) {
       utils.flushBarErrorMessage(e.toString(), context);
       // Handle error
