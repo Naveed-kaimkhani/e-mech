@@ -3,8 +3,10 @@ import 'package:e_mech/presentation/widgets/seller_screen_widget/ride_cancel_pop
 import 'package:e_mech/presentation/widgets/user_screen_widget/call_widget.dart';
 import 'package:e_mech/style/custom_text_style.dart';
 import 'package:e_mech/style/styling.dart';
+import 'package:e_mech/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import '../../../data/firebase_user_repository.dart';
 import '../../../domain/entities/request_model.dart';
@@ -38,7 +40,7 @@ class _RequestWidgetState extends State<RequestWidget> {
 
     return Container(
       padding: const EdgeInsets.only(left: 10, top: 10, bottom: 10, right: 10),
-      height: 129.h,
+      height: 135.h,
       width: 355.w,
       decoration: BoxDecoration(
         color: Colors.white,
@@ -147,9 +149,29 @@ class _RequestWidgetState extends State<RequestWidget> {
                         "Service Required",
                         style: CustomTextStyle.font_15_black,
                       ),
-                      Text(
-                        widget.requestModel.serviceRequired ?? "Service Null",
-                        style: CustomTextStyle.font_12_red,
+                      Row(
+                        children: [
+                          Text(
+                            widget.requestModel.serviceRequired ??
+                                "Service Null",
+                            style: CustomTextStyle.font_12_red,
+                          ),
+                          SizedBox(
+                            width: 12.w,
+                          ),
+                          InkWell(
+                            child: Icon(
+                              Icons.description,
+                              color: Styling.primaryColor,
+                            ),
+                            onTap: () {
+                              Fluttertoast.showToast(
+                                  msg: widget.requestModel.description ??
+                                      "No Description",
+                                  toastLength: Toast.LENGTH_LONG);
+                            },
+                          ),
+                        ],
                       ),
 
                       Text(
@@ -249,12 +271,12 @@ class _RequestWidgetState extends State<RequestWidget> {
                                   borderRadius: BorderRadius.circular(10.r),
                                 ),
                                 child: Center(
-                                    child: Text("30 mint",
+                                    child: Text("30 min",
                                         style: CustomTextStyle.font_12_white)),
                               ),
                               onTap: () {
                                 setState(() {
-                                  timeSelected = '30 mint';
+                                  timeSelected = '30 min';
                                   isTimeSelected = true;
                                 });
 
@@ -273,12 +295,12 @@ class _RequestWidgetState extends State<RequestWidget> {
                                   borderRadius: BorderRadius.circular(10.r),
                                 ),
                                 child: Center(
-                                    child: Text("45 mint",
+                                    child: Text("45 min",
                                         style: CustomTextStyle.font_12_white)),
                               ),
                               onTap: () {
                                 setState(() {
-                                  timeSelected = '45 mint';
+                                  timeSelected = '45 min';
                                   isTimeSelected = true;
                                 });
 

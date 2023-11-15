@@ -10,6 +10,8 @@ class RequestModel {
   String? serviceRequired;
   String? serviceId;
   String? timeRequired;
+  
+  String? description;
   String? senderDeviceToken;
   double? senderLat;
   double? senderLong;
@@ -31,6 +33,7 @@ class RequestModel {
     this.mechanicName,
     this.mechanicProfile,
     this.senderAddress,
+    this.description,
     this.senderDeviceToken,
     this.senderUid,
     this.receiverUid,
@@ -64,6 +67,7 @@ class RequestModel {
     data['mechanicName'] = request.mechanicName;
     data['mechanicProfile'] = request.mechanicProfile;
     data['serviceId'] = request.serviceId;
+    data['description'] = request.description;
     data['senderName'] = request.senderName;
     data['senderProfileImage'] = request.senderProfileImage;
     data['sentDate'] = request.sentDate;
@@ -82,7 +86,7 @@ class RequestModel {
     senderName = mapData['senderName'];
     senderUid = mapData['senderUid'];
     completed = mapData['completed'];
-
+    description = mapData['description'];
     vehicle = mapData['vehicle'];
     receiverUid = mapData['receiverUid'];
     senderLat = mapData['senderLat'];

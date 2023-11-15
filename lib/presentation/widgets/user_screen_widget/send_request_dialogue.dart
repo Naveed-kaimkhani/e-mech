@@ -27,7 +27,7 @@ class _SendRequestDialogueState extends State<SendRequestDialogue> {
   TextEditingController controller = TextEditingController();
   bool isLoadingNow = false;
   // Updated _services list with unique items
-  final List<String> _services = ['Mechanic', 'Puncture', 'Petrol'];
+  final List<String> _services = ['Mechanic', 'Puncture', 'Fuel'];
   final List<String> _vehicleTypes = ['Car', 'Motorcycle', 'Truck'];
 
   void isLoading(bool value) {
@@ -158,7 +158,7 @@ class _SendRequestDialogueState extends State<SendRequestDialogue> {
                     filterSellersByService(allSellers!, _selectedService);
 
                 if (neededSellers.isNotEmpty) {
-                  await sendRequest(neededSellers, user!,_selectedVehicleType);
+                  await sendRequest(neededSellers, user!,_selectedVehicleType, controller.text);
                   Navigator.pop(context);
                   utils.openRequestSentDialogue(context);
                 } else {
@@ -191,7 +191,7 @@ class _SendRequestDialogueState extends State<SendRequestDialogue> {
         .toList();
   }
 
-  sendRequest(List<SellerModel> sellers, UserModel user, String vehicleType) async {
+  sendRequest(List<SellerModel> sellers, UserModel user, String vehicleType, String description)async {
     RequestModel request = RequestModel(
         documentId: '',
         serviceId: utils.getRandomid(),
@@ -202,6 +202,7 @@ class _SendRequestDialogueState extends State<SendRequestDialogue> {
         senderLat: user.lat,
         senderLong: user.long,
         // receiverUid: ,
+        description: description,
         timeRequired: '0',
         status: "pending",
   vehicle: vehicleType,

@@ -81,9 +81,9 @@ class _UserAcceptedRequestWidgetState extends State<UserAcceptedRequestWidget> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        // widget.requestModel!.senderName!,
-                        widget.requestModel.senderName ?? "No Sender Name",
-                        style: CustomTextStyle.font_20,
+                        widget.requestModel.mechanicName!.split(' ')[0] ??
+                            "No Name",
+                        style: CustomTextStyle.font_18_black,
                       ),
                       SizedBox(
                         height: 4,
@@ -92,7 +92,7 @@ class _UserAcceptedRequestWidgetState extends State<UserAcceptedRequestWidget> {
                         children: [
                           AbsorbPointer(
                             child: SizedBox(
-                              height: 14,
+                              height: 14.h,
                               child: FittedBox(
                                 child: RatingBar(
                                   ratingWidget: RatingWidget(
@@ -129,7 +129,7 @@ class _UserAcceptedRequestWidgetState extends State<UserAcceptedRequestWidget> {
                                     .split('.')
                                     .first +
                                 ")",
-                            style: TextStyle(fontSize: 12),
+                            style: TextStyle(fontSize: 12.sp),
                           ),
                         ],
                       ),
@@ -137,11 +137,6 @@ class _UserAcceptedRequestWidgetState extends State<UserAcceptedRequestWidget> {
                   ),
                 ],
               ),
-              // CallWidget(
-              //     iconSize: 22.h,
-              //     radius: 24.r,
-              //     num: widget.requestModel.senderPhone!,
-              //     context: context),
               Row(
                 children: [
                   request_widget_button(
@@ -165,7 +160,7 @@ class _UserAcceptedRequestWidgetState extends State<UserAcceptedRequestWidget> {
             height: 6.h,
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 16.0),
+            padding: EdgeInsets.only(left: 16.w),
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

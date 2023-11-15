@@ -48,11 +48,11 @@ class _SellerInfoWindowState extends State<SellerInfoWindow> {
         padding:
             EdgeInsets.only(left: 10.w, top: 10.h, bottom: 10.h, right: 10.w),
         // padding: EdgeInsets.all(20),
-        height: 150.h,
-        width: 300.w,
+        height: 160.h,
+        width: 310.w,
         decoration: BoxDecoration(
           color: Colors.white,
-          border: Border.all(width: 1, color: Colors.redAccent),
+          border: Border.all(width: 1.w, color: Colors.redAccent),
           borderRadius: BorderRadius.circular(30.r),
           boxShadow: [
             BoxShadow(
@@ -98,10 +98,10 @@ class _SellerInfoWindowState extends State<SellerInfoWindow> {
                               // widget.requestModel!.senderName!,
                               widget.seller.name!.split(' ')[0] ??
                                   "No Sender Name",
-                              style: CustomTextStyle.font_20,
+                              style: CustomTextStyle.font_18_black,
                             ),
                             SizedBox(
-                              width: 20.w,
+                              width: 18.w,
                             ),
                             Row(
                               children: [

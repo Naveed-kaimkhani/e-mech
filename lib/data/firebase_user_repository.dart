@@ -309,6 +309,7 @@ class FirebaseUserRepository implements UsersRepository {
               timeRequired: '0',
               status: 'pending',
               mechanicName: seller.name,
+              description: requestModel.description,
               mechanicProfile: seller.profileImage,
               receiverUid: seller.uid, //this uid will change on every looop.
               senderAddress: requestModel.senderAddress,
